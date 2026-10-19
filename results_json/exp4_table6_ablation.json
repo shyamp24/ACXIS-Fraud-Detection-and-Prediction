@@ -158,6 +158,25 @@
     },
     {
       "panel": "Panel C: Cross-Dataset (IEEE-CIS)",
+      "model_name": "Raw Features Only [x]",
+      "representation": "[x]",
+      "fps_supp": 20,
+      "fns_leak": 3,
+      "cost": 94957.712,
+      "recall": 0.7933204259438529,
+      "precision": 0.47881974875839906,
+      "f1": 0.597194388777555,
+      "savings": -101.0,
+      "savings_pct": -0.10647638724816859,
+      "status": "LEAK (3 FN!)",
+      "tau_tiers": [
+        0.7281,
+        0.7352,
+        0.7442
+      ]
+    },
+    {
+      "panel": "Panel C: Cross-Dataset (IEEE-CIS)",
       "model_name": "SHAP Attributions Only [phi(x)]",
       "representation": "[phi(x)]",
       "fps_supp": 30,

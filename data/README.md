@@ -68,3 +68,26 @@ For immediate replication without downloading multi-gigabyte raw datasets, the `
 - `cache/paysim_xgb_stage1.json` (1.4 MB)
 
 All files are strictly $< 60$ MB and are directly version-controlled as plain Git objects. No Git LFS installation or external download bandwidth is required.
+
+---
+
+## 4. Preprocessing Pipelines & Deterministic Split Protocols
+
+### Deterministic 80/10/10 Split Protocol
+All datasets are partitioned into 80% training, 10% validation, and 10% test splits using stratified sampling on the fraud target (`random_state=42`):
+- First split: 90% temporary train / 10% test (`test_size=0.10`, `stratify=y`, `random_state=42`).
+- Second split: 80% train / 10% validation (`test_size=0.1111`, `stratify=y_temp`, `random_state=42`).
+
+### Preprocessing per Benchmark:
+1. **PaySim:**
+   - Drop non-predictive identifiers: `nameOrig`, `nameDest`, `isFlaggedFraud`.
+   - Categorical feature `type` is one-hot encoded (`type_CASH_IN`, `type_CASH_OUT`, `type_DEBIT`, `type_PAYMENT`, `type_TRANSFER`).
+   - Retain continuous accounting balances: `amount`, `oldbalanceOrg`, `newbalanceOrig`, `oldbalanceDest`, `newbalanceDest`.
+   - Typology notice: All 8,213 frauds occur exclusively in `TRANSFER` (4,097) and `CASH_OUT` (4,116).
+2. **IEEE-CIS:**
+   - Left-merge `train_transaction.csv` and `train_identity.csv` on `TransactionID`.
+   - Drop `TransactionID` and rename `TransactionAmt` $\to$ `amount`.
+   - Categorical features (`card1`–`card6`, `addr1`–`addr2`, `P_emaildomain`, `R_emaildomain`, `M1`–`M9`, `id_12`–`id_38`) encoded using category codes; missing numeric values imputed with $-1.0$.
+3. **ULB:**
+   - Features `V1`–`V28` (principal components) retained as continuous variables.
+   - Robust scaling applied to `Amount`. Target is binary `Class`.

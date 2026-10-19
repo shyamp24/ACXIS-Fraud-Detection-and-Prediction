@@ -18,6 +18,7 @@ Random Forest (ACXIS Proposed)         | Supp FP: 42 | Leak FN:0 | Cost: ₹2,13
 --- PANEL C: Cross-Dataset Validation (IEEE-CIS, tau*=0.3763) ---
 Validation-Optimal Baseline Cost: $94,856.71 (Recall: 0.7948)
 Probability-Only Filter [p_hat]        | Supp FP:  0 | Leak FN:0 | Cost: $94,856.71 | Savings: $0.00 (+0.00%) [SAFE (0 leaks)]
+Raw Features Only [x]                  | Supp FP: 20 | Leak FN:3 | Cost: $94,957.71 | Savings: $-101.00 (-0.11%) [LEAK (3 FN!)]
 SHAP Attributions Only [phi(x)]        | Supp FP: 30 | Leak FN:0 | Cost: $94,536.71 | Savings: $320.00 (+0.34%) [SAFE (0 leaks)]
 ACXIS Proposed [phi(x)]                | Supp FP: 30 | Leak FN:0 | Cost: $94,536.71 | Savings: $320.00 (+0.34%) [SAFE (0 leaks)]
 

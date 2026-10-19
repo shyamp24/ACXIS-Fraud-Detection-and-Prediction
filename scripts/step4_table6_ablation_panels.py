@@ -327,11 +327,17 @@ def main():
         'savings': 0.0, 'savings_pct': 0.0, 'status': 'Tuned Baseline'
     })
 
+    raw_npz_ie = os.path.join(CACHE_DIR, "ieeecis_cand_raw_X.npz")
     models_ie_c = [
-        ("Probability-Only Filter [p_hat]", p_v_cand_ie, p_t_cand_ie, '[p_hat]', 'rf', 5),
+        ("Probability-Only Filter [p_hat]", p_v_cand_ie, p_t_cand_ie, '[p_hat]', 'rf', 5)
+    ]
+    if os.path.exists(raw_npz_ie):
+        raw_d_ie = np.load(raw_npz_ie)
+        models_ie_c.append(("Raw Features Only [x]", raw_d_ie['X_cand_v'], raw_d_ie['X_cand_t'], '[x]', 'rf', 5))
+    models_ie_c.extend([
         ("SHAP Attributions Only [phi(x)]", s_v_ie, s_t_ie, '[phi(x)]', 'rf', 5),
         ("ACXIS Proposed [phi(x)]", s_v_ie, s_t_ie, '[phi(x)] + 3 Tiers', 'rf', 5)
-    ]
+    ])
 
     print(f"\n--- PANEL C: Cross-Dataset Validation (IEEE-CIS, tau*={tau_ie:.4f}) ---")
     print(f"Validation-Optimal Baseline Cost: ${base_cost_ie['total_cost']:,.2f} (Recall: {base_cost_ie['recall']:.4f})")
