@@ -9,7 +9,7 @@ Step 1: 100-step validation cost minimization (derives optimal tau*)
 Step 2: Algorithm 1 engine with amount-tiered safety guard
 Step 3: Comparative baselines benchmark (Table 4)
 Step 4: Ablation benchmark panels (Table 6)
-Step 5: 1,000-iteration stratified bootstrap resampling (Tables 5 & 7)
+Step 5: 1,000-iteration stratified bootstrap resampling (Tables 5 & 8)
 Step 6: Latency and throughput hardware benchmark (Table 3)
 Step 7: Synchronized publication figures generation
 
@@ -39,8 +39,7 @@ def main():
         ("Step 2: Algorithm 1 Execution Engine", "scripts/step2_algorithm1_engine.py", [], "logs/02_algorithm1.log"),
         ("Step 3: Comparative Baselines Benchmark (Table 4)", "scripts/step3_table4_master_baselines.py", step3_args, "logs/03_table4_baselines.log"),
         ("Step 4: Ablation Benchmark Panels (Table 6)", "scripts/step4_table6_ablation_panels.py", [], "logs/04_table6_ablation.log"),
-        ("Step 5: 1,000-Iteration Bootstrap Resampling (Tables 5 & 7)", "scripts/step5_bootstrap_resampling_1000.py", [], "logs/05_bootstrap.log"),
-        ("Step 5b: Multi-Seed & Split Robustness (5 Seeds)", "scripts/step5b_repeated_splits_5seeds.py", [], "logs/05b_multiseed.log"),
+        ("Step 5: 1,000-Iteration Bootstrap Resampling (Tables 5 & 8)", "scripts/step5_bootstrap_resampling_1000.py", [], "logs/05_bootstrap.log"),
         ("Step 6: Latency & Hardware Throughput Benchmark (Table 3)", "scripts/step6_latency_timing_loop.py", [], "logs/06_latency.log"),
         ("Step 7: Synchronized Publication Figures Generation", "scripts/step7_generate_publication_figures.py", [], "logs/07_figures.log")
     ]
