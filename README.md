@@ -269,12 +269,12 @@ All timing measurements are executed on genuine models using high-resolution mon
 Hardware: Apple Silicon workstation, Python 3.12, scikit-learn, XGBoost, SHAP.
 | Pipeline Stage | Mean Latency | Standard Deviation | Median ($p_{50}$) | $p_{95}$ Tail | $p_{99}$ Tail | Measured Throughput ($B=1000$) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Feature Preprocessing** | 0.0025 ms | 0.0018 ms | 0.0019 ms | 0.0021 ms | 0.0035 ms | — |
-| **Stage 1 Core (Fast-Path XGBoost)** | 0.7354 ms | 0.5124 ms | 0.5120 ms | 1.3055 ms | 2.3566 ms | **227,967.4 tx/s** |
-| **Stage 2 TreeSHAP Attribution** | 3.7139 ms | 1.8420 ms | 1.9542 ms | 4.6740 ms | 8.3196 ms | **1,301.7 tx/s** |
-| **Stage 3 Meta-Classifier (Random Forest)** | 5.9148 ms | 3.8210 ms | 5.1210 ms | 9.7536 ms | 20.2703 ms | **137,259.3 tx/s** |
-| **Full Triggered ACXIS Pipeline** | 13.3176 ms | 8.4120 ms | 9.8760 ms | 26.3815 ms | 67.4237 ms | **1,282.2 tx/s** |
-| *Baseline LIME Explainer* | 178.4012 ms | 24.1200 ms | 172.5400 ms | 216.5229 ms | 273.5438 ms | — |
+| **Feature Preprocessing** | 0.0019 ms | 0.0020 ms | 0.0018 ms | 0.0019 ms | 0.0027 ms | — |
+| **Stage 1 Core (Fast-Path XGBoost)** | 0.5467 ms | 0.3444 ms | 0.4624 ms | 0.8344 ms | 1.7158 ms | **227,967.4 tx/s** |
+| **Stage 2 TreeSHAP Attribution** | 3.4912 ms | 0.8676 ms | 3.2926 ms | 4.3655 ms | 5.9078 ms | **1,301.7 tx/s** |
+| **Stage 3 Meta-Classifier (Random Forest)** | 4.9470 ms | 1.7017 ms | 4.6395 ms | 6.0970 ms | 10.3198 ms | **137,259.3 tx/s** |
+| **Full Triggered ACXIS Pipeline** | 11.6947 ms | 2.0084 ms | 11.0611 ms | 14.7062 ms | 19.2839 ms | **1,282.2 tx/s** |
+| *Baseline LIME Explainer* | 175.6956 ms | 24.4376 ms | 167.9571 ms | 212.8126 ms | 262.7964 ms | — |
 
 ---
 
