@@ -3,22 +3,27 @@ STEP 1: 100-STEP EXHAUSTIVE THRESHOLD SEARCH (0.01 TO 0.99)
 ================================================================================
 
 >>> Processing PAYSIM...
-Validation 100-Step Optimum: tau* = 0.1288 | Min Cost: ₹2,432,245.10
-Test Set at tau=0.1288 : Cost = ₹2,033,757.25 | Recall = 0.9951 | Precision = 0.4211
+Validation 100-Step Optimum: tau* = 0.2179 | Min Cost: ₹2,391,599.76
+Test Set at tau=0.5000: Cost = ₹7,433,384.74 | Recall = 0.9245 | Precision = 0.8161
+Test Set at tau*=0.2179: Cost = ₹2,200,948.26 | Recall = 0.9842 | Precision = 0.5288
 
 >>> Processing IEEECIS...
 Validation 100-Step Optimum: tau* = 0.3763 | Min Cost: $93,700.71
-Test Set at tau=0.3763 : Cost = $94,856.71 | Recall = 0.7948 | Precision = 0.4765
-Test Set at Co-Opt tau=0.2800: Cost = $93,596.06 | Recall = 0.8364 | Precision = 0.3581
+Test Set at tau=0.5000: Cost = $107,017.62 | Recall = 0.7507 | Precision = 0.6267
+Test Set at tau*=0.3763: Cost = $94,856.71 | Recall = 0.7948 | Precision = 0.4765
 
 >>> Processing ULB...
 Validation 100-Step Optimum: tau* = 0.4555 | Min Cost: €1,202.81
-Test Set at tau=0.4555 : Cost = €750.61 | Recall = 0.8571 | Precision = 0.9130
+Test Set at tau=0.5000: Cost = €748.61 | Recall = 0.8571 | Precision = 0.9333
+Test Set at tau*=0.4555: Cost = €750.61 | Recall = 0.8571 | Precision = 0.9130
 
-[✓] Saved Cost Curve Figure to: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/figures/fig4_cost_vs_threshold_curves.png
-[✓] Saved 100-step Grid JSON to: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_json/exp1_stage1_coopt_grid.json
-[✓] Saved Table 2 Settings CSV to: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table2_experimental_settings.csv
+[✓] Saved Validation Cost Curve Figure to:
+  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/figures/fig4_cost_vs_threshold_curves.png
+[✓] Saved 100-Step Validation Grid JSON to:
+  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_json/exp1_stage1_coopt_grid.json
+[✓] Saved Table 2 Settings CSV to:
+  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table2_experimental_settings.csv
 
 ================================================================================
-STEP 1 COMPLETE!
+STEP 1 COMPLETE: VALIDATION THRESHOLDS DERIVED ALGORITHMICALLY
 ================================================================================

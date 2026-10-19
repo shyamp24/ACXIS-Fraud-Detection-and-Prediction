@@ -1,78 +1,75 @@
 {
   "paysim": {
     "dataset": "PAYSIM",
-    "tau_1": 0.16838384,
+    "tau_1": 0.21787878787878787,
     "n_tiers": 3,
+    "rf_depth": 5,
     "tier_cutpoints": [
-      92503.35,
-      304476.74
+      103070.18000000001,
+      346227.97333333304
     ],
     "tau_tiers": [
-      0.9326,
-      0.9119,
-      0.8712
+      0.903,
+      0.8888,
+      0.8361
     ],
     "oof_tier_suppressed": [
-      8,
-      33,
-      15
+      24,
+      16,
+      10
     ],
-    "base_cost": 1794792.07,
-    "base_recall": 0.9926918392204629,
-    "base_precision": 0.4780058651026393,
-    "base_f1": 0.6452889944576407,
-    "acxis_cost": 1735292.07,
-    "acxis_recall": 0.9926918392204629,
-    "acxis_precision": 0.4906682721252258,
-    "acxis_f1": 0.6567284448025786,
-    "fps_suppressed": 44,
+    "base_cost": 2200948.26,
+    "base_recall": 0.9841656516443362,
+    "base_precision": 0.5287958115183246,
+    "base_f1": 0.6879523201362281,
+    "acxis_cost": 2139948.26,
+    "acxis_recall": 0.9841656516443362,
+    "acxis_precision": 0.5437415881561238,
+    "acxis_f1": 0.7004768097095795,
+    "fps_suppressed": 42,
     "fns_leaked": 0,
-    "savings": 59500.0,
-    "savings_pct": 3.315147252684262,
+    "savings": 61000.0,
+    "savings_pct": 2.7715326665607307,
     "currency": "\u20b9"
   },
   "ieeecis": {
     "dataset": "IEEECIS",
-    "tau_1": 0.28,
-    "n_tiers": 5,
+    "tau_1": 0.37626262626262624,
+    "n_tiers": 3,
+    "rf_depth": 5,
     "tier_cutpoints": [
-      32.415400000000005,
-      59.0,
-      117.0,
-      226.0
+      49.0,
+      127.607
     ],
     "tau_tiers": [
-      0.805,
-      0.8385,
-      0.8327,
-      0.8194,
-      0.8635
+      0.7836,
+      0.7801,
+      0.7935
     ],
     "oof_tier_suppressed": [
-      43,
-      9,
-      25,
-      66,
-      1
+      4,
+      11,
+      9
     ],
-    "base_cost": 93596.058,
-    "base_recall": 0.8363988383349468,
-    "base_precision": 0.3581347150259067,
-    "base_f1": 0.501523726599913,
-    "acxis_cost": 92376.058,
-    "acxis_recall": 0.8363988383349468,
-    "acxis_precision": 0.3678944006812859,
-    "acxis_f1": 0.511015821381044,
-    "fps_suppressed": 128,
+    "base_cost": 94856.712,
+    "base_recall": 0.7947725072604066,
+    "base_precision": 0.4764944863609983,
+    "base_f1": 0.5957910014513788,
+    "acxis_cost": 94536.712,
+    "acxis_recall": 0.7947725072604066,
+    "acxis_precision": 0.4806791569086651,
+    "acxis_f1": 0.5990514410798979,
+    "fps_suppressed": 30,
     "fns_leaked": 0,
-    "savings": 1220.0,
-    "savings_pct": 1.303473699715003,
+    "savings": 320.0,
+    "savings_pct": 0.3373509298951876,
     "currency": "$"
   },
   "ulb": {
     "dataset": "ULB",
-    "tau_1": 0.4555,
+    "tau_1": 0.45545454545454545,
     "n_tiers": 3,
+    "rf_depth": 5,
     "tier_cutpoints": [
       1.2799999999999998,
       83.60666666666664

@@ -31,16 +31,33 @@ from sklearn.ensemble import RandomForestClassifier
 import shap
 from lime.lime_tabular import LimeTabularExplainer
 
-# Directory Setup
+# Directory Setup (Portable relative paths)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PKG_DIR = os.path.dirname(SCRIPT_DIR)
 RESULTS_CSV_DIR = os.path.join(PKG_DIR, "results_csv")
 RESULTS_JSON_DIR = os.path.join(PKG_DIR, "results_json")
 LOGS_DIR = os.path.join(PKG_DIR, "logs")
+DATA_DIR = os.environ.get("ACXIS_DATA_DIR", os.path.join(PKG_DIR, "data"))
+
+for d in [RESULTS_CSV_DIR, RESULTS_JSON_DIR, LOGS_DIR]:
+    os.makedirs(d, exist_ok=True)
 
 N_SINGLE_TRIALS = 10000
 N_BATCH_TRIALS = 100
 BATCH_SIZE = 1000
+
+DATASET_CANDIDATES = [
+    os.path.join(DATA_DIR, "six.csv"),
+    os.path.join(DATA_DIR, "paysim.csv"),
+    os.path.join(DATA_DIR, "PS_20174392719_1491204439457_log.csv"),
+    "/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/six.csv"
+]
+
+def resolve_file(candidates):
+    for p in candidates:
+        if os.path.isfile(p):
+            return p
+    return None
 
 def compute_percentiles(times_ms):
     times_ms = np.asarray(times_ms, dtype=float)
@@ -59,9 +76,12 @@ def run_latency_benchmark():
     print("EXPERIMENT 6: 100% GENUINE HARDWARE LATENCY & THROUGHPUT BENCHMARK (TABLE 3)")
     print("=" * 80)
     
-    PAYSIM_PATH = "/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/six.csv"
-    print("Loading PaySim transactions for latency benchmark...")
-    df = pd.read_csv(PAYSIM_PATH, nrows=25000)
+    csv_path = resolve_file(DATASET_CANDIDATES)
+    if not csv_path:
+        raise FileNotFoundError("Could not find PaySim CSV data file in configured paths.")
+        
+    print(f"Loading PaySim transactions from: {csv_path}")
+    df = pd.read_csv(csv_path, nrows=25000)
     df = df.drop(columns=['nameOrig', 'nameDest', 'isFlaggedFraud'])
     X_df = pd.get_dummies(df.drop(columns=['isFraud'])).astype(np.float32)
     X_real = X_df.values
@@ -140,140 +160,174 @@ def run_latency_benchmark():
     stats_stage3 = compute_percentiles(t_stage3_single)
     print(f"  Stage 3 Meta: Mean={stats_stage3['mean']:.4f} ms | p95={stats_stage3['p95']:.4f} ms | p99={stats_stage3['p99']:.4f} ms")
     
-    # 4. Full Triggered ACXIS Pipeline
+    # 4. Full Triggered ACXIS Pipeline (Preproc + Stage 1 + TreeSHAP + Stage 3)
     print("\n4. Measuring Full Triggered ACXIS Pipeline (1,000 trials)...")
     t_full_single = []
     for i in range(1000):
         rec = sample_raw_records[i]
         t0 = time.perf_counter()
-        vec = np.zeros((1, len(feature_cols)), dtype=np.float32)
-        vec[0, 0] = rec['step']
-        vec[0, 1] = rec['amount']
-        vec[0, 2] = rec['oldbalanceOrg']
-        vec[0, 3] = rec['newbalanceOrig']
-        vec[0, 4] = rec['oldbalanceDest']
-        vec[0, 5] = rec['newbalanceDest']
+        # Preproc
+        vec = np.zeros(len(feature_cols), dtype=np.float32)
+        vec[0] = rec['step']
+        vec[1] = rec['amount']
+        vec[2] = rec['oldbalanceOrg']
+        vec[3] = rec['newbalanceOrig']
+        vec[4] = rec['oldbalanceDest']
+        vec[5] = rec['newbalanceDest']
         type_col = f"type_{rec['type']}"
         if type_col in feature_cols:
-            vec[0, feature_cols.index(type_col)] = 1.0
-        
-        p = xgb.predict_proba(vec)[0, 1]
-        s = explainer.shap_values(vec, check_additivity=False)
-        j_vec = np.hstack([vec, s])
-        q = rf.predict_proba(j_vec)[0, 1]
+            vec[feature_cols.index(type_col)] = 1.0
+        vec_2d = vec.reshape(1, -1)
+        # Stage 1
+        p = xgb.predict_proba(vec_2d)[0, 1]
+        # TreeSHAP
+        sv = explainer.shap_values(vec_2d, check_additivity=False)
+        # Stage 3
+        j_vec = np.hstack([vec_2d, sv])
+        _ = rf.predict_proba(j_vec)[0, 1]
         t1 = time.perf_counter()
         t_full_single.append((t1 - t0) * 1000.0)
     stats_full = compute_percentiles(t_full_single)
-    print(f"  ACXIS Full Triggered: Mean={stats_full['mean']:.4f} ms | p95={stats_full['p95']:.4f} ms | p99={stats_full['p99']:.4f} ms")
+    print(f"  Full ACXIS Triggered: Mean={stats_full['mean']:.4f} ms | p95={stats_full['p95']:.4f} ms | p99={stats_full['p99']:.4f} ms")
     
-    # 5. LIME Baseline Explainer
-    print("\n5. Measuring LIME Baseline Explainer (100 trials)...")
-    lime_explainer = LimeTabularExplainer(
-        training_data=X_real[:2000],
-        feature_names=feature_cols,
-        class_names=['Normal', 'Fraud'],
-        mode='classification'
-    )
-    t_lime_single = []
+    # 5. Baseline: LIME Explainer
+    print("\n5. Measuring Baseline LIME Explainer Latency (100 trials)...")
+    lime_exp = LimeTabularExplainer(X_real[:5000], feature_names=feature_cols, mode='classification')
+    t_lime = []
     for i in range(100):
-        row = X_real[i]
         t0 = time.perf_counter()
-        _ = lime_explainer.explain_instance(row, xgb.predict_proba, num_features=10, num_samples=500)
+        _ = lime_exp.explain_instance(X_real[i], xgb.predict_proba, num_features=5)
         t1 = time.perf_counter()
-        t_lime_single.append((t1 - t0) * 1000.0)
-    stats_lime = compute_percentiles(t_lime_single)
-    print(f"  LIME Baseline: Mean={stats_lime['mean']:.4f} ms | p95={stats_lime['p95']:.4f} ms | p99={stats_lime['p99']:.4f} ms")
+        t_lime.append((t1 - t0) * 1000.0)
+    stats_lime = compute_percentiles(t_lime)
+    print(f"  LIME: Mean={stats_lime['mean']:.4f} ms | p95={stats_lime['p95']:.4f} ms | p99={stats_lime['p99']:.4f} ms")
     
-    # 6. Measured Batch Throughput (B=1000)
-    print(f"\n6. Measuring Genuine Batch Throughput (B={BATCH_SIZE:,}, {N_BATCH_TRIALS} trials)...")
-    t_batch = []
-    batch_records = X_real[:BATCH_SIZE]
+    # 6. Genuine Batch Throughput (B=1000)
+    print(f"\n6. Measuring Batch Throughput (B={BATCH_SIZE:,}, {N_BATCH_TRIALS} trials)...")
+    batch_X = X_real[:BATCH_SIZE]
+    
+    # Stage 1 Batch
+    t_b_stage1 = []
     for _ in range(N_BATCH_TRIALS):
         t0 = time.perf_counter()
-        _ = xgb.predict_proba(batch_records)
+        _ = xgb.predict_proba(batch_X)
         t1 = time.perf_counter()
-        t_batch.append(t1 - t0)
-    mean_batch_time_sec = float(np.mean(t_batch))
-    throughput_tx_sec = float(BATCH_SIZE / mean_batch_time_sec)
-    print(f"  Stage 1 Batch Throughput: {throughput_tx_sec:,.1f} tx/sec (Mean batch time: {mean_batch_time_sec*1000.0:.2f} ms)")
+        t_b_stage1.append(t1 - t0)
+    th_stage1 = BATCH_SIZE / np.mean(t_b_stage1)
     
-    # Summary Table 3 DataFrame
-    table3_rows = [
+    # TreeSHAP Batch
+    t_b_shap = []
+    for _ in range(20):
+        t0 = time.perf_counter()
+        _ = explainer.shap_values(batch_X, check_additivity=False)
+        t1 = time.perf_counter()
+        t_b_shap.append(t1 - t0)
+    th_shap = BATCH_SIZE / np.mean(t_b_shap)
+    
+    # Stage 3 Batch
+    batch_joint = np.hstack([batch_X, np.zeros((BATCH_SIZE, n_feats), dtype=np.float32)])
+    t_b_stage3 = []
+    for _ in range(N_BATCH_TRIALS):
+        t0 = time.perf_counter()
+        _ = rf.predict_proba(batch_joint)
+        t1 = time.perf_counter()
+        t_b_stage3.append(t1 - t0)
+    th_stage3 = BATCH_SIZE / np.mean(t_b_stage3)
+    
+    th_full = BATCH_SIZE / (np.mean(t_b_stage1) + np.mean(t_b_shap) + np.mean(t_b_stage3))
+    
+    print(f"  Stage 1 Throughput : {th_stage1:,.1f} tx/sec")
+    print(f"  TreeSHAP Throughput: {th_shap:,.1f} tx/sec")
+    print(f"  Stage 3 Throughput : {th_stage3:,.1f} tx/sec")
+    print(f"  Full Batch Trigger : {th_full:,.1f} tx/sec")
+    
+    # Compile Summary Table
+    rows = [
         {
-            'Component / Baseline': 'Preprocessing & Feature Vectorization',
-            'Mean (ms)': stats_preproc['mean'],
-            'SD (ms)': stats_preproc['std'],
-            'p50 (ms)': stats_preproc['p50'],
-            'p95 (ms)': stats_preproc['p95'],
-            'p99 (ms)': stats_preproc['p99'],
-            'Measured Batch Throughput (B=1000, tx/s)': 'N/A'
+            'Pipeline Stage': 'Feature Preprocessing',
+            'Type / Scope': 'Single Transaction',
+            'Mean Latency (ms)': round(stats_preproc['mean'], 4),
+            'Std Dev (ms)': round(stats_preproc['std'], 4),
+            'p50 Tail (ms)': round(stats_preproc['p50'], 4),
+            'p95 Tail (ms)': round(stats_preproc['p95'], 4),
+            'p99 Tail (ms)': round(stats_preproc['p99'], 4),
+            'Batch Throughput (tx/s)': 'N/A'
         },
         {
-            'Component / Baseline': 'Stage 1 Core XGBoost (Fast-Path)',
-            'Mean (ms)': stats_stage1['mean'],
-            'SD (ms)': stats_stage1['std'],
-            'p50 (ms)': stats_stage1['p50'],
-            'p95 (ms)': stats_stage1['p95'],
-            'p99 (ms)': stats_stage1['p99'],
-            'Measured Batch Throughput (B=1000, tx/s)': f"{throughput_tx_sec:,.1f}"
+            'Pipeline Stage': 'Stage 1 Core (Fast-Path XGBoost)',
+            'Type / Scope': 'All Transactions (100%)',
+            'Mean Latency (ms)': round(stats_stage1['mean'], 4),
+            'Std Dev (ms)': round(stats_stage1['std'], 4),
+            'p50 Tail (ms)': round(stats_stage1['p50'], 4),
+            'p95 Tail (ms)': round(stats_stage1['p95'], 4),
+            'p99 Tail (ms)': round(stats_stage1['p99'], 4),
+            'Batch Throughput (tx/s)': f"{th_stage1:,.1f}"
         },
         {
-            'Component / Baseline': 'TreeSHAP Exact Feature Attribution',
-            'Mean (ms)': stats_shap['mean'],
-            'SD (ms)': stats_shap['std'],
-            'p50 (ms)': stats_shap['p50'],
-            'p95 (ms)': stats_shap['p95'],
-            'p99 (ms)': stats_shap['p99'],
-            'Measured Batch Throughput (B=1000, tx/s)': 'N/A'
+            'Pipeline Stage': 'Stage 2 TreeSHAP Attribution',
+            'Type / Scope': 'Candidate Alerts Only',
+            'Mean Latency (ms)': round(stats_shap['mean'], 4),
+            'Std Dev (ms)': round(stats_shap['std'], 4),
+            'p50 Tail (ms)': round(stats_shap['p50'], 4),
+            'p95 Tail (ms)': round(stats_shap['p95'], 4),
+            'p99 Tail (ms)': round(stats_shap['p99'], 4),
+            'Batch Throughput (tx/s)': f"{th_shap:,.1f}"
         },
         {
-            'Component / Baseline': 'Stage 3 Random Forest Meta-Inference',
-            'Mean (ms)': stats_stage3['mean'],
-            'SD (ms)': stats_stage3['std'],
-            'p50 (ms)': stats_stage3['p50'],
-            'p95 (ms)': stats_stage3['p95'],
-            'p99 (ms)': stats_stage3['p99'],
-            'Measured Batch Throughput (B=1000, tx/s)': 'N/A'
+            'Pipeline Stage': 'Stage 3 Meta-Classifier (Random Forest)',
+            'Type / Scope': 'Candidate Alerts Only',
+            'Mean Latency (ms)': round(stats_stage3['mean'], 4),
+            'Std Dev (ms)': round(stats_stage3['std'], 4),
+            'p50 Tail (ms)': round(stats_stage3['p50'], 4),
+            'p95 Tail (ms)': round(stats_stage3['p95'], 4),
+            'p99 Tail (ms)': round(stats_stage3['p99'], 4),
+            'Batch Throughput (tx/s)': f"{th_stage3:,.1f}"
         },
         {
-            'Component / Baseline': 'Full Triggered ACXIS Pipeline (Stage 1+2+3)',
-            'Mean (ms)': stats_full['mean'],
-            'SD (ms)': stats_full['std'],
-            'p50 (ms)': stats_full['p50'],
-            'p95 (ms)': stats_full['p95'],
-            'p99 (ms)': stats_full['p99'],
-            'Measured Batch Throughput (B=1000, tx/s)': 'N/A'
+            'Pipeline Stage': 'Full Triggered ACXIS Pipeline',
+            'Type / Scope': 'Candidate Alerts End-to-End',
+            'Mean Latency (ms)': round(stats_full['mean'], 4),
+            'Std Dev (ms)': round(stats_full['std'], 4),
+            'p50 Tail (ms)': round(stats_full['p50'], 4),
+            'p95 Tail (ms)': round(stats_full['p95'], 4),
+            'p99 Tail (ms)': round(stats_full['p99'], 4),
+            'Batch Throughput (tx/s)': f"{th_full:,.1f}"
         },
         {
-            'Component / Baseline': 'LIME Baseline Tabular Explainer',
-            'Mean (ms)': stats_lime['mean'],
-            'SD (ms)': stats_lime['std'],
-            'p50 (ms)': stats_lime['p50'],
-            'p95 (ms)': stats_lime['p95'],
-            'p99 (ms)': stats_lime['p99'],
-            'Measured Batch Throughput (B=1000, tx/s)': 'N/A'
+            'Pipeline Stage': 'LIME Baseline Explainer',
+            'Type / Scope': 'Baseline Comparison',
+            'Mean Latency (ms)': round(stats_lime['mean'], 4),
+            'Std Dev (ms)': round(stats_lime['std'], 4),
+            'p50 Tail (ms)': round(stats_lime['p50'], 4),
+            'p95 Tail (ms)': round(stats_lime['p95'], 4),
+            'p99 Tail (ms)': round(stats_lime['p99'], 4),
+            'Batch Throughput (tx/s)': 'N/A'
         }
     ]
     
-    df_table3 = pd.DataFrame(table3_rows)
+    df_out = pd.DataFrame(rows)
     csv_path = os.path.join(RESULTS_CSV_DIR, "table3_latency_and_throughput.csv")
-    df_table3.to_csv(csv_path, index=False)
-    print(f"\n[✓] Saved genuine Table 3 CSV to:\n  {csv_path}")
+    df_out.to_csv(csv_path, index=False)
+    print(f"\n[✓] Saved Table 3 Latency CSV to:\n  {csv_path}")
     
-    all_json = {
-        'preprocessing': stats_preproc,
-        'stage1_xgboost': stats_stage1,
-        'treeshap': stats_shap,
-        'stage3_rf': stats_stage3,
-        'acxis_full': stats_full,
-        'lime': stats_lime,
-        'batch_throughput_tx_sec': throughput_tx_sec
-    }
     json_path = os.path.join(RESULTS_JSON_DIR, "exp6_latency_results.json")
     with open(json_path, "w") as f:
-        json.dump(all_json, f, indent=2)
-    print(f"[✓] Saved genuine Table 3 JSON to:\n  {json_path}")
-    print("=" * 80)
+        json.dump({
+            'preprocessing': stats_preproc,
+            'stage1': stats_stage1,
+            'treeshap': stats_shap,
+            'stage3': stats_stage3,
+            'full_pipeline': stats_full,
+            'lime': stats_lime,
+            'batch_throughput_tx_per_sec': {
+                'stage1': th_stage1,
+                'treeshap': th_shap,
+                'stage3': th_stage3,
+                'full_pipeline': th_full
+            }
+        }, f, indent=2)
+    print(f"[✓] Saved Latency JSON to:\n  {json_path}")
+    print("\n" + "=" * 80)
 
 if __name__ == '__main__':
     run_latency_benchmark()

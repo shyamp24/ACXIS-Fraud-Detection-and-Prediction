@@ -1,53 +1,63 @@
-=============================================================================
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/sklearn/model_selection/_split.py:737: UserWarning: The least populated class in y has only 4 members, which is less than n_splits=5.
+  warnings.warn(
+================================================================================
 STARTING EXPERIMENT 5: 1,000-ITERATION STRATIFIED BOOTSTRAP RESAMPLING
-=============================================================================
+================================================================================
 
 ================================================================================
-RUNNING 100% GENUINE 1,000 BOOTSTRAP RESAMPLING FOR: PAYSIM
+RUNNING 1,000 STRATIFIED BOOTSTRAP REPLICATES: PAYSIM
 ================================================================================
-Completed 1,000 resamples in 115.78 seconds.
------------------------------------------------------------------
-RESAMPLING SUMMARY FOR PAYSIM:
-Mean Savings: ₹59,126.00 +/- ₹10,061.09 (3.3294% +/- 0.6459%)
-95% CI: [2.1972%, 4.7456%]
-Mean FPs Suppressed: 43.8 +/- 6.6
-Mean FNs Leaked:     0.0 +/- 0.0 (100% Zero-Leak Guarantee Verified)
-Wilcoxon W: 500500.0 | p-value: 1.6273150079298502e-165 | Cohen's d: 5.88
------------------------------------------------------------------
+  Iteration  250/1000 | Mean Savings: ₹60,852.00 (2.91%) | Max Leaked FN: 0
+  Iteration  500/1000 | Mean Savings: ₹60,349.00 (2.83%) | Max Leaked FN: 0
+  Iteration  750/1000 | Mean Savings: ₹60,409.33 (2.83%) | Max Leaked FN: 0
+  Iteration 1000/1000 | Mean Savings: ₹60,226.50 (2.83%) | Max Leaked FN: 0
+Completed 1,000 iterations in 87.3s
+
+--- 1,000-ITERATION RESAMPLING RESULTS ---
+Baseline Cost : ₹2,192,028.16 ± ₹383,841.86 [95% CI: ₹1,506,258.33, ₹2,979,305.94]
+ACXIS Cost    : ₹2,131,801.66 ± ₹383,879.62 [95% CI: ₹1,439,403.66, ₹2,915,977.64]
+Absolute Sav. : ₹60,226.50 ± ₹11,711.05 [95% CI: ₹38,987.50, ₹85,500.00]
+Relative Sav. : 2.83% ± 0.75% [95% CI: 1.63%, 4.52%]
+Suppressed FP : 41.7 ± 6.5 [95% CI: 30, 56]
+Leaked FN     : 0.0000 (Max across all resamples = 0)
 
 ================================================================================
-RUNNING 100% GENUINE 1,000 BOOTSTRAP RESAMPLING FOR: IEEECIS
+RUNNING 1,000 STRATIFIED BOOTSTRAP REPLICATES: IEEECIS
 ================================================================================
-Completed 1,000 resamples in 7.80 seconds.
------------------------------------------------------------------
-RESAMPLING SUMMARY FOR IEEECIS:
-Mean Savings: $1,220.61 +/- $116.51 (1.3142% +/- 0.1500%)
-95% CI: [1.0591%, 1.6549%]
-Mean FPs Suppressed: 128.0 +/- 11.4
-Mean FNs Leaked:     0.0 +/- 0.0 (100% Zero-Leak Guarantee Verified)
-Wilcoxon W: 500500.0 | p-value: 1.6322887787982691e-165 | Cohen's d: 10.48
------------------------------------------------------------------
+  Iteration  250/1000 | Mean Savings: $319.06 (0.34%) | Max Leaked FN: 0
+  Iteration  500/1000 | Mean Savings: $321.18 (0.34%) | Max Leaked FN: 0
+  Iteration  750/1000 | Mean Savings: $320.84 (0.34%) | Max Leaked FN: 0
+  Iteration 1000/1000 | Mean Savings: $320.67 (0.34%) | Max Leaked FN: 0
+Completed 1,000 iterations in 5.1s
+
+--- 1,000-ITERATION RESAMPLING RESULTS ---
+Baseline Cost : $95,272.19 ± $7,049.36 [95% CI: $82,219.48, $109,734.75]
+ACXIS Cost    : $94,951.52 ± $7,048.70 [95% CI: $81,879.23, $109,450.82]
+Absolute Sav. : $320.67 ± $64.98 [95% CI: $209.88, $455.00]
+Relative Sav. : 0.34% ± 0.07% [95% CI: 0.21%, 0.49%]
+Suppressed FP : 30.0 ± 5.6 [95% CI: 20, 41]
+Leaked FN     : 0.0000 (Max across all resamples = 0)
 
 ================================================================================
-RUNNING 100% GENUINE 1,000 BOOTSTRAP RESAMPLING FOR: ULB
+RUNNING 1,000 STRATIFIED BOOTSTRAP REPLICATES: ULB
 ================================================================================
-Completed 1,000 resamples in 3.48 seconds.
------------------------------------------------------------------
-RESAMPLING SUMMARY FOR ULB:
-Mean Savings: €0.00 +/- €0.00 (0.0000% +/- 0.0000%)
-95% CI: [0.0000%, 0.0000%]
-Mean FPs Suppressed: 0.0 +/- 0.0
-Mean FNs Leaked:     0.0 +/- 0.0 (100% Zero-Leak Guarantee Verified)
-Wilcoxon W: nan | p-value: 1.0 | Cohen's d: 0.00
------------------------------------------------------------------
+  Iteration  250/1000 | Mean Savings: €0.00 (0.00%) | Max Leaked FN: 0
+  Iteration  500/1000 | Mean Savings: €0.00 (0.00%) | Max Leaked FN: 0
+  Iteration  750/1000 | Mean Savings: €0.00 (0.00%) | Max Leaked FN: 0
+  Iteration 1000/1000 | Mean Savings: €0.00 (0.00%) | Max Leaked FN: 0
+Completed 1,000 iterations in 2.3s
 
-[✓] Saved complete genuine bootstrap results to:
+--- 1,000-ITERATION RESAMPLING RESULTS ---
+Baseline Cost : €727.66 ± €596.66 [95% CI: €13.22, €2,103.63]
+ACXIS Cost    : €727.66 ± €596.66 [95% CI: €13.22, €2,103.63]
+Absolute Sav. : €0.00 ± €0.00 [95% CI: €0.00, €0.00]
+Relative Sav. : 0.00% ± 0.00% [95% CI: 0.00%, 0.00%]
+Suppressed FP : 0.0 ± 0.0 [95% CI: 0, 0]
+Leaked FN     : 0.0000 (Max across all resamples = 0)
+
+[✓] Saved complete 1,000-Bootstrap Master JSON to:
   /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_json/exp5_bootstrap_results.json
-[✓] Saved genuine Table 5 master CSV to:
+[✓] Saved Table 5 Resampling CI Master CSV to:
   /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table5_resampling_ci_master.csv
-[✓] Saved genuine Table 7 master CSV to:
-  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table7_statistical_significance.csv
 
-=============================================================================
-EXPERIMENT 5 COMPLETED SUCCESSFULLY!
-=============================================================================
+================================================================================

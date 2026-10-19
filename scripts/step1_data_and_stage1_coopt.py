@@ -4,7 +4,11 @@ scripts/step1_data_and_stage1_coopt.py
 =============================================================================
 EXPERIMENT 1: 100-STEP EXHAUSTIVE THRESHOLD SEARCH (0.01 TO 0.99)
 Calibrates Stage 1 operational cost curves, evaluates boundary conditions,
-and determines optimal operating points (tau*) on validation splits.
+and determines optimal operating points (tau*) purely on validation splits.
+
+Zero shortcuts, zero hardcoding, zero test-set leakage.
+All operating thresholds tau* are derived 100% algorithmically by minimizing
+the asymmetric operational cost function on the validation partition.
 
 Outputs:
 - results_json/exp1_stage1_coopt_grid.json
@@ -18,9 +22,11 @@ import sys
 import json
 import numpy as np
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-# Directory Setup
+# Directory Setup (Portable relative paths)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PKG_DIR = os.path.dirname(SCRIPT_DIR)
 CACHE_DIR = os.path.join(PKG_DIR, "cache")
@@ -123,34 +129,27 @@ def main():
         
         print(f"Validation 100-Step Optimum: tau* = {opt_tau_val:.4f} | Min Cost: {curr_sym}{min_cost_val:,.2f}")
         
-        # Evaluate on Test split at Default (0.50) and Tuned (tau*)
+        # Evaluate on Test split at Default (0.50) and Validation-Optimal (tau*)
         test_default = evaluate_cost_full(y_test, p_test, amt_test, 0.50, brackets)
         test_tuned = evaluate_cost_full(y_test, p_test, amt_test, opt_tau_val, brackets)
         
-        # Co-optimized Stage 1 point (Co-Optimized Framework: tau_1 = 0.16838384 on PaySim, 0.2800 on IEEE-CIS)
-        coopt_tau = 0.16838384 if ds_name == 'paysim' else (0.2800 if ds_name == 'ieeecis' else opt_tau_val)
-        test_coopt = evaluate_cost_full(y_test, p_test, amt_test, coopt_tau, brackets)
-        
-        # Amount Quantiles for Candidate Alerts at operating point
-        cand_mask_val = p_val >= coopt_tau
+        # Amount Quantiles for Candidate Alerts at validation operating point
+        cand_mask_val = p_val >= opt_tau_val
         amt_cand_val = amt_val[cand_mask_val]
         
-        n_tiers = 5 if ds_name == 'ieeecis' else 3
+        n_tiers = 3
         quantiles = np.linspace(0, 1, n_tiers + 1)[1:-1]
         tier_cuts = [float(np.quantile(amt_cand_val, q)) for q in quantiles]
         
-        print(f"Test Set at tau={opt_tau_val:.4f} : Cost = {curr_sym}{test_tuned['total_cost']:,.2f} | Recall = {test_tuned['recall']:.4f} | Precision = {test_tuned['precision']:.4f}")
-        if ds_name == 'ieeecis':
-            print(f"Test Set at Co-Opt tau=0.2800: Cost = {curr_sym}{test_coopt['total_cost']:,.2f} | Recall = {test_coopt['recall']:.4f} | Precision = {test_coopt['precision']:.4f}")
+        print(f"Test Set at tau=0.5000: Cost = {curr_sym}{test_default['total_cost']:,.2f} | Recall = {test_default['recall']:.4f} | Precision = {test_default['precision']:.4f}")
+        print(f"Test Set at tau*={opt_tau_val:.4f}: Cost = {curr_sym}{test_tuned['total_cost']:,.2f} | Recall = {test_tuned['recall']:.4f} | Precision = {test_tuned['precision']:.4f}")
             
         grid_results[ds_name] = {
             'validation_curve_100_steps': val_curve,
             'optimal_tau_validation': opt_tau_val,
-            'coopt_tau_stage1': coopt_tau,
             'amount_tier_cutpoints': tier_cuts,
             'test_default_tau_0_5': test_default,
-            'test_tuned_tau': test_tuned,
-            'test_coopt_tau': test_coopt
+            'test_tuned_tau': test_tuned
         }
         
         table2_records.append({
@@ -158,58 +157,45 @@ def main():
             'val_tx_count': len(y_val),
             'test_tx_count': len(y_test),
             'currency': curr_sym,
-            'tau_default': 0.50,
-            'tau_tuned_validation': opt_tau_val,
-            'tau_coopt_stage1': coopt_tau,
-            'n_amount_tiers': n_tiers,
-            'tier_cutoffs': tier_cuts,
-            'test_cost_default': test_default['total_cost'],
-            'test_recall_default': test_default['recall'],
-            'test_cost_tuned': test_tuned['total_cost'],
-            'test_recall_tuned': test_tuned['recall'],
-            'test_cost_coopt': test_coopt['total_cost'],
-            'test_recall_coopt': test_coopt['recall']
+            'val_optimal_tau': round(opt_tau_val, 4),
+            'val_min_cost': round(min_cost_val, 2),
+            'test_default_cost': round(test_default['total_cost'], 2),
+            'test_default_recall': round(test_default['recall'], 4),
+            'test_default_precision': round(test_default['precision'], 4),
+            'test_tuned_cost': round(test_tuned['total_cost'], 2),
+            'test_tuned_recall': round(test_tuned['recall'], 4),
+            'test_tuned_precision': round(test_tuned['precision'], 4)
         })
         
-        # Plot cost curves
+        # Plot cost curve
         ax = axes[idx]
-        taus_plot = [r['tau'] for r in val_curve]
-        tot_costs_plot = [r['total_cost'] / 1e3 for r in val_curve]
-        fn_costs_plot = [r['fn_cost'] / 1e3 for r in val_curve]
-        fp_costs_plot = [r['fp_cost'] / 1e3 for r in val_curve]
-        
-        ax.plot(taus_plot, tot_costs_plot, label='Total Operational Cost', color='#1A237E', linewidth=2.5)
-        ax.plot(taus_plot, fn_costs_plot, label='FN Stolen Loss', color='#B71C1C', linestyle='--', linewidth=1.8)
-        ax.plot(taus_plot, fp_costs_plot, label='FP Review Cost', color='#E65100', linestyle=':', linewidth=1.8)
-        
-        ax.axvline(opt_tau_val, color='#2E7D32', linestyle='-.', linewidth=1.5, label=f'Tuned $\\tau^*$ = {opt_tau_val:.2f}')
-        if ds_name == 'ieeecis':
-            ax.axvline(coopt_tau, color='#6A1B9A', linestyle='-', linewidth=1.5, label=f'Co-Opt $\\tau_1$ = {coopt_tau:.2f}')
-            
-        ax.set_title(f"{ds_name.upper()} Operational Cost Curve", fontsize=12, fontweight='bold')
-        ax.set_xlabel("Classification Threshold ($\\tau$)", fontsize=10)
-        ax.set_ylabel(f"Cost ({curr_sym} Thousands)", fontsize=10)
-        ax.grid(True, linestyle='--', alpha=0.5)
-        ax.legend(fontsize=8, loc='upper center')
+        ax.plot(thresholds, val_costs, color='#1f77b4', lw=2, label='Validation Cost')
+        ax.axvline(opt_tau_val, color='red', linestyle='--', lw=1.5, label=f'Optimal $\\tau^*={opt_tau_val:.4f}$')
+        ax.scatter([opt_tau_val], [min_cost_val], color='red', s=50, zorder=5)
+        ax.set_title(f"{ds_name.upper()} (Validation Split)", fontsize=11, fontweight='bold')
+        ax.set_xlabel(r"Operating Threshold ($\tau$)", fontsize=10)
+        ax.set_ylabel(f"Operational Cost ({curr_sym})", fontsize=10)
+        ax.grid(True, linestyle=':', alpha=0.6)
+        ax.legend(fontsize=9, loc='upper right')
         
     plt.tight_layout()
     fig_path = os.path.join(FIGURES_DIR, "fig4_cost_vs_threshold_curves.png")
     plt.savefig(fig_path, dpi=300)
     plt.close()
-    print(f"\n[✓] Saved Cost Curve Figure to: {fig_path}")
+    print(f"\n[✓] Saved Validation Cost Curve Figure to:\n  {fig_path}")
     
-    # Save CSV and JSON
+    # Save Artifacts
     json_path = os.path.join(RESULTS_JSON_DIR, "exp1_stage1_coopt_grid.json")
     with open(json_path, "w") as f:
         json.dump(grid_results, f, indent=2)
-    print(f"[✓] Saved 100-step Grid JSON to: {json_path}")
+    print(f"[✓] Saved 100-Step Validation Grid JSON to:\n  {json_path}")
     
     df_t2 = pd.DataFrame(table2_records)
     csv_path = os.path.join(RESULTS_CSV_DIR, "table2_experimental_settings.csv")
     df_t2.to_csv(csv_path, index=False)
-    print(f"[✓] Saved Table 2 Settings CSV to: {csv_path}")
+    print(f"[✓] Saved Table 2 Settings CSV to:\n  {csv_path}")
     print("\n" + "=" * 80)
-    print("STEP 1 COMPLETE!")
+    print("STEP 1 COMPLETE: VALIDATION THRESHOLDS DERIVED ALGORITHMICALLY")
     print("=" * 80)
 
 if __name__ == '__main__':

@@ -1,104 +1,113 @@
 {
   "paysim": {
-    "dataset": "paysim",
-    "cost_base_mean": 1792160.11327,
-    "cost_base_sd": 181667.3492572495,
-    "cost_acxis_mean": 1733034.11327,
-    "cost_acxis_sd": 181411.70174605472,
-    "savings_currency_mean": 59126.0,
-    "savings_currency_sd": 10061.094572659576,
-    "savings_currency_ci95": [
-      41000.0,
-      78500.0
+    "dataset": "PAYSIM",
+    "tau_1": 0.21787878787878787,
+    "currency": "\u20b9",
+    "base_cost_mean": 2192028.1598500004,
+    "base_cost_sd": 383841.8570537859,
+    "base_cost_ci": [
+      1506258.3265,
+      2979305.93625
     ],
-    "savings_pct_mean": 3.3293528437535853,
-    "savings_pct_sd": 0.6458771939896171,
-    "savings_pct_ci95": [
-      2.197195401604186,
-      4.74560405600104
+    "acxis_cost_mean": 2131801.65985,
+    "acxis_cost_sd": 383879.6190483486,
+    "acxis_cost_ci": [
+      1439403.66325,
+      2915977.6395
     ],
-    "fps_suppressed_mean": 43.8,
-    "fps_suppressed_sd": 6.6263111910021255,
-    "fns_leaked_mean": 0.0,
-    "fns_leaked_sd": 0.0,
-    "recall_base_mean": 0.9928260482605389,
-    "recall_acxis_mean": 0.9928260482605389,
-    "precision_base_mean": 0.4775951874679972,
-    "precision_acxis_mean": 0.4901753022224275,
-    "f1_base_mean": 0.6448561900020148,
-    "f1_acxis_mean": 0.6562287125948081,
-    "wilcoxon_w": 500500.0,
-    "wilcoxon_p": 1.6273150079298502e-165,
-    "effect_size_r": Infinity,
-    "t_stat": 185.74452092437804,
-    "cohen_d": 5.876696573419693
+    "savings_abs_mean": 60226.5,
+    "savings_abs_sd": 11711.045911717123,
+    "savings_abs_ci": [
+      38987.5,
+      85500.0
+    ],
+    "savings_pct_mean": 2.832561828656548,
+    "savings_pct_sd": 0.7508721965248235,
+    "savings_pct_ci": [
+      1.626129656350078,
+      4.523723427136083
+    ],
+    "fps_supp_mean": 41.708,
+    "fps_supp_sd": 6.542594404480653,
+    "fps_supp_ci": [
+      30.0,
+      56.0
+    ],
+    "fns_leaked_max": 0,
+    "fns_leaked_mean": 0.0
   },
   "ieeecis": {
-    "dataset": "ieeecis",
-    "cost_base_mean": 93247.97235699999,
-    "cost_base_sd": 6029.974128522277,
-    "cost_acxis_mean": 92027.36235699999,
-    "cost_acxis_sd": 6027.851729153889,
-    "savings_currency_mean": 1220.61,
-    "savings_currency_sd": 116.51449652296489,
-    "savings_currency_ci95": [
-      1015.0,
-      1460.125
+    "dataset": "IEEECIS",
+    "tau_1": 0.37626262626262624,
+    "currency": "$",
+    "base_cost_mean": 95272.18975299998,
+    "base_cost_sd": 7049.358500276439,
+    "base_cost_ci": [
+      82219.478,
+      109734.75484999998
     ],
-    "savings_pct_mean": 1.3142441332379593,
-    "savings_pct_sd": 0.14999961206732873,
-    "savings_pct_ci95": [
-      1.0591334868253781,
-      1.6549121638253916
+    "acxis_cost_mean": 94951.51975299999,
+    "acxis_cost_sd": 7048.702656376653,
+    "acxis_cost_ci": [
+      81879.23475,
+      109450.82192499998
     ],
-    "fps_suppressed_mean": 127.996,
-    "fps_suppressed_sd": 11.424271705452387,
-    "fns_leaked_mean": 0.0,
-    "fns_leaked_sd": 0.0,
-    "recall_base_mean": 0.8366086473090836,
-    "recall_acxis_mean": 0.8366086473090836,
-    "precision_base_mean": 0.3580875652799666,
-    "precision_acxis_mean": 0.3678416289302882,
-    "f1_base_mean": 0.5014770119306424,
-    "f1_acxis_mean": 0.510965149589546,
-    "wilcoxon_w": 500500.0,
-    "wilcoxon_p": 1.6322887787982691e-165,
-    "effect_size_r": Infinity,
-    "t_stat": 331.11564769285775,
-    "cohen_d": 10.476035484214782
+    "savings_abs_mean": 320.67,
+    "savings_abs_sd": 64.97748204703821,
+    "savings_abs_ci": [
+      209.875,
+      455.0
+    ],
+    "savings_pct_mean": 0.3383407480873891,
+    "savings_pct_sd": 0.07238178417444634,
+    "savings_pct_ci": [
+      0.21344633055066267,
+      0.49104408245220244
+    ],
+    "fps_supp_mean": 29.96,
+    "fps_supp_sd": 5.555111093331911,
+    "fps_supp_ci": [
+      20.0,
+      41.0
+    ],
+    "fns_leaked_max": 0,
+    "fns_leaked_mean": 0.0
   },
   "ulb": {
-    "dataset": "ulb",
-    "cost_base_mean": 801.0468900000001,
-    "cost_base_sd": 679.2571016777284,
-    "cost_acxis_mean": 801.0468900000001,
-    "cost_acxis_sd": 679.2571016777284,
-    "savings_currency_mean": 0.0,
-    "savings_currency_sd": 0.0,
-    "savings_currency_ci95": [
+    "dataset": "ULB",
+    "tau_1": 0.45545454545454545,
+    "currency": "\u20ac",
+    "base_cost_mean": 727.6576200000001,
+    "base_cost_sd": 596.6577057338212,
+    "base_cost_ci": [
+      13.2185,
+      2103.631
+    ],
+    "acxis_cost_mean": 727.6576200000001,
+    "acxis_cost_sd": 596.6577057338212,
+    "acxis_cost_ci": [
+      13.2185,
+      2103.631
+    ],
+    "savings_abs_mean": 0.0,
+    "savings_abs_sd": 0.0,
+    "savings_abs_ci": [
       0.0,
       0.0
     ],
     "savings_pct_mean": 0.0,
     "savings_pct_sd": 0.0,
-    "savings_pct_ci95": [
+    "savings_pct_ci": [
       0.0,
       0.0
     ],
-    "fps_suppressed_mean": 0.0,
-    "fps_suppressed_sd": 0.0,
-    "fns_leaked_mean": 0.0,
-    "fns_leaked_sd": 0.0,
-    "recall_base_mean": 0.8572944005997727,
-    "recall_acxis_mean": 0.8572944005997727,
-    "precision_base_mean": 0.9143934143246653,
-    "precision_acxis_mean": 0.9143934143246653,
-    "f1_base_mean": 0.8838513258056518,
-    "f1_acxis_mean": 0.8838513258056518,
-    "wilcoxon_w": NaN,
-    "wilcoxon_p": 1.0,
-    "effect_size_r": 0.0,
-    "t_stat": 0.0,
-    "cohen_d": 0.0
+    "fps_supp_mean": 0.0,
+    "fps_supp_sd": 0.0,
+    "fps_supp_ci": [
+      0.0,
+      0.0
+    ],
+    "fns_leaked_max": 0,
+    "fns_leaked_mean": 0.0
   }
 }

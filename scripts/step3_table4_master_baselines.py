@@ -2,7 +2,7 @@
 """
 scripts/step3_table4_master_baselines.py
 =============================================================================
-100% GENUINE COMPARATIVE BASELINE BENCHMARK (TABLE 4) UNDER OPTION A+C
+100% GENUINE COMPARATIVE BASELINE BENCHMARK (TABLE 4)
 ZERO SHORTCUTS, ZERO ESTIMATED NUMBERS, ZERO SYNTHETIC SUBSETS
 Strictly follows Rule 0 and the 7 Forensic Peer-Review Verification Rules.
 
@@ -19,8 +19,7 @@ Evaluates across PaySim and IEEE-CIS:
 10. XAI Heuristic Rule Filter [Formally Defined]
 11. Stage 1 Core (Default tau=0.5)
 12. Stage 2 Tuned (tau=tau*, No Filter)
-13. Stage 1 Co-Optimized (tau=tau_1, No Filter)
-14. ACXIS (Proposed Stage 1+2+3 under Co-Optimized Framework)
+13. ACXIS (Proposed Stage 1+2+3 at tau*)
 
 Outputs:
 - results_json/exp3_table4_baselines.json
@@ -48,25 +47,44 @@ from sklearn.metrics import roc_auc_score, average_precision_score
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(line_buffering=True)
 
-# Directory Setup
+# Directory Setup (Portable relative paths)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PKG_DIR = os.path.dirname(SCRIPT_DIR)
 CACHE_DIR = os.path.join(PKG_DIR, "cache")
 RESULTS_CSV_DIR = os.path.join(PKG_DIR, "results_csv")
 RESULTS_JSON_DIR = os.path.join(PKG_DIR, "results_json")
 LOGS_DIR = os.path.join(PKG_DIR, "logs")
+DATA_DIR = os.environ.get("ACXIS_DATA_DIR", os.path.join(PKG_DIR, "data"))
 
-os.makedirs(RESULTS_CSV_DIR, exist_ok=True)
-os.makedirs(RESULTS_JSON_DIR, exist_ok=True)
-os.makedirs(LOGS_DIR, exist_ok=True)
+for d in [RESULTS_CSV_DIR, RESULTS_JSON_DIR, LOGS_DIR]:
+    os.makedirs(d, exist_ok=True)
 
-DATA_PATHS = {
-    'paysim': "/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/six.csv",
-    'ieeecis_tx': "/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/Datasets/IEEE-ICS/ieee-fraud-detection/train_transaction.csv",
-    'ieeecis_id': "/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/Datasets/IEEE-ICS/ieee-fraud-detection/train_identity.csv"
+DATASET_FALLBACKS = {
+    'paysim': [
+        os.path.join(DATA_DIR, "six.csv"),
+        os.path.join(DATA_DIR, "paysim.csv"),
+        os.path.join(DATA_DIR, "PS_20174392719_1491204439457_log.csv"),
+        "/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/six.csv"
+    ],
+    'ieeecis_tx': [
+        os.path.join(DATA_DIR, "train_transaction.csv"),
+        os.path.join(DATA_DIR, "ieee-fraud-detection/train_transaction.csv"),
+        "/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/Datasets/IEEE-ICS/ieee-fraud-detection/train_transaction.csv"
+    ],
+    'ieeecis_id': [
+        os.path.join(DATA_DIR, "train_identity.csv"),
+        os.path.join(DATA_DIR, "ieee-fraud-detection/train_identity.csv"),
+        "/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/Datasets/IEEE-ICS/ieee-fraud-detection/train_identity.csv"
+    ]
 }
 
-# Asymmetric Cost Schedules
+def resolve_file(candidates):
+    for p in candidates:
+        if os.path.isfile(p):
+            return p
+    return None
+
+# Asymmetric Operational Cost Schedules
 brackets_paysim = [
     (50_000, 500), (100_000, 1000), (150_000, 1500), (200_000, 2000),
     (500_000, 3000), (1_000_000, 5000), (float('inf'), 10000)
@@ -129,14 +147,15 @@ def save_checkpoint(ds_name, results):
 
 def run_benchmark_for_dataset(ds_name):
     print("\n" + "=" * 80)
-    print(f"100% GENUINE BASELINE BENCHMARK FOR: {ds_name.upper()}")
+    print(f"GENUINE BASELINE BENCHMARK FOR: {ds_name.upper()}")
     print("=" * 80)
     
     if ds_name == 'paysim':
         brackets = brackets_paysim
         currency = "₹"
-        print("Loading PaySim dataset from six.csv...")
-        df = pd.read_csv(DATA_PATHS['paysim'])
+        csv_path = resolve_file(DATASET_FALLBACKS['paysim'])
+        print(f"Loading PaySim dataset from: {csv_path}")
+        df = pd.read_csv(csv_path)
         df = df.drop(columns=['nameOrig', 'nameDest', 'isFlaggedFraud'])
         X = df.drop(columns=['isFraud'])
         y = df['isFraud'].astype(int)
@@ -160,9 +179,11 @@ def run_benchmark_for_dataset(ds_name):
     elif ds_name == 'ieeecis':
         brackets = brackets_ieeecis
         currency = "$"
-        print("Loading IEEE-CIS transaction and identity tables...")
-        tx = pd.read_csv(DATA_PATHS['ieeecis_tx'])
-        idn = pd.read_csv(DATA_PATHS['ieeecis_id'])
+        tx_path = resolve_file(DATASET_FALLBACKS['ieeecis_tx'])
+        id_path = resolve_file(DATASET_FALLBACKS['ieeecis_id'])
+        print(f"Loading IEEE-CIS transaction ({tx_path}) and identity ({id_path})...")
+        tx = pd.read_csv(tx_path)
+        idn = pd.read_csv(id_path)
         df = tx.merge(idn, on='TransactionID', how='left').drop(columns=['TransactionID'])
         df = df.rename(columns={'TransactionAmt': 'amount'})
         del tx, idn
@@ -200,7 +221,7 @@ def run_benchmark_for_dataset(ds_name):
             print(f"[Checkpoint] Warning reading checkpoint: {e}")
             results = {}
     
-    # 1. Classical Baselines
+    # 1. Classical Machine Learning Baselines
     models = {
         'Logistic Regression': LogisticRegression(max_iter=1000, class_weight='balanced', random_state=42),
         'Decision Tree': DecisionTreeClassifier(max_depth=10, class_weight='balanced', random_state=42),
@@ -250,7 +271,7 @@ def run_benchmark_for_dataset(ds_name):
         else:
             X_res, y_res = smote.fit_resample(X1_train, y_train)
             
-        xgb_smote = XGBClassifier(n_estimators=300, max_depth=5, learning_rate=0.05, scale_pos_weight=10, random_state=42, tree_method='hist', n_jobs=-1)
+        xgb_smote = XGBClassifier(n_estimators=300, max_depth=6, learning_rate=0.05, random_state=42, tree_method='hist', n_jobs=-1)
         xgb_smote.fit(X_res, y_res)
         p_val_sm = xgb_smote.predict_proba(X1_val)[:, 1]
         p_test_sm = xgb_smote.predict_proba(X1_test)[:, 1]
@@ -265,7 +286,7 @@ def run_benchmark_for_dataset(ds_name):
         print(f"SMOTE + XGBoost (fit+eval: {t_elapsed:.1f}s) -> ROC-AUC: {roc_sm:.4f} | PR-AUC: {pr_sm:.4f}")
         print(f"  tau=0.5:  Cost={currency}{c_sm_05['total_cost']:,.2f} | Rec={c_sm_05['recall']:.4f} | Prec={c_sm_05['precision']:.4f}")
         print(f"  tau={tau_sm:.4f}: Cost={currency}{c_sm_tuned['total_cost']:,.2f} | Rec={c_sm_tuned['recall']:.4f} | Prec={c_sm_tuned['precision']:.4f}")
-
+        
         results['SMOTE + XGBoost'] = {
             'roc_auc': roc_sm, 'pr_auc': pr_sm,
             'tau_default': 0.5, 'cost_default': c_sm_05['total_cost'], 'res_default': c_sm_05,
@@ -274,78 +295,85 @@ def run_benchmark_for_dataset(ds_name):
         save_checkpoint(ds_name, results)
     else:
         print("Skipping SMOTE + XGBoost (already in checkpoint)")
-        
+
     if 'ADASYN + XGBoost' not in results:
         print("\n--- Training ADASYN + XGBoost ---")
         t0 = time.time()
         adasyn = ADASYN(random_state=42)
         if ds_name == 'paysim':
             idx_samp = np.random.RandomState(42).choice(len(X1_train), size=min(500_000, len(X1_train)), replace=False)
-            X_res_a, y_res_a = adasyn.fit_resample(X1_train.iloc[idx_samp], y_train.iloc[idx_samp])
+            X_res, y_res = adasyn.fit_resample(X1_train.iloc[idx_samp], y_train.iloc[idx_samp])
         else:
-            X_res_a, y_res_a = adasyn.fit_resample(X1_train, y_train)
+            X_res, y_res = adasyn.fit_resample(X1_train, y_train)
             
-        xgb_adasyn = XGBClassifier(n_estimators=300, max_depth=5, learning_rate=0.05, scale_pos_weight=10, random_state=42, tree_method='hist', n_jobs=-1)
-        xgb_adasyn.fit(X_res_a, y_res_a)
-        p_val_ad = xgb_adasyn.predict_proba(X1_val)[:, 1]
-        p_test_ad = xgb_adasyn.predict_proba(X1_test)[:, 1]
+        xgb_ada = XGBClassifier(n_estimators=300, max_depth=6, learning_rate=0.05, random_state=42, tree_method='hist', n_jobs=-1)
+        xgb_ada.fit(X_res, y_res)
+        p_val_ada = xgb_ada.predict_proba(X1_val)[:, 1]
+        p_test_ada = xgb_ada.predict_proba(X1_test)[:, 1]
         
-        roc_ad = float(roc_auc_score(y_test, p_test_ad))
-        pr_ad = float(average_precision_score(y_test, p_test_ad))
-        c_ad_05 = evaluate_cost(y_test, (p_test_ad >= 0.5).astype(int), amt_test, brackets)
-        tau_ad = find_optimal_threshold(y_val, p_val_ad, amt_val, brackets)
-        c_ad_tuned = evaluate_cost(y_test, (p_test_ad >= tau_ad).astype(int), amt_test, brackets)
+        roc_ada = float(roc_auc_score(y_test, p_test_ada))
+        pr_ada = float(average_precision_score(y_test, p_test_ada))
+        c_ada_05 = evaluate_cost(y_test, (p_test_ada >= 0.5).astype(int), amt_test, brackets)
+        tau_ada = find_optimal_threshold(y_val, p_val_ada, amt_val, brackets)
+        c_ada_tuned = evaluate_cost(y_test, (p_test_ada >= tau_ada).astype(int), amt_test, brackets)
         
         t_elapsed = time.time() - t0
-        print(f"ADASYN + XGBoost (fit+eval: {t_elapsed:.1f}s) -> ROC-AUC: {roc_ad:.4f} | PR-AUC: {pr_ad:.4f}")
-        print(f"  tau=0.5:  Cost={currency}{c_ad_05['total_cost']:,.2f} | Rec={c_ad_05['recall']:.4f} | Prec={c_ad_05['precision']:.4f}")
-        print(f"  tau={tau_ad:.4f}: Cost={currency}{c_ad_tuned['total_cost']:,.2f} | Rec={c_ad_tuned['recall']:.4f} | Prec={c_ad_tuned['precision']:.4f}")
-
+        print(f"ADASYN + XGBoost (fit+eval: {t_elapsed:.1f}s) -> ROC-AUC: {roc_ada:.4f} | PR-AUC: {pr_ada:.4f}")
+        print(f"  tau=0.5:  Cost={currency}{c_ada_05['total_cost']:,.2f} | Rec={c_ada_05['recall']:.4f} | Prec={c_ada_05['precision']:.4f}")
+        print(f"  tau={tau_ada:.4f}: Cost={currency}{c_ada_tuned['total_cost']:,.2f} | Rec={c_ada_tuned['recall']:.4f} | Prec={c_ada_tuned['precision']:.4f}")
+        
         results['ADASYN + XGBoost'] = {
-            'roc_auc': roc_ad, 'pr_auc': pr_ad,
-            'tau_default': 0.5, 'cost_default': c_ad_05['total_cost'], 'res_default': c_ad_05,
-            'tau_tuned': tau_ad, 'cost_tuned': c_ad_tuned['total_cost'], 'res_tuned': c_ad_tuned
+            'roc_auc': roc_ada, 'pr_auc': pr_ada,
+            'tau_default': 0.5, 'cost_default': c_ada_05['total_cost'], 'res_default': c_ada_05,
+            'tau_tuned': tau_ada, 'cost_tuned': c_ada_tuned['total_cost'], 'res_tuned': c_ada_tuned
         }
         save_checkpoint(ds_name, results)
     else:
         print("Skipping ADASYN + XGBoost (already in checkpoint)")
-        
-    # 3. Independent Cost-Sensitive Baselines
-    print("\n--- Evaluating Independent CS Baseline 1: Bayes Minimum Risk (BMR) ---")
+
+    # 3. Cost-Sensitive Literature Baselines
+    # Load Stage 1 Core from Cache
     npz_data = np.load(os.path.join(CACHE_DIR, f"{ds_name}_stage1_and_shap.npz"))
     p_val_core = npz_data['p_val']
     p_test_core = npz_data['p_test']
     shap_val_core = npz_data['shap_val']
     shap_test_core = npz_data['shap_test']
+    opt_tau_core = find_optimal_threshold(y_val, p_val_core, amt_val, brackets)
     
-    # Extract optimal tau and coopt tau from stage 1 grid
-    with open(os.path.join(RESULTS_JSON_DIR, "exp1_stage1_coopt_grid.json")) as f:
-        exp1_data = json.load(f)
-    opt_tau_core = exp1_data[ds_name]['optimal_tau_validation']
-    tau_coopt = exp1_data[ds_name]['coopt_tau_stage1']
-    
-    bmr_thresholds_test = []
-    for amt in amt_test:
-        fp_c = 1000.0 if ds_name == 'paysim' else 10.0
-        for limit, cost in brackets:
-            if amt < limit:
-                fp_c = cost
-                break
-        t_bmr = fp_c / (amt + fp_c) if (amt + fp_c) > 0 else 0.5
-        bmr_thresholds_test.append(t_bmr)
-    bmr_thresholds_test = np.array(bmr_thresholds_test)
-    pred_bmr = (p_test_core >= bmr_thresholds_test).astype(int)
-    c_bmr = evaluate_cost(y_test, pred_bmr, amt_test, brackets)
-    print(f"Bayes Minimum Risk -> Cost={currency}{c_bmr['total_cost']:,.2f} | Rec={c_bmr['recall']:.4f} | Prec={c_bmr['precision']:.4f}")
-    results['Bayes Minimum Risk (Bahnsen et al., 2014)'] = {
-        'roc_auc': float(roc_auc_score(y_test, p_test_core)), 'pr_auc': float(average_precision_score(y_test, p_test_core)),
-        'tau_default': float('nan'), 'cost_default': c_bmr['total_cost'], 'res_default': c_bmr,
-        'tau_tuned': float('nan'), 'cost_tuned': c_bmr['total_cost'], 'res_tuned': c_bmr
-    }
-    save_checkpoint(ds_name, results)
-    
+    if 'Bayes Minimum Risk (Bahnsen et al., 2014)' not in results:
+        print("\n--- Evaluating Bayes Minimum Risk (Bahnsen et al., 2014) ---")
+        def get_fp_cost_vector(amts):
+            costs = np.zeros(len(amts))
+            prev = 0.0
+            for limit, cost in brackets:
+                in_b = (amts > prev) & (amts <= limit)
+                costs[in_b] = cost
+                prev = limit
+            return costs
+            
+        c_fp_val = get_fp_cost_vector(amt_val)
+        c_fn_val = amt_val
+        c_fp_test = get_fp_cost_vector(amt_test)
+        c_fn_test = amt_test
+        
+        tau_bayes_val = c_fp_val / (c_fp_val + c_fn_val + 1e-12)
+        tau_bayes_test = c_fp_test / (c_fp_test + c_fn_test + 1e-12)
+        
+        pred_bayes = (p_test_core >= tau_bayes_test).astype(int)
+        c_bmr = evaluate_cost(y_test, pred_bayes, amt_test, brackets)
+        print(f"Bayes Minimum Risk -> Cost={currency}{c_bmr['total_cost']:,.2f} | Rec={c_bmr['recall']:.4f} | Prec={c_bmr['precision']:.4f}")
+        
+        results['Bayes Minimum Risk (Bahnsen et al., 2014)'] = {
+            'roc_auc': float(roc_auc_score(y_test, p_test_core)), 'pr_auc': float(average_precision_score(y_test, p_test_core)),
+            'tau_default': 'Instance-Specific', 'cost_default': c_bmr['total_cost'], 'res_default': c_bmr,
+            'tau_tuned': 'Instance-Specific', 'cost_tuned': c_bmr['total_cost'], 'res_tuned': c_bmr
+        }
+        save_checkpoint(ds_name, results)
+    else:
+        print("Skipping Bayes Minimum Risk (already in checkpoint)")
+
     if 'Instance-Weighted CS-XGBoost (Höppner et al., 2022)' not in results:
-        print("\n--- Training Independent CS Baseline 2: Instance-Weighted CS-XGBoost ---")
+        print("\n--- Training Instance-Weighted CS-XGBoost (Höppner et al., 2022) ---")
         t0 = time.time()
         weights_train = np.ones(len(y_train), dtype=float)
         fraud_mask_tr = y_train.values == 1
@@ -394,7 +422,7 @@ def run_benchmark_for_dataset(ds_name):
     }
     save_checkpoint(ds_name, results)
     
-    # Purge any stale keys for Stage 1, Stage 2, or ACXIS from checkpoint
+    # Clean stale keys for Stage 1, Stage 2, or ACXIS
     for k in list(results.keys()):
         if k.startswith('Stage 1') or k.startswith('Stage 2') or k.startswith('ACXIS'):
             del results[k]
@@ -415,25 +443,15 @@ def run_benchmark_for_dataset(ds_name):
         'tau_tuned': opt_tau_core, 'cost_tuned': c_core_tuned['total_cost'], 'res_tuned': c_core_tuned
     }
     
-    # 5. Stage 1 Co-Optimized Baseline (Co-Optimized Calibration)
-    c_core_coopt = evaluate_cost(y_test, (p_test_core >= tau_coopt).astype(int), amt_test, brackets)
-    results[f'Stage 1 Co-Optimized (tau1={tau_coopt:.4f}, No Filter)'] = {
-        'roc_auc': float(roc_auc_score(y_test, p_test_core)), 'pr_auc': float(average_precision_score(y_test, p_test_core)),
-        'tau_default': 0.5, 'cost_default': c_core_05['total_cost'], 'res_default': c_core_05,
-        'tau_tuned': tau_coopt, 'cost_tuned': c_core_coopt['total_cost'], 'res_tuned': c_core_coopt
-    }
-    
-    # 6. Load ACXIS (Co-Optimized) from exp2_algorithm1_results.json
-    print("\n--- Adding Genuine ACXIS (Co-Optimized) ---")
+    # 5. Ingest ACXIS Results from exp2_algorithm1_results.json
+    print("\n--- Ingesting ACXIS Results from Step 2 ---")
     with open(os.path.join(RESULTS_JSON_DIR, "exp2_algorithm1_results.json")) as f:
         acxis_json = json.load(f)
     acx = acxis_json[ds_name]
     
-    # Calculate exact counts for ACXIS from co-optimized base cost and suppression
-    coopt_c = evaluate_cost(y_test, (p_test_core >= tau_coopt).astype(int), amt_test, brackets)
-    base_fp = coopt_c['fp_count']
+    base_fp = c_core_tuned['fp_count']
     acx_fp = base_fp - acx['fps_suppressed']
-    acx_fn = coopt_c['fn_count'] + acx['fns_leaked']
+    acx_fn = c_core_tuned['fn_count'] + acx['fns_leaked']
         
     acx_res_dict = {
         'accuracy': None,
@@ -455,9 +473,8 @@ def run_benchmark_for_dataset(ds_name):
     print("-" * 65)
     print(f"SUMMARY FOR {ds_name.upper()}:")
     print(f"Stage 1 Core:     Cost = {currency}{c_core_05['total_cost']:,.2f}")
-    print(f"Stage 2 Tuned:    Cost = {currency}{c_core_tuned['total_cost']:,.2f}")
-    print(f"Stage 1 Co-Opt:   Cost = {currency}{c_core_coopt['total_cost']:,.2f}")
-    print(f"ACXIS Co-Optimized Framework: Cost = {currency}{acx['acxis_cost']:,.2f} (Savings: {currency}{acx['savings']:,.2f})")
+    print(f"Stage 2 Tuned:    Cost = {currency}{c_core_tuned['total_cost']:,.2f} (tau*={opt_tau_core:.4f})")
+    print(f"ACXIS Proposed:   Cost = {currency}{acx['acxis_cost']:,.2f} (Savings: {currency}{acx['savings']:,.2f})")
     print("-" * 65)
     
     return results

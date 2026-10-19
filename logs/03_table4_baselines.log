@@ -3,71 +3,70 @@ STARTING EXPERIMENT 3: COMPARATIVE BASELINES BENCHMARK (TABLE 4)
 =============================================================================
 
 ================================================================================
-100% GENUINE BASELINE BENCHMARK FOR: PAYSIM
+GENUINE BASELINE BENCHMARK FOR: PAYSIM
 ================================================================================
-Loading PaySim dataset from six.csv...
+Loading PaySim dataset from: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/six.csv
 
 --- Training Logistic Regression ---
-Logistic Regression (fit+eval: 273.7s) -> ROC-AUC: 0.9887 | PR-AUC: 0.5682
+Logistic Regression (fit+eval: 187.7s) -> ROC-AUC: 0.9887 | PR-AUC: 0.5682
   tau=0.5:  Cost=₹56,100,609.89 | Rec=0.9464 | Prec=0.0249
   tau=0.8712: Cost=₹29,132,574.50 | Rec=0.8027 | Prec=0.0890
 
 --- Training Decision Tree ---
-Decision Tree (fit+eval: 91.1s) -> ROC-AUC: 0.9917 | PR-AUC: 0.7722
+Decision Tree (fit+eval: 67.1s) -> ROC-AUC: 0.9917 | PR-AUC: 0.7722
   tau=0.5:  Cost=₹8,598,278.87 | Rec=0.9842 | Prec=0.1407
   tau=0.9306: Cost=₹7,552,479.39 | Rec=0.9562 | Prec=0.2099
 
 --- Training Random Forest ---
-Random Forest (fit+eval: 923.3s) -> ROC-AUC: 0.9991 | PR-AUC: 0.8870
+Random Forest (fit+eval: 606.0s) -> ROC-AUC: 0.9991 | PR-AUC: 0.8870
   tau=0.5:  Cost=₹19,255,385.53 | Rec=0.9903 | Prec=0.0787
   tau=0.7722: Cost=₹9,666,656.22 | Rec=0.9330 | Prec=0.3352
 
 --- Training LightGBM ---
-LightGBM (fit+eval: 123.7s) -> ROC-AUC: 0.9527 | PR-AUC: 0.3752
-  tau=0.5:  Cost=₹28,732,644.40 | Rec=0.8392 | Prec=0.4015
-  tau=0.2080: Cost=₹26,054,023.62 | Rec=0.8940 | Prec=0.2441
+LightGBM (fit+eval: 92.5s) -> ROC-AUC: 0.9416 | PR-AUC: 0.3575
+  tau=0.5:  Cost=₹31,580,517.52 | Rec=0.8210 | Prec=0.4107
+  tau=0.1486: Cost=₹27,970,589.91 | Rec=0.8819 | Prec=0.2815
 
 --- Training CatBoost (Fairly Tuned) ---
-CatBoost (Fairly Tuned) (fit+eval: 280.0s) -> ROC-AUC: 0.9986 | PR-AUC: 0.9540
+CatBoost (Fairly Tuned) (fit+eval: 219.5s) -> ROC-AUC: 0.9986 | PR-AUC: 0.9540
   tau=0.5:  Cost=₹2,737,505.53 | Rec=0.9939 | Prec=0.3785
   tau=0.8811: Cost=₹3,113,489.08 | Rec=0.9854 | Prec=0.4475
 
 --- Training SMOTE + XGBoost ---
-SMOTE + XGBoost (fit+eval: 35.0s) -> ROC-AUC: 0.9982 | PR-AUC: 0.9213
-  tau=0.5:  Cost=₹10,931,463.71 | Rec=0.9781 | Prec=0.1630
-  tau=0.9108: Cost=₹7,967,389.12 | Rec=0.9695 | Prec=0.3162
+SMOTE + XGBoost (fit+eval: 30.9s) -> ROC-AUC: 0.9985 | PR-AUC: 0.9250
+  tau=0.5:  Cost=₹7,894,598.74 | Rec=0.9732 | Prec=0.2905
+  tau=0.7722: Cost=₹8,705,981.77 | Rec=0.9574 | Prec=0.4244
 
 --- Training ADASYN + XGBoost ---
-ADASYN + XGBoost (fit+eval: 33.6s) -> ROC-AUC: 0.9987 | PR-AUC: 0.9002
-  tau=0.5:  Cost=₹12,447,238.54 | Rec=0.9793 | Prec=0.1312
-  tau=0.8910: Cost=₹9,454,174.56 | Rec=0.9732 | Prec=0.2351
+ADASYN + XGBoost (fit+eval: 30.1s) -> ROC-AUC: 0.9985 | PR-AUC: 0.9085
+  tau=0.5:  Cost=₹9,250,483.58 | Rec=0.9720 | Prec=0.2579
+  tau=0.5346: Cost=₹9,351,167.46 | Rec=0.9695 | Prec=0.2704
 
---- Evaluating Independent CS Baseline 1: Bayes Minimum Risk (BMR) ---
-Bayes Minimum Risk -> Cost=₹7,745,658.53 | Rec=0.9927 | Prec=0.1587
+--- Evaluating Bayes Minimum Risk (Bahnsen et al., 2014) ---
+Bayes Minimum Risk -> Cost=₹10,226,158.53 | Rec=0.9927 | Prec=0.1308
 
---- Training Independent CS Baseline 2: Instance-Weighted CS-XGBoost ---
-Instance-Weighted CS-XGBoost (fit+eval: 136.0s) -> ROC-AUC: 0.9996 | PR-AUC: 0.9461
+--- Training Instance-Weighted CS-XGBoost (Höppner et al., 2022) ---
+Instance-Weighted CS-XGBoost (fit+eval: 111.7s) -> ROC-AUC: 0.9996 | PR-AUC: 0.9461
   tau=0.5:  Cost=₹2,667,929.30 | Rec=0.9695 | Prec=0.5293
   tau=0.4951: Cost=₹2,367,511.02 | Rec=0.9708 | Prec=0.5268
 
 --- Evaluating XAI Heuristic Rule Filter ---
-XAI Heuristic Rule Filter -> Cost=₹46,836,643.30 | Rec=0.5457 | Prec=0.8485
+XAI Heuristic Rule Filter -> Cost=₹181,066,037.85 | Rec=0.4836 | Prec=0.8982
 
 --- Evaluating Stage 1 Core and Stage 2 Tuned ---
 
---- Adding Genuine ACXIS (Co-Optimized) ---
+--- Ingesting ACXIS Results from Step 2 ---
 -----------------------------------------------------------------
 SUMMARY FOR PAYSIM:
-Stage 1 Core:     Cost = ₹6,236,998.46
-Stage 2 Tuned:    Cost = ₹2,033,757.25
-Stage 1 Co-Opt:   Cost = ₹1,794,792.07
-ACXIS Co-Optimized Framework: Cost = ₹1,735,292.07 (Savings: ₹59,500.00)
+Stage 1 Core:     Cost = ₹7,433,384.74
+Stage 2 Tuned:    Cost = ₹2,200,948.26 (tau*=0.2179)
+ACXIS Proposed:   Cost = ₹2,139,948.26 (Savings: ₹61,000.00)
 -----------------------------------------------------------------
 
 ================================================================================
-100% GENUINE BASELINE BENCHMARK FOR: IEEECIS
+GENUINE BASELINE BENCHMARK FOR: IEEECIS
 ================================================================================
-Loading IEEE-CIS transaction and identity tables...
+Loading IEEE-CIS transaction (/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/Datasets/IEEE-ICS/ieee-fraud-detection/train_transaction.csv) and identity (/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/Datasets/IEEE-ICS/ieee-fraud-detection/train_identity.csv)...
 
 --- Training Logistic Regression ---
 /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/sklearn/linear_model/_logistic.py:469: ConvergenceWarning: lbfgs failed to converge (status=1):
@@ -78,45 +77,45 @@ Increase the number of iterations (max_iter) or scale the data as shown in:
 Please also refer to the documentation for alternative solver options:
     https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
   n_iter_i = _check_optimize_result(
-Logistic Regression (fit+eval: 407.3s) -> ROC-AUC: 0.7722 | PR-AUC: 0.1500
+Logistic Regression (fit+eval: 335.8s) -> ROC-AUC: 0.7722 | PR-AUC: 0.1500
   tau=0.5:  Cost=$254,795.87 | Rec=0.6776 | Prec=0.0869
   tau=0.6435: Cost=$227,382.38 | Rec=0.4898 | Prec=0.1367
 
 --- Training Decision Tree ---
-Decision Tree (fit+eval: 57.0s) -> ROC-AUC: 0.8576 | PR-AUC: 0.4092
+Decision Tree (fit+eval: 47.6s) -> ROC-AUC: 0.8576 | PR-AUC: 0.4092
   tau=0.5:  Cost=$170,970.59 | Rec=0.7323 | Prec=0.1678
   tau=0.6534: Cost=$166,845.04 | Rec=0.7014 | Prec=0.1875
 
 --- Training Random Forest ---
-Random Forest (fit+eval: 146.0s) -> ROC-AUC: 0.8806 | PR-AUC: 0.5053
+Random Forest (fit+eval: 112.7s) -> ROC-AUC: 0.8806 | PR-AUC: 0.5053
   tau=0.5:  Cost=$168,816.43 | Rec=0.7265 | Prec=0.1844
   tau=0.5742: Cost=$169,943.68 | Rec=0.6626 | Prec=0.2478
 
 --- Training LightGBM ---
-LightGBM (fit+eval: 73.4s) -> ROC-AUC: 0.9395 | PR-AUC: 0.6819
+LightGBM (fit+eval: 64.1s) -> ROC-AUC: 0.9395 | PR-AUC: 0.6819
   tau=0.5:  Cost=$117,312.16 | Rec=0.7076 | Prec=0.4895
   tau=0.3664: Cost=$108,691.40 | Rec=0.7740 | Prec=0.3456
 
 --- Training CatBoost (Fairly Tuned) ---
-CatBoost (Fairly Tuned) (fit+eval: 289.1s) -> ROC-AUC: 0.9499 | PR-AUC: 0.7041
+CatBoost (Fairly Tuned) (fit+eval: 150.8s) -> ROC-AUC: 0.9499 | PR-AUC: 0.7041
   tau=0.5:  Cost=$101,752.91 | Rec=0.8233 | Prec=0.3209
   tau=0.6138: Cost=$98,960.00 | Rec=0.7841 | Prec=0.4168
 
 --- Training SMOTE + XGBoost ---
-SMOTE + XGBoost (fit+eval: 716.7s) -> ROC-AUC: 0.9001 | PR-AUC: 0.5598
-  tau=0.5:  Cost=$147,549.21 | Rec=0.7033 | Prec=0.2778
-  tau=0.4753: Cost=$144,825.78 | Rec=0.7178 | Prec=0.2600
+SMOTE + XGBoost (fit+eval: 434.0s) -> ROC-AUC: 0.9039 | PR-AUC: 0.5959
+  tau=0.5:  Cost=$230,444.37 | Rec=0.3993 | Prec=0.8436
+  tau=0.0793: Cost=$133,057.08 | Rec=0.7357 | Prec=0.2645
 
 --- Training ADASYN + XGBoost ---
-ADASYN + XGBoost (fit+eval: 979.4s) -> ROC-AUC: 0.9007 | PR-AUC: 0.5608
-  tau=0.5:  Cost=$144,544.90 | Rec=0.7101 | Prec=0.2833
-  tau=0.4951: Cost=$145,436.45 | Rec=0.7115 | Prec=0.2776
+ADASYN + XGBoost (fit+eval: 602.2s) -> ROC-AUC: 0.9038 | PR-AUC: 0.6014
+  tau=0.5:  Cost=$224,694.86 | Rec=0.4051 | Prec=0.8541
+  tau=0.0892: Cost=$135,781.88 | Rec=0.7178 | Prec=0.2831
 
---- Evaluating Independent CS Baseline 1: Bayes Minimum Risk (BMR) ---
-Bayes Minimum Risk -> Cost=$181,133.88 | Rec=0.9424 | Prec=0.1264
+--- Evaluating Bayes Minimum Risk (Bahnsen et al., 2014) ---
+Bayes Minimum Risk -> Cost=$181,625.38 | Rec=0.9429 | Prec=0.1261
 
---- Training Independent CS Baseline 2: Instance-Weighted CS-XGBoost ---
-Instance-Weighted CS-XGBoost (fit+eval: 213.5s) -> ROC-AUC: 0.9114 | PR-AUC: 0.6285
+--- Training Instance-Weighted CS-XGBoost (Höppner et al., 2022) ---
+Instance-Weighted CS-XGBoost (fit+eval: 150.0s) -> ROC-AUC: 0.9114 | PR-AUC: 0.6285
   tau=0.5:  Cost=$224,494.15 | Rec=0.3843 | Prec=0.8911
   tau=0.0694: Cost=$123,592.43 | Rec=0.7217 | Prec=0.3272
 
@@ -125,13 +124,12 @@ XAI Heuristic Rule Filter -> Cost=$249,246.15 | Rec=0.2924 | Prec=0.8629
 
 --- Evaluating Stage 1 Core and Stage 2 Tuned ---
 
---- Adding Genuine ACXIS (Co-Optimized) ---
+--- Ingesting ACXIS Results from Step 2 ---
 -----------------------------------------------------------------
 SUMMARY FOR IEEECIS:
 Stage 1 Core:     Cost = $107,017.62
-Stage 2 Tuned:    Cost = $94,856.71
-Stage 1 Co-Opt:   Cost = $93,596.06
-ACXIS Co-Optimized Framework: Cost = $92,376.06 (Savings: $1,220.00)
+Stage 2 Tuned:    Cost = $94,856.71 (tau*=0.3763)
+ACXIS Proposed:   Cost = $94,536.71 (Savings: $320.00)
 -----------------------------------------------------------------
 
 [✓] Saved complete genuine baseline results to:

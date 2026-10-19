@@ -1,7 +1,7 @@
 # ACXIS: Replication Package
 ## Adaptive Cost-Sensitive XGBoost with SHAP-Based Integrated Suppression
 
-This repository contains the complete, 100% genuine replication code, dataset caching scripts, benchmark evaluation suites, statistical test logs, and publication figures for the manuscript:
+This repository contains the complete replication code, dataset pre-processing scripts, benchmark evaluation suites, statistical test logs, and publication figures for the manuscript:
 
 > **ACXIS: An Adaptive Cost-Sensitive XGBoost Framework with SHAP-based Integrated Suppression for Financial Fraud Detection and Prediction**  
 > *Authors:* Shyamshundar N. Patil, Dr. Manoj E. Patil  
@@ -11,17 +11,23 @@ This repository contains the complete, 100% genuine replication code, dataset ca
 
 ## 1. Architectural Highlights: Framework Implementation
 
-This replication package implements the unified ACXIS framework developed in response to peer-review feedback:
+This replication package implements the unified ACXIS framework:
 
-1. **Amount-Tiered Safety Guard:**  
-   Candidate alerts ($\hat{p} \ge \tau_1$) are partitioned into amount quantiles ($K=3$ for PaySim, $K=5$ for IEEE-CIS). Within each quantile tier $k$, an independent safety threshold $\tau_{\text{meta}, k}$ is calibrated on out-of-fold validation alerts to guarantee zero false-negative leakage ($\Delta\text{FN} = 0.00$):
-   $$\tau_{\text{meta}, k} = \max_{i \in \text{Fraud}_k} q_{\text{OOF}, i} + \varepsilon$$
-2. **Stage 1 Threshold Co-Optimization:**  
-   Stage 1 operating thresholds are co-optimized to expand initial fraud capture before meta-filtering:
-   - **PaySim:** Co-optimized at $\tau_1 = 0.1684$ (Index 16 of `np.linspace(0.01, 0.99, 100)`).
-   - **IEEE-CIS:** Co-optimized at $\tau_1 = 0.2800$, capturing **95 additional genuine frauds** over the original baseline (recall rises from 78.99% $\rightarrow$ 83.64%), while Stage 3 suppresses 128 false alarms with zero leaks.
-3. **100-Step Grid Exhaustive Sweep:**  
-   Threshold searches are systematically performed across 100 uniform steps from 0.01 to 0.99 (`np.linspace(0.01, 0.99, 100)`), eliminating boundary artifacts.
+1. **Validation-Derived Operating Threshold ($\tau^*$):**  
+   The Stage 1 operating threshold $\tau_1 = \tau^*$ is determined strictly on the independent validation partition $\mathcal{D}_{\text{val}}$ by minimizing the total asymmetric operational cost:
+   $$\tau^* = \arg\min_{\tau \in [0.01, 0.99]} \text{Cost}(\mathcal{D}_{\text{val}}, \tau)$$
+   Test data is strictly kept blind and is never used for threshold selection.
+   - **PaySim Validation Optimum:** $\tau^* = 0.2179$
+   - **IEEE-CIS Validation Optimum:** $\tau^* = 0.3763$
+   - **ULB Validation Optimum:** $\tau^* = 0.4555$
+
+2. **Amount-Tiered Safety Guard:**  
+   Candidate alerts ($\hat{p} \ge \tau^*$) are partitioned into amount quantiles ($K=3$ equal-frequency bins). Within each quantile tier $k$, an independent safety threshold $\tau_{\text{meta}, k}$ is calibrated on 5-fold out-of-fold (OOF) cross-validation predictions:
+   $$\tau_{\text{meta}, k} = \max_{i \in \text{Val-Fraud}_k} q_{\text{OOF}, i} + \varepsilon$$
+   Candidate alerts in test partition whose meta-probability satisfies $q_i \ge \tau_{\text{meta}, k}$ are suppressed as verified false alarms. If a tier's calibrated threshold reaches 1.0 or suppresses zero alerts out-of-fold, the guard safely abstains ($\tau_{\text{meta}, k} = \infty$).
+
+3. **5-Fold Cross-Fitting Meta-Ensemble:**  
+   To prevent single-model variance shift between validation calibration and test scoring, test candidate alerts are scored by the cross-fitting ensemble average $\bar{q}(x) = \frac{1}{5}\sum_{j=1}^5 m_j(x)$, ensuring exact distribution alignment with the OOF calibration thresholds.
 
 ---
 
@@ -32,13 +38,14 @@ This replication package implements the unified ACXIS framework developed in res
 ├── README.md                                  # Complete replication documentation
 ├── run_all.py                                 # Master orchestrator script
 ├── scripts/                                   # Standalone execution scripts
-│   ├── step1_data_and_stage1_coopt.py        # Exp 1: 100-step grid & co-optimization
-│   ├── step2_algorithm1_engine.py             # Exp 2: Algorithm 1 implementation & evaluation
-│   ├── step3_table4_master_baselines.py       # Exp 3: Genuine Table 4 comparative baselines
-│   ├── step4_table6_ablation_panels.py        # Exp 4: Table 6 ablation panels (A, B, C)
-│   ├── step5_bootstrap_resampling_1000.py     # Exp 5: 1,000-iteration bootstrap resampling
-│   ├── step6_latency_timing_loop.py           # Exp 6: Measured latency & batch throughput
-│   └── step7_generate_publication_figures.py  # Exp 7: Publication vector figures
+│   ├── step0_train_stage1_and_shap.py         # Step 0: End-to-end training & TreeSHAP calculation
+│   ├── step1_data_and_stage1_coopt.py         # Step 1: 100-step validation cost minimization sweep
+│   ├── step2_algorithm1_engine.py             # Step 2: Algorithm 1 implementation & evaluation
+│   ├── step3_table4_master_baselines.py       # Step 3: Comparative baseline benchmarks (13 models)
+│   ├── step4_table6_ablation_panels.py        # Step 4: Table 6 ablation panels (Panels A, B, C)
+│   ├── step5_bootstrap_resampling_1000.py     # Step 5: 1,000-iteration stratified bootstrap resampling
+│   ├── step6_latency_timing_loop.py           # Step 6: Measured single-row latency & batch throughput
+│   └── step7_generate_publication_figures.py  # Step 7: Publication vector & high-DPI figures
 ├── cache/                                     # Cached arrays & model artifacts (.npz, .json)
 ├── results_csv/                               # All generated tables in CSV format
 │   ├── table1_algorithm1_summary.csv          # Summary of Algorithm 1 across datasets
@@ -47,21 +54,22 @@ This replication package implements the unified ACXIS framework developed in res
 │   ├── table4_baseline_benchmarks.csv         # Side-by-side comparative benchmarks
 │   ├── table5_resampling_ci_master.csv        # 1,000 bootstrap resampling means & 95% CIs
 │   ├── table6_ablation_master.csv             # Representation & architecture ablations
-│   └── table7_statistical_significance.csv    # Wilcoxon signed-rank tests & Cohen's d
-├── results_json/                              # Full structured JSON results
-│   ├── exp1_stage1_coopt_grid.json            # 100-step cost curves across datasets
+│   └── table7_statistical_significance.csv    # Statistical significance tests
+├── results_json/                              # Structured JSON results
+│   ├── exp1_stage1_coopt_grid.json            # 100-step validation cost curves across datasets
 │   ├── exp2_algorithm1_results.json           # Algorithm 1 exact metrics & tier thresholds
 │   ├── exp3_table4_baselines.json             # All baseline metrics (default & tuned)
 │   ├── exp4_table6_ablation.json              # Ablation metrics across Panels A, B, C
 │   ├── exp5_bootstrap_results.json            # Full 1,000 bootstrap distributions
-│   └── exp6_latency_results.json              # Timing loop percentiles (p50, p95, p99)
-├── figures/                                   # High-DPI (300 DPI) & Vector (PDF/SVG) figures
+│   └── exp6_latency_results.json              # Hardware timing loop percentiles
+├── figures/                                   # Publication-ready figures (PDF & PNG)
 │   ├── fig1_acxis_architecture.pdf / .png     # Vector architecture diagram
 │   ├── fig4_before_after_confusion_matrix.pdf # 2-panel confusion matrix
 │   ├── fig4_cost_vs_threshold_curves.png      # 100-step threshold cost curves
 │   ├── fig7_amount_tier_breakdown.pdf / .png  # Quantile tier suppression distribution
 │   └── fig10_bootstrap_robustness.pdf / .png  # Bootstrap cost reduction density plots
-└── logs/                                      # Full console logs of every physical run
+└── logs/                                      # Console execution logs
+    ├── 00_stage1_and_shap.log
     ├── 01_stage1_coopt.log
     ├── 02_algorithm1.log
     ├── 03_table4_baselines.log
@@ -75,29 +83,28 @@ This replication package implements the unified ACXIS framework developed in res
 
 ## 3. Verified Experimental Results Summary
 
-Every number below was executed directly on a local workstation (macOS 14.8, Python 3.12, Apple Silicon) without interpolation or derivation:
+All results reported below are generated by executing the pipeline directly on local hardware without interpolation or manual estimation:
 
 ### A. Core Performance Across Datasets (Table 1 & Table 5)
-| Dataset | Operating Point ($\tau_1$) | Base Cost | ACXIS Cost | Currency Savings | Cost Reduction (%) | 95% Bootstrap CI | FPs Suppressed | FNs Leaked |
+| Dataset | Operating Point ($\tau^*$) | Base Cost | ACXIS Cost | Currency Savings | Cost Reduction (%) | 95% Bootstrap CI | FPs Suppressed | FNs Leaked |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **PaySim** | $\tau_1 = 0.1684$ | ₹1,794,792.07 | ₹1,735,292.07 | **₹59,500.00** | **+3.32%** (Mean: 3.33% ± 0.65%) | [2.20%, 4.75%] | **44** (43.8 ± 6.6) | **0** (0.00 ± 0.00) |
-| **IEEE-CIS** | $\tau_1 = 0.2800$ | $93,596.06 | $92,376.06 | **$1,220.00** | **+1.30%** (Mean: 1.31% ± 0.15%) | [1.06%, 1.65%] | **128** (128.0 ± 11.4) | **0** (0.00 ± 0.00) |
-| **ULB** | $\tau_1 = 0.4555$ | €750.61 | €750.61 | **€0.00** | **0.00%** (0.00% ± 0.00%) | [0.00%, 0.00%] | **0** (0.0 ± 0.0) | **0** (0.00 ± 0.00) |
+| **PaySim** | $\tau^* = 0.2179$ | ₹2,200,948.26 | ₹2,139,948.26 | **₹61,000.00** | **+2.77%** (Mean: 2.83% ± 0.75%) | [1.63%, 4.52%] | **42** (41.7 ± 6.5) | **0** (0.00 ± 0.00) |
+| **IEEE-CIS** | $\tau^* = 0.3763$ | $94,856.71 | $94,536.71 | **$320.00** | **+0.34%** (Mean: 0.34% ± 0.07%) | [0.21%, 0.49%] | **30** (30.0 ± 5.6) | **0** (0.00 ± 0.00) |
+| **ULB** | $\tau^* = 0.4555$ | €750.61 | €750.61 | **€0.00** | **0.00%** (0.00% ± 0.00%) | [0.00%, 0.00%] | **0** (0.0 ± 0.0) | **0** (0.00 ± 0.00) |
 
-*Note on ULB:* ACXIS transparently abstains on ULB, reporting €0.00 savings and 0 false alarms suppressed because all candidate false alarms overlap with genuine fraud attributions under strict safety checks, providing an honest empirical boundary condition.
+*Empirical Boundary Condition (ULB):* ACXIS transparently abstains on ULB (€0.00 savings, 0 false alarms suppressed) because the safety guard identifies that candidate false alarm attributions overlap with fraud attributions within the tiers. Rather than risking a false negative, the framework safely retains all Stage 1 alerts, providing an honest empirical boundary condition.
 
-### B. Statistical Rigor (Table 7)
-- **PaySim:** Wilcoxon signed-rank $W = 500,500.0, p = 1.63 \times 10^{-165}$, Paired $t$-statistic $= 185.74$, Cohen's $d = 5.88$ ($p < 0.001$).
-- **IEEE-CIS:** Wilcoxon signed-rank $W = 500,500.0, p = 1.63 \times 10^{-165}$, Paired $t$-statistic $= 331.12$, Cohen's $d = 10.48$ ($p < 0.001$).
+### B. Single-Row Tail Latency & Batch Throughput (Table 3)
+Hardware: Apple Silicon workstation, Python 3.12, scikit-learn, XGBoost, SHAP.
 
-### C. Measured Latency & Hardware Throughput (Table 3)
-- **Single-Item Fast-Path Scoring ($B=1$):** Mean = **1.67 ms** (p50: 0.68 ms, p95: 7.02 ms, p99: 15.13 ms).
-- **TreeSHAP Attribution ($B=1$):** Mean = **4.32 ms** (p50: 1.26 ms, p95: 18.10 ms, p99: 43.32 ms).
-- **Stage 3 RF Meta-Inference ($B=1$):** Mean = **8.99 ms** (p50: 6.76 ms, p95: 18.40 ms, p99: 34.43 ms).
-- **Full Triggered Pipeline ($B=1$):** Mean = **12.70 ms** (p50: 10.20 ms, p95: 22.12 ms, p99: 42.93 ms).
-- **Preprocessing Latency ($B=1$):** Mean = **0.0028 ms** (p99: 0.0061 ms).
-- **LIME Tabular Explainer Baseline ($B=1$):** Mean = **17.06 ms** (p95: 27.89 ms, p99: 33.59 ms).
-- **Measured Batch Throughput ($B=1000$):** **382,335.8 transactions/second** (Mean batch execution time: 2.62 ms).
+| Processing Stage | Mean Latency | Standard Deviation | Median ($p_{50}$) | $p_{95}$ Tail | $p_{99}$ Tail | Measured Throughput ($B=1000$) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Preprocessing & Encoding** | 0.0027 ms | 0.0022 ms | 0.0019 ms | 0.0037 ms | 0.0045 ms | — |
+| **Stage 1 XGBoost Fast-Path** | 0.6201 ms | 1.4341 ms | 0.5124 ms | 0.8902 ms | 1.8668 ms | **680,116.4 tx/sec** |
+| **TreeSHAP Attribution** | 1.1362 ms | 2.7582 ms | 0.8796 ms | 1.3726 ms | 4.5441 ms | **8,400.7 tx/sec** |
+| **Stage 3 RF Meta-Inference** | 5.4506 ms | 4.7011 ms | 4.8322 ms | 8.0003 ms | 15.5813 ms | **97,364.9 tx/sec** |
+| **Full Triggered Pipeline** | 9.4991 ms | 5.9086 ms | 8.9583 ms | 10.0343 ms | 29.7184 ms | **7,646.5 tx/sec** |
+| *Baseline LIME Explainer* | 179.5568 ms | 30.9808 ms | 170.2082 ms | 269.1889 ms | 309.2068 ms | — |
 
 ---
 
@@ -105,49 +112,56 @@ Every number below was executed directly on a local workstation (macOS 14.8, Pyt
 
 ### Prerequisites
 - Python $\ge 3.10$
-- Required libraries:
+- Dependencies:
   ```bash
   pip install numpy pandas scikit-learn lightgbm catboost xgboost shap imbalanced-learn scipy matplotlib
   ```
 
 ### Master Single-Command Reproduction
-Run the full reproduction pipeline end-to-end:
+To execute the pipeline from the verified cache:
 ```bash
 python3 run_all.py
 ```
 
-### Step-by-Step Reproduction
-Alternatively, each experiment can be executed independently:
+To re-train Stage 1 XGBoost and regenerate SHAP attributions from the raw CSV datasets from scratch:
 ```bash
-# Step 1: Stage 1 threshold co-optimization & 100-step grid sweep
+python3 run_all.py --from-scratch
+```
+
+### Step-by-Step Reproduction
+Each experiment can also be executed independently:
+```bash
+# Step 0: End-to-end Stage 1 XGBoost training & TreeSHAP matrix generation
+python3 scripts/step0_train_stage1_and_shap.py
+
+# Step 1: Validation cost minimization sweep & threshold selection (tau*)
 python3 scripts/step1_data_and_stage1_coopt.py
 
-# Step 2: Algorithm 1 implementation with Amount-Tiered Safety Guard
+# Step 2: Algorithm 1 engine with Amount-Tiered Safety Guard
 python3 scripts/step2_algorithm1_engine.py
 
-# Step 3: Genuine comparative baseline benchmarks (Table 4)
+# Step 3: Comparative baseline benchmarks (13 models side-by-side)
 python3 scripts/step3_table4_master_baselines.py
 
-# Step 4: Full ablation benchmark across Panels A, B, and C (Table 6)
+# Step 4: Full ablation benchmark across Panels A, B, and C
 python3 scripts/step4_table6_ablation_panels.py
 
-# Step 5: 1,000-iteration stratified bootstrap resampling (Tables 5 & 7)
+# Step 5: 1,000-iteration stratified bootstrap resampling
 python3 scripts/step5_bootstrap_resampling_1000.py
 
-# Step 6: Dedicated hardware latency timing loops & batch throughput (Table 3)
+# Step 6: Dedicated hardware latency timing loops & batch throughput
 python3 scripts/step6_latency_timing_loop.py
 
-# Step 7: Generate publication-grade figures (Figures 1, 4, 7, 10)
+# Step 7: Synchronized publication vector figures
 python3 scripts/step7_generate_publication_figures.py
 ```
 
 ---
 
-## 5. Compliance with Peer-Review Forensic Verification Protocol
+## 5. Methodological & Statistical Notes
 
-This replication package strictly enforces:
-1. **Rule 0 (100% Genuine Execution):** Zero hardcoded numbers, zero interpolated values, zero synthetic subsets for primary models.
-2. **Zero Ghost Numbers:** All numbers in manuscript tables and text match the output CSVs and JSONs exactly.
-3. **Statistical Soundness:** Standard deviations and $p$-values are computed from genuine data resampling over test partition instances.
-4. **Honest Framing:** Default ($\tau = 0.5$) and Tuned ($\tau = \tau^*$) baselines are reported side-by-side; boundary datasets (ULB) are transparently documented as structural limitations.
-5. **No Reciprocal Latency:** True batch throughput is measured in dedicated loops ($B=1000$), never computed as $1/\text{latency}$.
+1. **Threshold Derivation Transparency:** Stage 1 operating thresholds ($\tau^*$) are derived strictly by minimizing asymmetric operational cost on the validation partition $\mathcal{D}_{\text{val}}$. Test labels are withheld until blind evaluation.
+2. **Resampling Scope:** Reported bootstrap 95% confidence intervals reflect 1,000 stratified resamples of the test partition to measure sampling variability under fixed operational model weights.
+3. **Safety Guard Guarantee:** "Zero leaks" ($\Delta\text{FN} = 0$) represents the verified empirical outcome on the blind test partition under the validation-calibrated amount-tiered safety guard.
+4. **Independent Baselines:** Cost-sensitive and sampling baselines (SMOTE, ADASYN, Bayes Minimum Risk, Instance-Weighted CS-XGBoost, LightGBM, CatBoost) are executed independently with both default ($\tau = 0.5$) and validation-tuned operating points.
+5. **Direct Hardware Timing:** Batch throughput ($B=1000$) is measured in dedicated vectorized execution loops, avoiding reciprocal approximations ($1/\text{latency}$).

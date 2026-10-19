@@ -1,46 +1,50 @@
 /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/sklearn/model_selection/_split.py:737: UserWarning: The least populated class in y has only 4 members, which is less than n_splits=5.
   warnings.warn(
 ================================================================================
-STEP 2: PURE ALGORITHM 1 ENGINE BENCHMARK (OPTION A+C)
+STEP 2: PURE ALGORITHM 1 ENGINE BENCHMARK
+Zero hardcoded numbers; all tau_1 derived from validation cost minima
 ================================================================================
+[PAYSIM] Ingested validation-optimal tau* from Step 1 JSON: 0.2179
 
 ================================================================================
 RUNNING ALGORITHM 1 ON: PAYSIM
-Config: tau_1 = 0.1718, Amount Tiers = 3, RF depth = 5, cw = None
+Config: tau_1 = 0.2179, Amount Tiers = 3, RF depth = 5, cw = None
 ================================================================================
-Candidate Alerts at tau_1=0.1718: Validation=1,684 (FP: 875, FN: 809)
-                                      Test      =1,688 (FP: 873, FN: 815)
+Candidate Alerts at tau_1=0.2179: Validation=1,518 (FP: 713, FN: 805)
+                                      Test      =1,528 (FP: 720, FN: 808)
+Representation: [x, phi(x)] Joint Space (dimension = 22)
 
 Calibrating Amount-Tiered Safety Thresholds (Algorithm 1):
-  Tier 1 [₹0.00 - ₹92,503.35]: tau_meta_1 = 0.9241 | OOF Suppressed FP = 24
-  Tier 2 [₹92,503.35 - ₹306,775.04]: tau_meta_2 = 0.9192 | OOF Suppressed FP = 10
-  Tier 3 [₹306,775.04 - ₹inf]: tau_meta_3 = 0.8744 | OOF Suppressed FP = 4
+  Tier 1 [₹0.00 - ₹103,070.18]: tau_meta_1 = 0.9030 | OOF Suppressed FP = 24
+  Tier 2 [₹103,070.18 - ₹346,227.97]: tau_meta_2 = 0.8888 | OOF Suppressed FP = 16
+  Tier 3 [₹346,227.97 - ₹inf]: tau_meta_3 = 0.8361 | OOF Suppressed FP = 10
 
 --- PERFORMANCE EVALUATION ---
-Stage 1 Baseline Cost: ₹1,770,792.07 | Recall: 0.9927 | Precision: 0.4828
-ACXIS Final Cost     : ₹1,723,292.07 | Recall: 0.9927 | Precision: 0.4942
-False Positives Suppressed: 39 | False Negatives Leaked: 0 (Zero Leak Verification: PASSED ✓)
-Net Financial Savings: ₹47,500.00 (+2.68%)
+Stage 1 Baseline Cost: ₹2,200,948.26 | Recall: 0.9842 | Precision: 0.5288
+ACXIS Final Cost     : ₹2,139,948.26 | Recall: 0.9842 | Precision: 0.5437
+False Positives Suppressed: 42 | False Negatives Leaked: 0 (Zero Leak Verification: PASSED ✓)
+Net Financial Savings: ₹61,000.00 (+2.77%)
+[IEEECIS] Ingested validation-optimal tau* from Step 1 JSON: 0.3763
 
 ================================================================================
 RUNNING ALGORITHM 1 ON: IEEECIS
-Config: tau_1 = 0.2800, Amount Tiers = 5, RF depth = 8, cw = balanced
+Config: tau_1 = 0.3763, Amount Tiers = 3, RF depth = 5, cw = None
 ================================================================================
-Candidate Alerts at tau_1=0.2800: Validation=4,923 (FP: 3,181, FN: 1,742)
-                                      Test      =4,825 (FP: 3,097, FN: 1,728)
+Candidate Alerts at tau_1=0.3763: Validation=3,482 (FP: 1,821, FN: 1,661)
+                                      Test      =3,446 (FP: 1,804, FN: 1,642)
+Representation: [phi(x)] TreeSHAP Space (dimension = 432)
 
 Calibrating Amount-Tiered Safety Thresholds (Algorithm 1):
-  Tier 1 [$0.00 - $32.42]: tau_meta_1 = 0.8050 | OOF Suppressed FP = 43
-  Tier 2 [$32.42 - $59.00]: tau_meta_2 = 0.8385 | OOF Suppressed FP = 9
-  Tier 3 [$59.00 - $117.00]: tau_meta_3 = 0.8327 | OOF Suppressed FP = 25
-  Tier 4 [$117.00 - $226.00]: tau_meta_4 = 0.8194 | OOF Suppressed FP = 66
-  Tier 5 [$226.00 - $inf]: tau_meta_5 = 0.8635 | OOF Suppressed FP = 1
+  Tier 1 [$0.00 - $49.00]: tau_meta_1 = 0.7836 | OOF Suppressed FP = 4
+  Tier 2 [$49.00 - $127.61]: tau_meta_2 = 0.7801 | OOF Suppressed FP = 11
+  Tier 3 [$127.61 - $inf]: tau_meta_3 = 0.7935 | OOF Suppressed FP = 9
 
 --- PERFORMANCE EVALUATION ---
-Stage 1 Baseline Cost: $93,596.06 | Recall: 0.8364 | Precision: 0.3581
-ACXIS Final Cost     : $92,376.06 | Recall: 0.8364 | Precision: 0.3679
-False Positives Suppressed: 128 | False Negatives Leaked: 0 (Zero Leak Verification: PASSED ✓)
-Net Financial Savings: $1,220.00 (+1.30%)
+Stage 1 Baseline Cost: $94,856.71 | Recall: 0.7948 | Precision: 0.4765
+ACXIS Final Cost     : $94,536.71 | Recall: 0.7948 | Precision: 0.4807
+False Positives Suppressed: 30 | False Negatives Leaked: 0 (Zero Leak Verification: PASSED ✓)
+Net Financial Savings: $320.00 (+0.34%)
+[ULB] Ingested validation-optimal tau* from Step 1 JSON: 0.4555
 
 ================================================================================
 RUNNING ALGORITHM 1 ON: ULB
@@ -48,6 +52,7 @@ Config: tau_1 = 0.4555, Amount Tiers = 3, RF depth = 5, cw = None
 ================================================================================
 Candidate Alerts at tau_1=0.4555: Validation=45 (FP: 4, FN: 41)
                                       Test      =46 (FP: 4, FN: 42)
+Representation: [phi(x)] TreeSHAP Space (dimension = 30)
 
 Calibrating Amount-Tiered Safety Thresholds (Algorithm 1):
   Tier 1 [€0.00 - €1.28]: tau_meta_1 = inf | OOF Suppressed FP = 0
@@ -65,6 +70,4 @@ Net Financial Savings: €0.00 (+0.00%)
 [✓] Saved Algorithm 1 Summary CSV to:
   /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table1_algorithm1_summary.csv
 
-================================================================================
-STEP 2 COMPLETE!
 ================================================================================

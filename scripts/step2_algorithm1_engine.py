@@ -2,13 +2,17 @@
 """
 scripts/step2_algorithm1_engine.py
 =============================================================================
-EXPERIMENT 2: PURE ALGORITHM 1 ENGINE WITH AMOUNT-TIERED SAFETY THRESHOLDS (OPTION A+C)
+EXPERIMENT 2: PURE ALGORITHM 1 ENGINE WITH AMOUNT-TIERED SAFETY THRESHOLDS
 Zero shortcuts, zero hardcoded numbers, 100% real script execution.
 
+All operating thresholds tau_1 are dynamically ingested from Step 1 validation
+optimization (exp1_stage1_coopt_grid.json), or derived algorithmically on the
+fly by minimizing the asymmetric cost function on the validation split.
+
 Executes:
-1. PaySim: 3 Amount Tiers (33%, 66%) on [x, phi(x)] Joint Space
-2. IEEE-CIS: 5 Amount Tiers (20%, 40%, 60%, 80%) on [phi(x)] Co-Optimized (tau_1 = 0.2800)
-3. ULB: Boundary condition check (Zero-gain / Abstention verification)
+1. PaySim: 3 Amount Tiers (Tertiles) on [x, phi(x)] Joint Space
+2. IEEE-CIS: 3 Amount Tiers (Tertiles) on [phi(x)] Feature Space
+3. ULB: 3 Amount Tiers (Tertiles) on [phi(x)] Feature Space (Boundary Condition)
 
 Outputs:
 - results_json/exp2_algorithm1_results.json
@@ -24,7 +28,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import StratifiedKFold
 
-# Directory Setup
+# Directory Setup (Portable relative paths)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PKG_DIR = os.path.dirname(SCRIPT_DIR)
 CACHE_DIR = os.path.join(PKG_DIR, "cache")
@@ -32,6 +36,10 @@ RESULTS_CSV_DIR = os.path.join(PKG_DIR, "results_csv")
 RESULTS_JSON_DIR = os.path.join(PKG_DIR, "results_json")
 LOGS_DIR = os.path.join(PKG_DIR, "logs")
 
+for d in [RESULTS_CSV_DIR, RESULTS_JSON_DIR, LOGS_DIR]:
+    os.makedirs(d, exist_ok=True)
+
+# Asymmetric Operational Cost Schedules
 brackets_paysim = [
     (50_000, 500), (100_000, 1000), (150_000, 1500), (200_000, 2000),
     (500_000, 3000), (1_000_000, 5000), (float('inf'), 10000)
@@ -81,15 +89,24 @@ def evaluate_cost(y_true, y_pred, amounts, brackets):
         'recall': rec, 'precision': prec, 'f1': f1, 'accuracy': acc
     }
 
-def run_dataset_algorithm1(ds_name, tau_1, n_tiers=3, rf_depth=5, rf_cw=None):
-    print("\n" + "=" * 80)
-    print(f"RUNNING ALGORITHM 1 ON: {ds_name.upper()}")
-    print(f"Config: tau_1 = {tau_1:.4f}, Amount Tiers = {n_tiers}, RF depth = {rf_depth}, cw = {rf_cw}")
-    print("=" * 80)
-    
+def derive_validation_optimal_tau(y_val, p_val, amt_val, brackets):
+    """Exhaustive 100-step grid search to find cost-minimizing threshold on validation split."""
+    thresholds = np.linspace(0.01, 0.99, 100)
+    costs = []
+    for t in thresholds:
+        preds = (p_val >= t).astype(int)
+        c = evaluate_cost(y_val, preds, amt_val, brackets)
+        costs.append(c['total_cost'])
+    opt_idx = int(np.argmin(costs))
+    return float(thresholds[opt_idx])
+
+def run_dataset_algorithm1(ds_name, n_tiers=3, rf_depth=5, rf_cw=None):
     npz_path = os.path.join(CACHE_DIR, f"{ds_name}_stage1_and_shap.npz")
     raw_npz_path = os.path.join(CACHE_DIR, f"{ds_name}_cand_raw_X.npz")
     
+    if not os.path.exists(npz_path):
+        raise FileNotFoundError(f"Missing required cache file: {npz_path}")
+        
     data = np.load(npz_path)
     p_val, p_test = data['p_val'], data['p_test']
     y_val, y_test = data['y_val'], data['y_test']
@@ -99,6 +116,22 @@ def run_dataset_algorithm1(ds_name, tau_1, n_tiers=3, rf_depth=5, rf_cw=None):
     brackets = brackets_paysim if ds_name == 'paysim' else (brackets_ieeecis if ds_name == 'ieeecis' else brackets_ulb)
     curr_sym = '₹' if ds_name == 'paysim' else ('$' if ds_name == 'ieeecis' else '€')
     
+    # Ingest validation-optimal threshold dynamically from Step 1 artifact or compute on the fly
+    grid_json_path = os.path.join(RESULTS_JSON_DIR, "exp1_stage1_coopt_grid.json")
+    if os.path.exists(grid_json_path):
+        with open(grid_json_path) as f:
+            grid_data = json.load(f)
+        tau_1 = float(grid_data[ds_name]['optimal_tau_validation'])
+        print(f"[{ds_name.upper()}] Ingested validation-optimal tau* from Step 1 JSON: {tau_1:.4f}")
+    else:
+        tau_1 = derive_validation_optimal_tau(y_val, p_val, amt_val, brackets)
+        print(f"[{ds_name.upper()}] Dynamically computed validation-optimal tau*: {tau_1:.4f}")
+        
+    print("\n" + "=" * 80)
+    print(f"RUNNING ALGORITHM 1 ON: {ds_name.upper()}")
+    print(f"Config: tau_1 = {tau_1:.4f}, Amount Tiers = {n_tiers}, RF depth = {rf_depth}, cw = {rf_cw}")
+    print("=" * 80)
+    
     cand_val_mask = p_val >= tau_1
     cand_test_mask = p_test >= tau_1
     
@@ -107,29 +140,35 @@ def run_dataset_algorithm1(ds_name, tau_1, n_tiers=3, rf_depth=5, rf_cw=None):
     print(f"Candidate Alerts at tau_1={tau_1:.4f}: Validation={n_cand_v:,} (FP: {np.sum(y_val[cand_val_mask]==0):,}, FN: {np.sum(y_val[cand_val_mask]==1):,})")
     print(f"                                      Test      ={n_cand_t:,} (FP: {np.sum(y_test[cand_test_mask]==0):,}, FN: {np.sum(y_test[cand_test_mask]==1):,})")
     
-    # Joint Space representation
-    if os.path.exists(raw_npz_path) and ds_name == 'paysim':
-        raw_data = np.load(raw_npz_path)
-        X_val = np.hstack([raw_data['X_cand_v'], shap_val[cand_val_mask]])
-        X_test = np.hstack([raw_data['X_cand_t'], shap_test[cand_test_mask]])
+    # Feature Representation (Joint space [x, phi(x)] if raw cache available, else SHAP [phi(x)])
+    full_raw_path = os.path.join(CACHE_DIR, f"{ds_name}_full_raw_splits.npz")
+    if os.path.exists(full_raw_path) and ds_name == 'paysim':
+        raw_data = np.load(full_raw_path)
+        X_val = np.hstack([raw_data['X_val'][cand_val_mask], shap_val[cand_val_mask]])
+        X_test = np.hstack([raw_data['X_test'][cand_test_mask], shap_test[cand_test_mask]])
+        rep_desc = "[x, phi(x)] Joint Space"
     else:
         X_val = shap_val[cand_val_mask]
         X_test = shap_test[cand_test_mask]
+        rep_desc = "[phi(x)] TreeSHAP Space"
+    print(f"Representation: {rep_desc} (dimension = {X_val.shape[1]})")
         
-    meta_y_val = (y_val[cand_val_mask] == 0).astype(int)
+    meta_y_val = (y_val[cand_val_mask] == 0).astype(int)  # 1 = False Positive (Target for suppression), 0 = Fraud
     amt_val_c = amt_val[cand_val_mask]
     amt_test_c = amt_test[cand_test_mask]
     
-    # 1. 5-Fold Stratified OOF Cross-Fitting
+    # 1. 5-Fold Stratified OOF Cross-Fitting on Validation Candidates
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
     oof_q = np.zeros(n_cand_v, dtype=float)
+    oof_models = []
     
     for fold, (tr, va) in enumerate(skf.split(X_val, meta_y_val), 1):
         clf = RandomForestClassifier(n_estimators=100, max_depth=rf_depth, class_weight=rf_cw, random_state=42 + fold, n_jobs=-1)
         clf.fit(X_val[tr], meta_y_val[tr])
         oof_q[va] = clf.predict_proba(X_val[va])[:, 1]
+        oof_models.append(clf)
         
-    # 2. Amount-Tiered Safety Guard Calibration
+    # 2. Amount-Tiered Safety Guard Calibration (Algorithm 1)
     quantiles = np.linspace(0, 1, n_tiers + 1)[1:-1]
     tier_cutpoints = [float(np.quantile(amt_val_c, q)) for q in quantiles]
     cuts = [-np.inf] + tier_cutpoints + [np.inf]
@@ -148,6 +187,7 @@ def run_dataset_algorithm1(ds_name, tau_1, n_tiers=3, rf_depth=5, rf_cw=None):
         oof_supp_k = (oof_q[tiers_v == k] >= t_k).astype(int)
         oof_fp_supp_k = int(np.sum((oof_supp_k == 1) & (meta_y_val[tiers_v == k] == 1)))
         
+        # Safe abstention: if threshold exceeds 1.0 or zero FPs safely suppressed, abstain
         if t_k >= 1.0 or oof_fp_supp_k == 0:
             t_k = float('inf')
         tau_tiers.append(t_k)
@@ -157,10 +197,8 @@ def run_dataset_algorithm1(ds_name, tau_1, n_tiers=3, rf_depth=5, rf_cw=None):
         upper_bound = float('inf') if k == n_tiers - 1 else tier_cutpoints[k]
         print(f"  Tier {k+1} [{curr_sym}{lower_bound:,.2f} - {curr_sym}{upper_bound:,.2f}]: tau_meta_{k+1} = {t_k:.4f} | OOF Suppressed FP = {oof_fp_supp_k}")
 
-    # 3. Fit Final Meta-Classifier on all Validation Candidates
-    final_clf = RandomForestClassifier(n_estimators=100, max_depth=rf_depth, class_weight=rf_cw, random_state=42, n_jobs=-1)
-    final_clf.fit(X_val, meta_y_val)
-    q_test = final_clf.predict_proba(X_test)[:, 1]
+    # 3. Cross-Fitting Meta-Inference on Blind Test Candidates
+    q_test = np.mean([clf.predict_proba(X_test)[:, 1] for clf in oof_models], axis=0)
     
     # 4. Blind Test Prediction
     supp_test = np.zeros(len(q_test), dtype=int)
@@ -184,7 +222,7 @@ def run_dataset_algorithm1(ds_name, tau_1, n_tiers=3, rf_depth=5, rf_cw=None):
     fns_leak = int(np.sum((supp_test == 1) & (test_target == 0)))
     
     sav = base_eval['total_cost'] - acxis_eval['total_cost']
-    sav_pct = (sav / base_eval['total_cost']) * 100
+    sav_pct = (sav / base_eval['total_cost']) * 100 if base_eval['total_cost'] > 0 else 0.0
     
     print("\n--- PERFORMANCE EVALUATION ---")
     print(f"Stage 1 Baseline Cost: {curr_sym}{base_eval['total_cost']:,.2f} | Recall: {base_eval['recall']:.4f} | Precision: {base_eval['precision']:.4f}")
@@ -196,6 +234,7 @@ def run_dataset_algorithm1(ds_name, tau_1, n_tiers=3, rf_depth=5, rf_cw=None):
         'dataset': ds_name.upper(),
         'tau_1': tau_1,
         'n_tiers': n_tiers,
+        'rf_depth': rf_depth,
         'tier_cutpoints': tier_cutpoints,
         'tau_tiers': [round(t, 4) if t != float('inf') else 'inf' for t in tau_tiers],
         'oof_tier_suppressed': oof_tier_supp,
@@ -216,28 +255,29 @@ def run_dataset_algorithm1(ds_name, tau_1, n_tiers=3, rf_depth=5, rf_cw=None):
 
 def main():
     print("=" * 80)
-    print("STEP 2: PURE ALGORITHM 1 ENGINE BENCHMARK (OPTION A+C)")
+    print("STEP 2: PURE ALGORITHM 1 ENGINE BENCHMARK")
+    print("Zero hardcoded numbers; all tau_1 derived from validation cost minima")
     print("=" * 80)
     
     results = {}
     summary_rows = []
     
-    # 1. PaySim: tau_1 = 0.16838384 (Index 16 of np.linspace(0.01, 0.99, 100)), 3 Tiers, Depth 5
-    res_ps = run_dataset_algorithm1('paysim', tau_1=0.16838384, n_tiers=3, rf_depth=5)
+    # 1. PaySim: 3 Tiers, Depth 5, validation-derived tau*
+    res_ps = run_dataset_algorithm1('paysim', n_tiers=3, rf_depth=5)
     results['paysim'] = res_ps
     summary_rows.append(res_ps)
     
-    # 2. IEEE-CIS: tau_1 = 0.2800 (Co-Optimized Calibration), 5 Tiers, Depth 8, Balanced
-    res_ie = run_dataset_algorithm1('ieeecis', tau_1=0.2800, n_tiers=5, rf_depth=8, rf_cw='balanced')
+    # 2. IEEE-CIS: 3 Tiers, Depth 5, validation-derived tau*
+    res_ie = run_dataset_algorithm1('ieeecis', n_tiers=3, rf_depth=5)
     results['ieeecis'] = res_ie
     summary_rows.append(res_ie)
     
-    # 3. ULB: tau_1 = 0.4555, 3 Tiers, Depth 5
-    res_ulb = run_dataset_algorithm1('ulb', tau_1=0.4555, n_tiers=3, rf_depth=5)
+    # 3. ULB: 3 Tiers, Depth 5, validation-derived tau* (Honest abstention boundary condition)
+    res_ulb = run_dataset_algorithm1('ulb', n_tiers=3, rf_depth=5)
     results['ulb'] = res_ulb
     summary_rows.append(res_ulb)
     
-    # Save Artifacts
+    # Save Master Artifacts
     json_path = os.path.join(RESULTS_JSON_DIR, "exp2_algorithm1_results.json")
     with open(json_path, "w") as f:
         json.dump(results, f, indent=2)
@@ -248,8 +288,6 @@ def main():
     df_sum.to_csv(csv_path, index=False)
     print(f"[✓] Saved Algorithm 1 Summary CSV to:\n  {csv_path}")
     print("\n" + "=" * 80)
-    print("STEP 2 COMPLETE!")
-    print("=" * 80)
 
 if __name__ == '__main__':
     main()

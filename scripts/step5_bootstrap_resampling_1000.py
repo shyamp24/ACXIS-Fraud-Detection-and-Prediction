@@ -7,10 +7,10 @@ Strictly adheres to Rule 0 and the 7 Forensic Peer-Review Verification Rules.
 Zero shortcuts, zero hardcoded numbers, 100% genuine execution on local machine.
 
 Evaluates across PaySim, IEEE-CIS, and ULB:
-1. Empirical Mean +/- SD
+1. Empirical Mean +/- SD across 1,000 test set resamples
 2. Empirical 95% Bootstrap Confidence Intervals [2.5th, 97.5th percentiles]
-3. Paired Wilcoxon signed-rank test (W-statistic, p-value, effect size r)
-4. Paired Student's t-test and Cohen's d
+3. Distribution of Suppressed False Positives and Leaked False Negatives
+4. Resampling distribution export to CSV
 
 Outputs:
 - results_json/exp5_bootstrap_results.json
@@ -24,16 +24,18 @@ import json
 import time
 import numpy as np
 import pandas as pd
-from scipy.stats import wilcoxon, norm, ttest_rel
 from sklearn.ensemble import RandomForestClassifier
 
-# Directory Setup
+# Directory Setup (Portable relative paths)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PKG_DIR = os.path.dirname(SCRIPT_DIR)
 CACHE_DIR = os.path.join(PKG_DIR, "cache")
 RESULTS_CSV_DIR = os.path.join(PKG_DIR, "results_csv")
 RESULTS_JSON_DIR = os.path.join(PKG_DIR, "results_json")
 LOGS_DIR = os.path.join(PKG_DIR, "logs")
+
+for d in [RESULTS_CSV_DIR, RESULTS_JSON_DIR, LOGS_DIR]:
+    os.makedirs(d, exist_ok=True)
 
 brackets_paysim = [
     (50_000, 500), (100_000, 1000), (150_000, 1500), (200_000, 2000),
@@ -95,11 +97,11 @@ def get_genuine_predictions_and_vectors(ds_name):
     cand_val_mask = p_val >= tau_1
     cand_test_mask = p_test >= tau_1
     
-    raw_path = os.path.join(CACHE_DIR, f"{ds_name}_cand_raw_X.npz")
-    if os.path.exists(raw_path) and ds_name == 'paysim':
-        raw_d = np.load(raw_path)
-        X_val = np.hstack([raw_d['X_cand_v'], shap_val[cand_val_mask]])
-        X_test = np.hstack([raw_d['X_cand_t'], shap_test[cand_test_mask]])
+    full_raw_path = os.path.join(CACHE_DIR, f"{ds_name}_full_raw_splits.npz")
+    if os.path.exists(full_raw_path) and ds_name == 'paysim':
+        raw_d = np.load(full_raw_path)
+        X_val = np.hstack([raw_d['X_val'][cand_val_mask], shap_val[cand_val_mask]])
+        X_test = np.hstack([raw_d['X_test'][cand_test_mask], shap_test[cand_test_mask]])
     else:
         X_val = shap_val[cand_val_mask]
         X_test = shap_test[cand_test_mask]
@@ -108,231 +110,209 @@ def get_genuine_predictions_and_vectors(ds_name):
     amt_val_c = amt_val[cand_val_mask]
     amt_test_c = amt_test[cand_test_mask]
     
-    rf_depth = 5 if ds_name == 'paysim' else 8
-    rf_cw = None if ds_name == 'paysim' else 'balanced'
-    final_rf = RandomForestClassifier(n_estimators=100, max_depth=rf_depth, class_weight=rf_cw, random_state=42, n_jobs=-1)
-    final_rf.fit(X_val, meta_y_val)
-    q_test = final_rf.predict_proba(X_test)[:, 1]
+    n_tiers = cfg['n_tiers']
+    rf_depth = cfg.get('rf_depth', 5)
     
-    # Stratify test candidate alerts into tiers
-    tier_cutpoints = cfg['tier_cutpoints']
+    quantiles = np.linspace(0, 1, n_tiers + 1)[1:-1]
+    tier_cutpoints = [float(np.quantile(amt_val_c, q)) for q in quantiles]
     cuts = [-np.inf] + tier_cutpoints + [np.inf]
     tiers_t = np.digitize(amt_test_c, cuts) - 1
     
-    tau_tiers = [float(t) for t in cfg['tau_tiers']]
-    n_tiers = len(tau_tiers)
+    # Reconstruct tau_tiers from JSON
+    tau_tiers = [float(t) if t != 'inf' else float('inf') for t in cfg['tau_tiers']]
+    
+    # Reconstruct 5-fold cross-fitting models on validation set
+    from sklearn.model_selection import StratifiedKFold
+    skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    models = []
+    for fold, (tr, va) in enumerate(skf.split(X_val, meta_y_val), 1):
+        clf = RandomForestClassifier(n_estimators=100, max_depth=rf_depth, random_state=42 + fold, n_jobs=-1)
+        clf.fit(X_val[tr], meta_y_val[tr])
+        models.append(clf)
+    q_test = np.mean([m.predict_proba(X_test)[:, 1] for m in models], axis=0)
+    
     supp_test = np.zeros(len(q_test), dtype=int)
     for k in range(n_tiers):
-        in_k = tiers_t == k
         if tau_tiers[k] != float('inf'):
+            in_k = tiers_t == k
             supp_test[in_k] = (q_test[in_k] >= tau_tiers[k]).astype(int)
             
+    base_pred_test = (p_test >= tau_1).astype(int)
     cand_test_idx = np.where(cand_test_mask)[0]
-    pred_base = (p_test >= tau_1).astype(int)
-    pred_acxis = pred_base.copy()
+    pred_acxis = base_pred_test.copy()
     pred_acxis[cand_test_idx[supp_test == 1]] = 0
     
-    return y_test, amt_test, pred_base, pred_acxis, supp_test, cand_test_mask
+    is_cand_test = np.zeros(len(y_test), dtype=bool)
+    is_cand_test[cand_test_idx] = True
+    
+    supp_full = np.zeros(len(y_test), dtype=int)
+    supp_full[cand_test_idx] = supp_test
+    
+    return {
+        'y_test': y_test,
+        'amt_test': amt_test,
+        'base_pred': base_pred_test,
+        'acxis_pred': pred_acxis,
+        'is_cand': is_cand_test,
+        'supp': supp_full,
+        'brackets': brackets_paysim if ds_name == 'paysim' else (brackets_ieeecis if ds_name == 'ieeecis' else brackets_ulb),
+        'currency': '₹' if ds_name == 'paysim' else ('$' if ds_name == 'ieeecis' else '€'),
+        'tau_1': tau_1
+    }
 
-def run_resampling_benchmark(ds_name, n_boot=1000):
+def run_bootstrap_for_dataset(ds_name, n_iterations=1000, seed=42):
     print("\n" + "=" * 80)
-    print(f"RUNNING 100% GENUINE 1,000 BOOTSTRAP RESAMPLING FOR: {ds_name.upper()}")
+    print(f"RUNNING 1,000 STRATIFIED BOOTSTRAP REPLICATES: {ds_name.upper()}")
     print("=" * 80)
     
-    brackets = brackets_paysim if ds_name == 'paysim' else (brackets_ieeecis if ds_name == 'ieeecis' else brackets_ulb)
-    curr_sym = "₹" if ds_name == 'paysim' else ("$" if ds_name == 'ieeecis' else "€")
+    d = get_genuine_predictions_and_vectors(ds_name)
+    y_test = d['y_test']
+    amt_test = d['amt_test']
+    base_pred = d['base_pred']
+    acxis_pred = d['acxis_pred']
+    brackets = d['brackets']
+    curr = d['currency']
     
-    y_test, amt_test, pred_base, pred_acxis, supp_test, cand_test_mask = get_genuine_predictions_and_vectors(ds_name)
-    n_test = len(y_test)
+    fraud_indices = np.where(y_test == 1)[0]
+    legit_indices = np.where(y_test == 0)[0]
+    n_fraud = len(fraud_indices)
+    n_legit = len(legit_indices)
     
-    rng = np.random.RandomState(42)
+    rng = np.random.RandomState(seed)
     
-    cost_base_list = []
-    cost_acxis_list = []
-    savings_curr_list = []
-    savings_pct_list = []
-    supp_fp_list = []
-    leak_fn_list = []
-    rec_base_list = []
-    rec_acxis_list = []
-    prec_base_list = []
-    prec_acxis_list = []
-    f1_base_list = []
-    f1_acxis_list = []
+    base_costs = np.zeros(n_iterations, dtype=float)
+    acxis_costs = np.zeros(n_iterations, dtype=float)
+    savings_abs = np.zeros(n_iterations, dtype=float)
+    savings_pct = np.zeros(n_iterations, dtype=float)
+    fps_suppressed = np.zeros(n_iterations, dtype=int)
+    fns_leaked = np.zeros(n_iterations, dtype=int)
+    recalls_base = np.zeros(n_iterations, dtype=float)
+    recalls_acxis = np.zeros(n_iterations, dtype=float)
     
     t0 = time.time()
-    for b in range(n_boot):
-        if (b + 1) % 100 == 0 or b == 0:
-            print(f"  [{ds_name.upper()}] Running Bootstrap Iteration {b+1:4d} / {n_boot} (Elapsed: {time.time()-t0:.1f}s)...", flush=True)
+    for b in range(n_iterations):
+        sample_fraud = rng.choice(fraud_indices, size=n_fraud, replace=True)
+        sample_legit = rng.choice(legit_indices, size=n_legit, replace=True)
+        idx_boot = np.concatenate([sample_fraud, sample_legit])
+        
+        y_b = y_test[idx_boot]
+        amt_b = amt_test[idx_boot]
+        p_base_b = base_pred[idx_boot]
+        p_acxis_b = acxis_pred[idx_boot]
+        
+        c_base, _, _, rec_b, _, _, _, _ = evaluate_cost_fast(y_b, p_base_b, amt_b, brackets)
+        c_acx, _, _, rec_a, _, _, _, _ = evaluate_cost_fast(y_b, p_acxis_b, amt_b, brackets)
+        
+        diff = c_base - c_acx
+        pct = (diff / c_base) * 100 if c_base > 0 else 0.0
+        
+        cand_b = d['is_cand'][idx_boot]
+        supp_b = d['supp'][idx_boot]
+        fp_supp = int(np.sum((supp_b == 1) & (y_b == 0)))
+        fn_leak = int(np.sum((supp_b == 1) & (y_b == 1)))
+        
+        base_costs[b] = c_base
+        acxis_costs[b] = c_acx
+        savings_abs[b] = diff
+        savings_pct[b] = pct
+        fps_suppressed[b] = fp_supp
+        fns_leaked[b] = fn_leak
+        recalls_base[b] = rec_b
+        recalls_acxis[b] = rec_a
+        
+        if (b + 1) % 250 == 0:
+            print(f"  Iteration {b+1:4d}/1000 | Mean Savings: {curr}{np.mean(savings_abs[:b+1]):,.2f} ({np.mean(savings_pct[:b+1]):.2f}%) | Max Leaked FN: {np.max(fns_leaked[:b+1])}")
             
-        b_idx = rng.choice(n_test, size=n_test, replace=True)
-        y_b = y_test[b_idx]
-        amt_b = amt_test[b_idx]
-        p_base_b = pred_base[b_idx]
-        p_acx_b = pred_acxis[b_idx]
-        
-        c_base, _, _, rec_b, prec_b, f1_b, _, _ = evaluate_cost_fast(y_b, p_base_b, amt_b, brackets)
-        c_acx, _, _, rec_a, prec_a, f1_a, _, _ = evaluate_cost_fast(y_b, p_acx_b, amt_b, brackets)
-        
-        suppressed_in_b = (p_base_b == 1) & (p_acx_b == 0)
-        fp_supp = int(np.sum(suppressed_in_b & (y_b == 0)))
-        fn_leak = int(np.sum(suppressed_in_b & (y_b == 1)))
-        
-        sav_curr = c_base - c_acx
-        sav_pct = (sav_curr / c_base * 100.0) if c_base > 0 else 0.0
-        
-        cost_base_list.append(c_base)
-        cost_acxis_list.append(c_acx)
-        savings_curr_list.append(sav_curr)
-        savings_pct_list.append(sav_pct)
-        supp_fp_list.append(fp_supp)
-        leak_fn_list.append(fn_leak)
-        rec_base_list.append(rec_b)
-        rec_acxis_list.append(rec_a)
-        prec_base_list.append(prec_b)
-        prec_acxis_list.append(prec_a)
-        f1_base_list.append(f1_b)
-        f1_acxis_list.append(f1_a)
-        
-    t_elapsed = time.time() - t0
-    print(f"Completed {n_boot:,} resamples in {t_elapsed:.2f} seconds.")
+    elapsed = time.time() - t0
+    print(f"Completed 1,000 iterations in {elapsed:.1f}s")
     
-    cost_base_arr = np.array(cost_base_list)
-    cost_acxis_arr = np.array(cost_acxis_list)
-    savings_curr_arr = np.array(savings_curr_list)
-    savings_pct_arr = np.array(savings_pct_list)
-    supp_fp_arr = np.array(supp_fp_list)
-    leak_fn_arr = np.array(leak_fn_list)
+    # Empirical Percentile Confidence Intervals
+    sav_ci_pct = (float(np.percentile(savings_pct, 2.5)), float(np.percentile(savings_pct, 97.5)))
+    sav_ci_abs = (float(np.percentile(savings_abs, 2.5)), float(np.percentile(savings_abs, 97.5)))
+    base_cost_ci = (float(np.percentile(base_costs, 2.5)), float(np.percentile(base_costs, 97.5)))
+    acxis_cost_ci = (float(np.percentile(acxis_costs, 2.5)), float(np.percentile(acxis_costs, 97.5)))
+    fps_supp_ci = (float(np.percentile(fps_suppressed, 2.5)), float(np.percentile(fps_suppressed, 97.5)))
     
-    diff = cost_base_arr - cost_acxis_arr
-    if np.all(diff == 0):
-        w_stat, p_val, eff_r, t_stat, cohen_d = float('nan'), 1.0, 0.0, 0.0, 0.0
-    else:
-        w_res = wilcoxon(cost_base_arr, cost_acxis_arr, alternative='greater')
-        w_stat = float(w_res.statistic)
-        p_val = float(w_res.pvalue)
-        z_score = norm.ppf(1 - p_val) if p_val > 0 else 38.0
-        eff_r = float(z_score / np.sqrt(n_boot))
-        
-        t_res = ttest_rel(cost_base_arr, cost_acxis_arr)
-        t_stat = float(t_res.statistic)
-        cohen_d = float(np.mean(diff) / np.std(diff)) if np.std(diff) > 0 else 0.0
-        
-    summary = {
-        'dataset': ds_name,
-        'cost_base_mean': float(np.mean(cost_base_arr)),
-        'cost_base_sd': float(np.std(cost_base_arr)),
-        'cost_acxis_mean': float(np.mean(cost_acxis_arr)),
-        'cost_acxis_sd': float(np.std(cost_acxis_arr)),
-        'savings_currency_mean': float(np.mean(savings_curr_arr)),
-        'savings_currency_sd': float(np.std(savings_curr_arr)),
-        'savings_currency_ci95': [float(np.percentile(savings_curr_arr, 2.5)), float(np.percentile(savings_curr_arr, 97.5))],
-        'savings_pct_mean': float(np.mean(savings_pct_arr)),
-        'savings_pct_sd': float(np.std(savings_pct_arr)),
-        'savings_pct_ci95': [float(np.percentile(savings_pct_arr, 2.5)), float(np.percentile(savings_pct_arr, 97.5))],
-        'fps_suppressed_mean': float(np.mean(supp_fp_arr)),
-        'fps_suppressed_sd': float(np.std(supp_fp_arr)),
-        'fns_leaked_mean': float(np.mean(leak_fn_arr)),
-        'fns_leaked_sd': float(np.std(leak_fn_arr)),
-        'recall_base_mean': float(np.mean(rec_base_list)),
-        'recall_acxis_mean': float(np.mean(rec_acxis_list)),
-        'precision_base_mean': float(np.mean(prec_base_list)),
-        'precision_acxis_mean': float(np.mean(prec_acxis_list)),
-        'f1_base_mean': float(np.mean(f1_base_list)),
-        'f1_acxis_mean': float(np.mean(f1_acxis_list)),
-        'wilcoxon_w': w_stat,
-        'wilcoxon_p': p_val,
-        'effect_size_r': eff_r,
-        't_stat': t_stat,
-        'cohen_d': cohen_d
-    }
+    print("\n--- 1,000-ITERATION RESAMPLING RESULTS ---")
+    print(f"Baseline Cost : {curr}{np.mean(base_costs):,.2f} ± {curr}{np.std(base_costs, ddof=1):,.2f} [95% CI: {curr}{base_cost_ci[0]:,.2f}, {curr}{base_cost_ci[1]:,.2f}]")
+    print(f"ACXIS Cost    : {curr}{np.mean(acxis_costs):,.2f} ± {curr}{np.std(acxis_costs, ddof=1):,.2f} [95% CI: {curr}{acxis_cost_ci[0]:,.2f}, {curr}{acxis_cost_ci[1]:,.2f}]")
+    print(f"Absolute Sav. : {curr}{np.mean(savings_abs):,.2f} ± {curr}{np.std(savings_abs, ddof=1):,.2f} [95% CI: {curr}{sav_ci_abs[0]:,.2f}, {curr}{sav_ci_abs[1]:,.2f}]")
+    print(f"Relative Sav. : {np.mean(savings_pct):.2f}% ± {np.std(savings_pct, ddof=1):.2f}% [95% CI: {sav_ci_pct[0]:.2f}%, {sav_ci_pct[1]:.2f}%]")
+    print(f"Suppressed FP : {np.mean(fps_suppressed):.1f} ± {np.std(fps_suppressed, ddof=1):.1f} [95% CI: {fps_supp_ci[0]:.0f}, {fps_supp_ci[1]:.0f}]")
+    print(f"Leaked FN     : {np.mean(fns_leaked):.4f} (Max across all resamples = {np.max(fns_leaked)})")
     
-    # Save full 1,000 raw bootstrap resamples to permanent CSV
-    raw_df = pd.DataFrame({
-        'iteration': np.arange(1, n_boot + 1),
-        'cost_baseline': cost_base_arr,
-        'cost_acxis': cost_acxis_arr,
-        'savings_currency': savings_curr_arr,
-        'savings_pct': savings_pct_arr,
-        'fps_suppressed': supp_fp_arr,
-        'fns_leaked': leak_fn_arr,
-        'recall_base': rec_base_list,
-        'recall_acxis': rec_acxis_list,
-        'precision_base': prec_base_list,
-        'precision_acxis': prec_acxis_list,
-        'f1_base': f1_base_list,
-        'f1_acxis': f1_acxis_list
+    # Save per-dataset distribution CSV
+    dist_df = pd.DataFrame({
+        'iteration': np.arange(1, n_iterations + 1),
+        'base_cost': base_costs,
+        'acxis_cost': acxis_costs,
+        'savings_abs': savings_abs,
+        'savings_pct': savings_pct,
+        'fps_suppressed': fps_suppressed,
+        'fns_leaked': fns_leaked
     })
-    raw_csv = os.path.join(RESULTS_CSV_DIR, f"table5_bootstrap_raw_{ds_name}_1000.csv")
-    raw_df.to_csv(raw_csv, index=False)
-    print(f"  [✓] Saved 1,000 raw bootstrap iterations to: {raw_csv}")
-
-    print("-" * 65)
-    print(f"RESAMPLING SUMMARY FOR {ds_name.upper()}:")
-    print(f"Mean Savings: {curr_sym}{summary['savings_currency_mean']:,.2f} +/- {curr_sym}{summary['savings_currency_sd']:,.2f} ({summary['savings_pct_mean']:.4f}% +/- {summary['savings_pct_sd']:.4f}%)")
-    print(f"95% CI: [{summary['savings_pct_ci95'][0]:.4f}%, {summary['savings_pct_ci95'][1]:.4f}%]")
-    print(f"Mean FPs Suppressed: {summary['fps_suppressed_mean']:.1f} +/- {summary['fps_suppressed_sd']:.1f}")
-    print(f"Mean FNs Leaked:     {summary['fns_leaked_mean']:.1f} +/- {summary['fns_leaked_sd']:.1f} (100% Zero-Leak Guarantee Verified)")
-    print(f"Wilcoxon W: {summary['wilcoxon_w']} | p-value: {summary['wilcoxon_p']} | Cohen's d: {summary['cohen_d']:.2f}")
-    print("-" * 65)
+    dist_csv = os.path.join(RESULTS_CSV_DIR, f"table5_bootstrap_distribution_{ds_name}.csv")
+    dist_df.to_csv(dist_csv, index=False)
     
-    return summary
+    return {
+        'dataset': ds_name.upper(),
+        'tau_1': d['tau_1'],
+        'currency': curr,
+        'base_cost_mean': float(np.mean(base_costs)),
+        'base_cost_sd': float(np.std(base_costs, ddof=1)),
+        'base_cost_ci': base_cost_ci,
+        'acxis_cost_mean': float(np.mean(acxis_costs)),
+        'acxis_cost_sd': float(np.std(acxis_costs, ddof=1)),
+        'acxis_cost_ci': acxis_cost_ci,
+        'savings_abs_mean': float(np.mean(savings_abs)),
+        'savings_abs_sd': float(np.std(savings_abs, ddof=1)),
+        'savings_abs_ci': sav_ci_abs,
+        'savings_pct_mean': float(np.mean(savings_pct)),
+        'savings_pct_sd': float(np.std(savings_pct, ddof=1)),
+        'savings_pct_ci': sav_ci_pct,
+        'fps_supp_mean': float(np.mean(fps_suppressed)),
+        'fps_supp_sd': float(np.std(fps_suppressed, ddof=1)),
+        'fps_supp_ci': fps_supp_ci,
+        'fns_leaked_max': int(np.max(fns_leaked)),
+        'fns_leaked_mean': float(np.mean(fns_leaked))
+    }
 
 def main():
-    print("=============================================================================")
+    print("=" * 80)
     print("STARTING EXPERIMENT 5: 1,000-ITERATION STRATIFIED BOOTSTRAP RESAMPLING")
-    print("=============================================================================")
+    print("=" * 80)
     
-    all_summaries = {}
+    all_summary = {}
     table5_rows = []
-    table7_rows = []
     
     for ds in ['paysim', 'ieeecis', 'ulb']:
-        s = run_resampling_benchmark(ds, n_boot=1000)
-        all_summaries[ds] = s
-        
-        curr = "₹" if ds == 'paysim' else ("$" if ds == 'ieeecis' else "€")
+        res = run_bootstrap_for_dataset(ds, n_iterations=1000, seed=42)
+        all_summary[ds] = res
+        curr = res['currency']
         table5_rows.append({
-            'dataset': ds.upper(),
-            'baseline_cost_mean_sd': f"{curr}{s['cost_base_mean']:,.2f} ± {curr}{s['cost_base_sd']:,.2f}",
-            'acxis_cost_mean_sd': f"{curr}{s['cost_acxis_mean']:,.2f} ± {curr}{s['cost_acxis_sd']:,.2f}",
-            'savings_mean_sd': f"{curr}{s['savings_currency_mean']:,.2f} ± {curr}{s['savings_currency_sd']:,.2f}",
-            'savings_pct_mean_sd': f"{s['savings_pct_mean']:.2f}% ± {s['savings_pct_sd']:.2f}%",
-            'savings_pct_95ci': f"[{s['savings_pct_ci95'][0]:.2f}%, {s['savings_pct_ci95'][1]:.2f}%]",
-            'fps_suppressed_mean_sd': f"{s['fps_suppressed_mean']:.1f} ± {s['fps_suppressed_sd']:.1f}",
-            'fns_leaked_mean_sd': f"{s['fns_leaked_mean']:.2f} ± {s['fns_leaked_sd']:.2f}",
-            'recall_preserved': f"{s['recall_acxis_mean']:.4f} (Base: {s['recall_base_mean']:.4f})",
-            'f1_score_mean': f"{s['f1_acxis_mean']:.4f} (Base: {s['f1_base_mean']:.4f})"
+            'Dataset': res['dataset'],
+            'Operating tau*': f"{res['tau_1']:.4f}",
+            'Baseline Cost': f"{curr}{res['base_cost_mean']:,.2f} ± {curr}{res['base_cost_sd']:,.2f}",
+            'Baseline 95% CI': f"[{curr}{res['base_cost_ci'][0]:,.2f}, {curr}{res['base_cost_ci'][1]:,.2f}]",
+            'ACXIS Cost': f"{curr}{res['acxis_cost_mean']:,.2f} ± {curr}{res['acxis_cost_sd']:,.2f}",
+            'ACXIS 95% CI': f"[{curr}{res['acxis_cost_ci'][0]:,.2f}, {curr}{res['acxis_cost_ci'][1]:,.2f}]",
+            'Net Savings': f"{curr}{res['savings_abs_mean']:,.2f} ± {curr}{res['savings_abs_sd']:,.2f}",
+            'Savings % [95% CI]': f"{res['savings_pct_mean']:.2f}% [{res['savings_pct_ci'][0]:.2f}%, {res['savings_pct_ci'][1]:.2f}%]",
+            'Suppressed FPs [95% CI]': f"{res['fps_supp_mean']:.1f} [{res['fps_supp_ci'][0]:.0f}, {res['fps_supp_ci'][1]:.0f}]",
+            'Leaked FNs (Max)': f"{res['fns_leaked_max']}"
         })
         
-        table7_rows.append({
-            'dataset': ds.upper(),
-            'wilcoxon_w': s['wilcoxon_w'],
-            'wilcoxon_p': s['wilcoxon_p'],
-            'effect_size_r': s['effect_size_r'],
-            't_stat': s['t_stat'],
-            'cohen_d': s['cohen_d'],
-            'significance': "p < 0.001 (Extremely Significant)" if s['wilcoxon_p'] < 0.001 else ("p = 1.0 (Abstention / Boundary Condition)" if ds == 'ulb' else f"p = {s['wilcoxon_p']:.4f}")
-        })
-        
-    # Save permanent artifacts
-    out_json = os.path.join(RESULTS_JSON_DIR, "exp5_bootstrap_results.json")
-    with open(out_json, "w") as f:
-        json.dump(all_summaries, f, indent=2)
-    print(f"\n[✓] Saved complete genuine bootstrap results to:\n  {out_json}")
+    # Save artifacts
+    json_path = os.path.join(RESULTS_JSON_DIR, "exp5_bootstrap_results.json")
+    with open(json_path, "w") as f:
+        json.dump(all_summary, f, indent=2)
+    print(f"\n[✓] Saved complete 1,000-Bootstrap Master JSON to:\n  {json_path}")
     
-    df5 = pd.DataFrame(table5_rows)
-    out_csv5 = os.path.join(RESULTS_CSV_DIR, "table5_resampling_ci_master.csv")
-    df5.to_csv(out_csv5, index=False)
-    print(f"[✓] Saved genuine Table 5 master CSV to:\n  {out_csv5}")
-    
-    df7 = pd.DataFrame(table7_rows)
-    out_csv7 = os.path.join(RESULTS_CSV_DIR, "table7_statistical_significance.csv")
-    df7.to_csv(out_csv7, index=False)
-    print(f"[✓] Saved genuine Table 7 master CSV to:\n  {out_csv7}")
-    print("\n=============================================================================")
-    print("EXPERIMENT 5 COMPLETED SUCCESSFULLY!")
-    print("=============================================================================")
+    df_t5 = pd.DataFrame(table5_rows)
+    csv_path = os.path.join(RESULTS_CSV_DIR, "table5_resampling_ci_master.csv")
+    df_t5.to_csv(csv_path, index=False)
+    print(f"[✓] Saved Table 5 Resampling CI Master CSV to:\n  {csv_path}")
+    print("\n" + "=" * 80)
 
 if __name__ == '__main__':
     main()
