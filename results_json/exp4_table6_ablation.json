@@ -157,7 +157,7 @@
   ],
   "panel_c": [
     {
-      "panel": "Panel C: Cross-Dataset (IEEE-CIS, Option A+C)",
+      "panel": "Panel C: Cross-Dataset (IEEE-CIS, Co-Optimized Framework)",
       "model_name": "Probability-Only Filter [p_hat]",
       "representation": "[p_hat]",
       "fps_supp": 25,
@@ -178,7 +178,7 @@
       ]
     },
     {
-      "panel": "Panel C: Cross-Dataset (IEEE-CIS, Option A+C)",
+      "panel": "Panel C: Cross-Dataset (IEEE-CIS, Co-Optimized Framework)",
       "model_name": "SHAP Attributions Only [phi(x)]",
       "representation": "[phi(x)]",
       "fps_supp": 128,
@@ -199,7 +199,7 @@
       ]
     },
     {
-      "panel": "Panel C: Cross-Dataset (IEEE-CIS, Option A+C)",
+      "panel": "Panel C: Cross-Dataset (IEEE-CIS, Co-Optimized Framework)",
       "model_name": "ACXIS Proposed [phi(x) + Co-Opt]",
       "representation": "[phi(x)] + 5 Tiers",
       "fps_supp": 128,

@@ -441,7 +441,7 @@
       "tn_count": 634551
     }
   },
-  "ACXIS (Proposed Stage 1+2+3 [Option A+C])": {
+  "ACXIS (Proposed Stage 1+2+3)": {
     "roc_auc": 0.9997219334536369,
     "pr_auc": 0.9649995210984412,
     "tau_default": 0.5,

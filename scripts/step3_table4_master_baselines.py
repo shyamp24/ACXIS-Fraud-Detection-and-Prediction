@@ -20,7 +20,7 @@ Evaluates across PaySim and IEEE-CIS:
 11. Stage 1 Core (Default tau=0.5)
 12. Stage 2 Tuned (tau=tau*, No Filter)
 13. Stage 1 Co-Optimized (tau=tau_1, No Filter)
-14. ACXIS (Proposed Stage 1+2+3 under Option A+C)
+14. ACXIS (Proposed Stage 1+2+3 under Co-Optimized Framework)
 
 Outputs:
 - results_json/exp3_table4_baselines.json
@@ -415,7 +415,7 @@ def run_benchmark_for_dataset(ds_name):
         'tau_tuned': opt_tau_core, 'cost_tuned': c_core_tuned['total_cost'], 'res_tuned': c_core_tuned
     }
     
-    # 5. Stage 1 Co-Optimized Baseline (Option C)
+    # 5. Stage 1 Co-Optimized Baseline (Co-Optimized Calibration)
     c_core_coopt = evaluate_cost(y_test, (p_test_core >= tau_coopt).astype(int), amt_test, brackets)
     results[f'Stage 1 Co-Optimized (tau1={tau_coopt:.4f}, No Filter)'] = {
         'roc_auc': float(roc_auc_score(y_test, p_test_core)), 'pr_auc': float(average_precision_score(y_test, p_test_core)),
@@ -423,8 +423,8 @@ def run_benchmark_for_dataset(ds_name):
         'tau_tuned': tau_coopt, 'cost_tuned': c_core_coopt['total_cost'], 'res_tuned': c_core_coopt
     }
     
-    # 6. Load ACXIS (Option A+C) from exp2_algorithm1_results.json
-    print("\n--- Adding Genuine ACXIS (Option A+C) ---")
+    # 6. Load ACXIS (Co-Optimized) from exp2_algorithm1_results.json
+    print("\n--- Adding Genuine ACXIS (Co-Optimized) ---")
     with open(os.path.join(RESULTS_JSON_DIR, "exp2_algorithm1_results.json")) as f:
         acxis_json = json.load(f)
     acx = acxis_json[ds_name]
@@ -445,7 +445,7 @@ def run_benchmark_for_dataset(ds_name):
         'fn_count': acx_fn
     }
     
-    results['ACXIS (Proposed Stage 1+2+3 [Option A+C])'] = {
+    results['ACXIS (Proposed Stage 1+2+3)'] = {
         'roc_auc': float(roc_auc_score(y_test, p_test_core)), 'pr_auc': float(average_precision_score(y_test, p_test_core)),
         'tau_default': 0.5, 'cost_default': c_core_05['total_cost'], 'res_default': c_core_05,
         'tau_tuned': acx['tau_1'], 'cost_tuned': acx['acxis_cost'], 'res_tuned': acx_res_dict
@@ -457,7 +457,7 @@ def run_benchmark_for_dataset(ds_name):
     print(f"Stage 1 Core:     Cost = {currency}{c_core_05['total_cost']:,.2f}")
     print(f"Stage 2 Tuned:    Cost = {currency}{c_core_tuned['total_cost']:,.2f}")
     print(f"Stage 1 Co-Opt:   Cost = {currency}{c_core_coopt['total_cost']:,.2f}")
-    print(f"ACXIS Option A+C: Cost = {currency}{acx['acxis_cost']:,.2f} (Savings: {currency}{acx['savings']:,.2f})")
+    print(f"ACXIS Co-Optimized Framework: Cost = {currency}{acx['acxis_cost']:,.2f} (Savings: {currency}{acx['savings']:,.2f})")
     print("-" * 65)
     
     return results

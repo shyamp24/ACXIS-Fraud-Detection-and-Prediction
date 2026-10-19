@@ -227,7 +227,7 @@ def main():
     results['paysim'] = res_ps
     summary_rows.append(res_ps)
     
-    # 2. IEEE-CIS: tau_1 = 0.2800 (Option C), 5 Tiers, Depth 8, Balanced
+    # 2. IEEE-CIS: tau_1 = 0.2800 (Co-Optimized Calibration), 5 Tiers, Depth 8, Balanced
     res_ie = run_dataset_algorithm1('ieeecis', tau_1=0.2800, n_tiers=5, rf_depth=8, rf_cw='balanced')
     results['ieeecis'] = res_ie
     summary_rows.append(res_ie)

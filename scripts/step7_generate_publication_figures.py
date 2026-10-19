@@ -7,7 +7,7 @@ Strictly adheres to Rule 0 and the 7 Forensic Peer-Review Verification Rules.
 All numbers and data points are loaded directly from the executed JSON/CSV artifacts.
 
 Generates:
-1. Fig 1: Vector Architecture Diagram (with Amount-Stratified Guard & Option A+C)
+1. Fig 1: Vector Architecture Diagram (with Amount-Stratified Guard & Co-Optimized Framework)
 2. Fig 4: 2-Panel Confusion Matrix (Before vs. After Stage 3 SHAP Suppression)
 3. Fig 5: Cross-Dataset Cost & Performance Benchmark (PaySim, IEEE-CIS, ULB)
 4. Fig 7: Amount-Tiered Suppression Breakdown (Quantiles & Zero-Leak Verification)
@@ -178,7 +178,7 @@ def generate_figure_1():
     print(f"  [✓] Saved Figure 1 to:\n    {pdf_path}\n    {png_path}")
 
 # =============================================================================
-# 2. FIGURE 4: 2-PANEL CONFUSION MATRIX (PaySim Option A+C)
+# 2. FIGURE 4: 2-PANEL CONFUSION MATRIX (PaySim Co-Optimized Framework)
 # =============================================================================
 def generate_figure_4():
     print("Generating Figure 4: Before vs. After Confusion Matrix...")
@@ -213,7 +213,7 @@ def generate_figure_4():
     panels = [
         (cm_before, f"(a) Before Stage 3 Suppression (τ* = {tau_1:.4f})", 
          f"Stage 2 Tuned Baseline (τ* = {tau_1:.4f})\nTotal Alerts = {tp_b+fp_b:,} (TP: {tp_b:,}, FP: {fp_b:,}) | Baseline Missed (FN): {fn_b}", False, '#64748B'),
-        (cm_after,  f"(b) After Stage 3 SHAP Suppression (ACXIS Option A+C)", 
+        (cm_after,  f"(b) After Stage 3 SHAP Suppression (ACXIS Co-Optimized Framework)", 
          f"Proposed ACXIS Framework (Stage 1+2+3)\nTotal Alerts = {tp_a+fp_a:,} (TP: {tp_a:,}, FP: {fp_a:,}) | ↓ {fps_supp} False Alarms, {fns_leak:.2f} FN Leaks", True, '#16A34A')
     ]
 

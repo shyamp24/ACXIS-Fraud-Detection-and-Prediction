@@ -18,7 +18,7 @@ Random Forest + TreeSHAP (ACXIS Proposed)  | Supp FP: 44 | Leak FN:0 | Cost: ₹
 
 >>> Loading IEEE-CIS Data...
 
---- PANEL C: Cross-Dataset Validation (IEEE-CIS) under Option A+C ---
+--- PANEL C: Cross-Dataset Validation (IEEE-CIS) under Co-Optimized Framework ---
 Original Baseline Cost: $95,057.65 (Recall: 0.7899)
 Co-Optimized Baseline : $93,596.06 (Recall: 0.8364)
 Probability-Only Filter [p_hat]            | Supp FP: 25 | Leak FN:1 | Cost: $93,521.06 | Savings: $1,536.59 (+1.62%) [LEAK (1 FN!)]

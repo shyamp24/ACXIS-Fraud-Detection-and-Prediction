@@ -55,13 +55,13 @@ XAI Heuristic Rule Filter -> Cost=₹46,836,643.30 | Rec=0.5457 | Prec=0.8485
 
 --- Evaluating Stage 1 Core and Stage 2 Tuned ---
 
---- Adding Genuine ACXIS (Option A+C) ---
+--- Adding Genuine ACXIS (Co-Optimized) ---
 -----------------------------------------------------------------
 SUMMARY FOR PAYSIM:
 Stage 1 Core:     Cost = ₹6,236,998.46
 Stage 2 Tuned:    Cost = ₹2,033,757.25
 Stage 1 Co-Opt:   Cost = ₹1,794,792.07
-ACXIS Option A+C: Cost = ₹1,735,292.07 (Savings: ₹59,500.00)
+ACXIS Co-Optimized Framework: Cost = ₹1,735,292.07 (Savings: ₹59,500.00)
 -----------------------------------------------------------------
 
 ================================================================================
@@ -125,13 +125,13 @@ XAI Heuristic Rule Filter -> Cost=$249,246.15 | Rec=0.2924 | Prec=0.8629
 
 --- Evaluating Stage 1 Core and Stage 2 Tuned ---
 
---- Adding Genuine ACXIS (Option A+C) ---
+--- Adding Genuine ACXIS (Co-Optimized) ---
 -----------------------------------------------------------------
 SUMMARY FOR IEEECIS:
 Stage 1 Core:     Cost = $107,017.62
 Stage 2 Tuned:    Cost = $94,856.71
 Stage 1 Co-Opt:   Cost = $93,596.06
-ACXIS Option A+C: Cost = $92,376.06 (Savings: $1,220.00)
+ACXIS Co-Optimized Framework: Cost = $92,376.06 (Savings: $1,220.00)
 -----------------------------------------------------------------
 
 [✓] Saved complete genuine baseline results to:

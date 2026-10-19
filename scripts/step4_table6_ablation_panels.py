@@ -6,7 +6,7 @@ EXPERIMENT 4: FULL ABLATION BENCHMARK (TABLE 6) UNDER OPTION A+C
 Tests whether ACXIS beats all other representations and architectures:
 - Panel A: Representation Ablation (PaySim)
 - Panel B: Meta-Classifier Architecture Ablation (PaySim)
-- Panel C: Cross-Dataset Validation (IEEE-CIS) under Option A+C
+- Panel C: Cross-Dataset Validation (IEEE-CIS) under Co-Optimized Framework
 
 Zero shortcuts, zero hardcoded numbers, 100% real script execution.
 Outputs:
@@ -177,7 +177,7 @@ def main():
     json_results = {}
 
     # =========================================================================
-    # PART 1: PAYSIM (Panels A & B) - 3 Tiers (Option A / A+C)
+    # PART 1: PAYSIM (Panels A & B) - 3 Tiers (Amount-Tiered Calibration)
     # =========================================================================
     print("\n>>> Loading PaySim Data...")
     ps_data = np.load(os.path.join(CACHE_DIR, "paysim_stage1_and_shap.npz"))
@@ -290,7 +290,7 @@ def main():
         print(f"{name:42s} | Supp FP:{res['fps_suppressed']:3d} | Leak FN:{res['fns_leaked']:1d} | Cost: ₹{res['cost']:,.2f} | Savings: ₹{sav:,.2f} ({pct:+.2f}%) [{status}]")
 
     # =========================================================================
-    # PART 2: IEEE-CIS (Panel C) - Option A + C (Co-Optimized tau_1 = 0.28, 5 Tiers)
+    # PART 2: IEEE-CIS (Panel C) - Co-Optimized Framework (Co-Optimized tau_1 = 0.28, 5 Tiers)
     # =========================================================================
     print("\n>>> Loading IEEE-CIS Data...")
     ie_d = np.load(os.path.join(CACHE_DIR, "ieeecis_stage1_and_shap.npz"))
@@ -309,7 +309,7 @@ def main():
     base_pred_std = (p_t_ie >= tau_opt_orig).astype(int)
     base_cost_std = evaluate_cost(y_t_ie, base_pred_std, amt_t_ie, brackets_ieeecis)
 
-    # 2. Co-Optimized operating point tau_1 = 0.2800 (Option C)
+    # 2. Co-Optimized operating point tau_1 = 0.2800 (Co-Optimized Calibration)
     tau_1_coopt = 0.2800
     cand_v_ie = p_v_ie >= tau_1_coopt
     cand_t_ie = p_t_ie >= tau_1_coopt
@@ -327,7 +327,7 @@ def main():
 
     # Baseline rows for Panel C
     rows.append({
-        'panel': 'Panel C: Cross-Dataset (IEEE-CIS, Option A+C)',
+        'panel': 'Panel C: Cross-Dataset (IEEE-CIS, Co-Optimized Framework)',
         'model_name': 'Original Stage 1 Baseline (tau*=0.3876, No Filter)',
         'representation': 'None',
         'fps_supp': 0, 'fns_leak': 0,
@@ -337,7 +337,7 @@ def main():
     })
 
     rows.append({
-        'panel': 'Panel C: Cross-Dataset (IEEE-CIS, Option A+C)',
+        'panel': 'Panel C: Cross-Dataset (IEEE-CIS, Co-Optimized Framework)',
         'model_name': 'Co-Optimized Stage 1 (tau_1=0.2800, No Filter)',
         'representation': 'None',
         'fps_supp': 0, 'fns_leak': 0,
@@ -355,7 +355,7 @@ def main():
         ("ACXIS Proposed [phi(x) + Co-Opt]", s_v_ie, s_t_ie, '[phi(x)] + 5 Tiers', 'rf', 8, 'balanced')
     ]
 
-    print("\n--- PANEL C: Cross-Dataset Validation (IEEE-CIS) under Option A+C ---")
+    print("\n--- PANEL C: Cross-Dataset Validation (IEEE-CIS) under Co-Optimized Framework ---")
     print(f"Original Baseline Cost: ${base_cost_std['total_cost']:,.2f} (Recall: {base_cost_std['recall']:.4f})")
     print(f"Co-Optimized Baseline : ${base_cost_coopt['total_cost']:,.2f} (Recall: {base_cost_coopt['recall']:.4f})")
 
@@ -370,7 +370,7 @@ def main():
         pct = (sav / base_cost_std['total_cost']) * 100
         status = 'SAFE (0 leaks)' if res['fns_leaked'] == 0 else f'LEAK ({res["fns_leaked"]} FN!)'
         entry = {
-            'panel': 'Panel C: Cross-Dataset (IEEE-CIS, Option A+C)',
+            'panel': 'Panel C: Cross-Dataset (IEEE-CIS, Co-Optimized Framework)',
             'model_name': name,
             'representation': rep,
             'fps_supp': res['fps_suppressed'], 'fns_leak': res['fns_leaked'],

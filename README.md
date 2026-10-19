@@ -1,4 +1,4 @@
-# ACXIS: Replication Package (Option A+C)
+# ACXIS: Replication Package
 ## Adaptive Cost-Sensitive XGBoost with SHAP-Based Integrated Suppression
 
 This repository contains the complete, 100% genuine replication code, dataset caching scripts, benchmark evaluation suites, statistical test logs, and publication figures for the manuscript:
@@ -9,14 +9,14 @@ This repository contains the complete, 100% genuine replication code, dataset ca
 
 ---
 
-## 1. Architectural Highlights: Option A + C Implementation
+## 1. Architectural Highlights: Framework Implementation
 
-This replication package implements the unified **Option A + C** framework developed in response to peer-review feedback:
+This replication package implements the unified ACXIS framework developed in response to peer-review feedback:
 
-1. **Option A (Amount-Tiered Safety Guard):**  
+1. **Amount-Tiered Safety Guard:**  
    Candidate alerts ($\hat{p} \ge \tau_1$) are partitioned into amount quantiles ($K=3$ for PaySim, $K=5$ for IEEE-CIS). Within each quantile tier $k$, an independent safety threshold $\tau_{\text{meta}, k}$ is calibrated on out-of-fold validation alerts to guarantee zero false-negative leakage ($\Delta\text{FN} = 0.00$):
    $$\tau_{\text{meta}, k} = \max_{i \in \text{Fraud}_k} q_{\text{OOF}, i} + \varepsilon$$
-2. **Option C (Co-Optimized Stage 1 Operating Point):**  
+2. **Stage 1 Threshold Co-Optimization:**  
    Stage 1 operating thresholds are co-optimized to expand initial fraud capture before meta-filtering:
    - **PaySim:** Co-optimized at $\tau_1 = 0.1684$ (Index 16 of `np.linspace(0.01, 0.99, 100)`).
    - **IEEE-CIS:** Co-optimized at $\tau_1 = 0.2800$, capturing **95 additional genuine frauds** over the original baseline (recall rises from 78.99% $\rightarrow$ 83.64%), while Stage 3 suppresses 128 false alarms with zero leaks.

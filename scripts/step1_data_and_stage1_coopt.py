@@ -127,7 +127,7 @@ def main():
         test_default = evaluate_cost_full(y_test, p_test, amt_test, 0.50, brackets)
         test_tuned = evaluate_cost_full(y_test, p_test, amt_test, opt_tau_val, brackets)
         
-        # Co-optimized Stage 1 point (Option A+C: tau_1 = 0.16838384 on PaySim, 0.2800 on IEEE-CIS)
+        # Co-optimized Stage 1 point (Co-Optimized Framework: tau_1 = 0.16838384 on PaySim, 0.2800 on IEEE-CIS)
         coopt_tau = 0.16838384 if ds_name == 'paysim' else (0.2800 if ds_name == 'ieeecis' else opt_tau_val)
         test_coopt = evaluate_cost_full(y_test, p_test, amt_test, coopt_tau, brackets)
         
