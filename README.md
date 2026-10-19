@@ -1,7 +1,7 @@
 # ACXIS: Replication Package
 ## Adaptive Cost-Sensitive XGBoost with SHAP-Based Integrated Suppression
 
-This repository contains the complete replication code, dataset pre-processing scripts, benchmark evaluation suites, multi-seed statistical logs, and publication figures for the manuscript:
+This repository contains the complete replication code, dataset pre-processing scripts, benchmark evaluation suites, bootstrap resampling distributions, and publication figures for the manuscript:
 
 > **ACXIS: An Adaptive Cost-Sensitive XGBoost Framework with SHAP-based Integrated Suppression for Financial Fraud Detection and Prediction**  
 > *Authors:* Shyamshundar N. Patil, Dr. Manoj E. Patil  
@@ -14,13 +14,14 @@ This repository contains the complete replication code, dataset pre-processing s
 1. [Framework Architecture & Mechanics](#1-framework-architecture--mechanics)
 2. [Data Provenance, Fixed Seeds & Exact Split Protocols](#2-data-provenance-fixed-seeds--exact-split-protocols)
 3. [Hyperparameter Settings & Preprocessing Pipelines (Table 2)](#3-hyperparameter-settings--preprocessing-pipelines-table-2)
-4. [Validation Threshold Sweep & Extended Boundary Curve](#4-validation-threshold-sweep--extended-boundary-curve)
-5. [Operational Cost Schedules, Flat Penalties & Break-Even Analysis](#5-operational-cost-schedules-flat-penalties--break-even-analysis)
+4. [Validation Cost Optimization Grid (Table 2)](#4-validation-cost-optimization-grid-table-2)
+5. [Operational Cost Schedules & Zero-Leak Economics](#5-operational-cost-schedules--zero-leak-economics)
 6. [Comparative Baseline Benchmarks: 13 Literature Models (Table 4)](#6-comparative-baseline-benchmarks-13-literature-models-table-4)
 7. [Comprehensive Ablation Studies: Panels A, B, and C (Table 6)](#7-comprehensive-ablation-studies-panels-a-b-and-c-table-6)
 8. [Data Resampling & Statistical Significance (Tables 5 & 8)](#8-data-resampling--statistical-significance-tables-5--8)
 9. [Hardware Timing Loops, Tail Latencies & Exact Function Calls (Table 3)](#9-hardware-timing-loops-tail-latencies--exact-function-calls-table-3)
 10. [Repository Structure & Quickstart Reproduction](#10-repository-structure--quickstart-reproduction)
+11. [Citation & Manuscript Status](#11-citation--manuscript-status)
 
 ---
 
@@ -73,7 +74,7 @@ Raw Transaction x
 2. **Amount-Tiered Safety Guard:** Candidate alerts ($\hat{p} \ge \tau^*$) are stratified into $K=3$ transaction amount quantile tiers. Within each tier $k$, an independent suppression threshold is calibrated against 5-fold out-of-fold (OOF) cross-validation predictions:
    $$\tau_{\text{meta}, k} = \max_{i \in \text{Val-Fraud}_k} q_{\text{OOF}, i} + \varepsilon$$
    If an amount tier suppresses zero false positives out-of-fold or reaches $\tau_{\text{meta}, k} \ge 1.0$, it automatically abstains ($\tau_{\text{meta}, k} = \infty$).
-3. **Recall Preservation ($\Delta\mathrm{FN} = 0$):** Under the safety guard, only high-confidence false positives are suppressed; no additional false negatives are introduced on test evaluations across all evaluated random seeds.
+3. **Recall Preservation ($\Delta\mathrm{FN} = 0$):** Under the amount-tiered safety guard, only high-confidence false alarms are suppressed; Stage 1 baseline fraud recall is strictly preserved with zero additional false negatives ($\Delta\mathrm{FN} = 0$) across the 1,000 stratified bootstrap test resamples and deterministic test partitions.
 
 ---
 
@@ -91,11 +92,8 @@ All experiments are initialized with fixed, documented random seeds for strict d
 | **IEEE-CIS** | 590,540 | 20,663 | 3.50% | 472,432 tx | 59,054 tx | 59,054 tx | **Stratified Split (`random_state=42`):** Merged transaction and identity tables (432 features). Stratified splitting ensures equal representation of complex device/identity multi-attribute fraud patterns across calibration and test sets. |
 | **ULB Credit** | 284,807 | 492 | 0.173% | 227,845 tx | 28,481 tx | 28,481 tx | **Stratified Split (`random_state=42`):** Extreme imbalance benchmark (492 frauds across 284k records). Stratification guarantees sufficient fraud samples in validation (49) and test (49). |
 
-### PaySim Typology Restriction Analysis (TRANSFER / CASH_OUT)
-In PaySim, all 8,213 fraudulent transactions occur strictly within `TRANSFER` and `CASH_OUT` transaction types (Lopez-Rojas et al., 2016). We evaluated ACXIS across three distinct ingestion settings:
-1. **Full Operational Stream (Primary Benchmark, 6.36M tx):** Evaluates all transaction types with one-hot encoded `type` to model operational screening where non-fraudulent transaction types (`PAYMENT`, `CASH_IN`, `DEBIT`) pass through Stage 1. Net savings: **₹61,000.00 (+2.77%)**, $\Delta\mathrm{FN} = 0$.
-2. **Dedicated TRANSFER + CASH_OUT Subset (2.77M tx):** Filtering exclusively to the 2,770,409 candidate transactions yields: Stage 1 baseline cost ₹5,336,347; Stage 2 tuned cost ($\tau^*=0.1879$) ₹1,763,733; Stage 3 ACXIS cost ₹1,710,233 (Recall: 98.05%, Precision: 48.9%). Incremental net savings: **₹53,500.00 (+3.03%)**, $\Delta\mathrm{FN} = 0$.
-3. **Forward-Chaining Chronological Temporal Split (Full 6.36M tx):** Sorted by simulation timestamp `step` (first 80% train, next 10% val, last 10% test): Stage 1 baseline cost at $\tau=0.5$ incurs ₹132,349,950; Stage 2 tuned ($\tau^*=0.0370$) reduces cost to ₹4,808,912 (Recall: 98.49%); Stage 3 ACXIS further suppresses 135 false alarms, reducing cost to ₹4,554,412. Incremental net savings: **₹254,500.00 (+5.29%)**, $\Delta\mathrm{FN} = 0$.
+### PaySim Fraud Typology Protocol
+In PaySim, fraudulent activities are concentrated exclusively within `TRANSFER` and `CASH_OUT` transaction types (Lopez-Rojas et al., 2016). To reflect enterprise clearing environments where all transactions arrive as an unsegregated stream, the primary benchmark pipeline ingests the complete 6.36M transaction dataset with one-hot encoded transaction categories (`PAYMENT`, `TRANSFER`, `CASH_OUT`, `CASH_IN`, `DEBIT`). Non-fraudulent transaction types are evaluated alongside high-risk corridors in Stage 1, where Stage 1 assigns them low risk scores ($\hat{p} < \tau^*$), routing them to immediate fast-path approval.
 
 ---
 
@@ -121,49 +119,36 @@ All model architectures, hyperparameter grids, and preprocessing steps are fully
 
 ---
 
-## 4. Validation Threshold Sweep & Extended Boundary Curve
+## 4. Validation Cost Optimization Grid (Table 2)
 
-### 100-Step Validation Cost Optimization Grid
-The Stage 1 operating threshold $\tau^*$ is selected by an exhaustive 100-step grid search over $\tau \in [0.01, 0.99]$ on the validation split $\mathcal{D}_{\text{val}}$:
+### 100-Step Validation Cost Minimization Sweep
+The Stage 1 operating threshold $\tau^*$ is selected by an exhaustive 100-step grid search over $\tau \in [0.01, 0.99]$ on the validation split $\mathcal{D}_{\text{val}}$ (`scripts/step1_data_and_stage1_coopt.py`), identifying the operating point that minimizes total asymmetric operational cost:
 $$\tau^* = \arg\min_{\tau \in [0.01, 0.99]} \left( \sum_{i \in \text{FN}(\tau)} \text{Amount}_i + \sum_{j \in \text{FP}(\tau)} C_{\text{FP}}(\text{Amount}_j) \right)$$
-- **PaySim:** $\tau^* = 0.2179$ (Validation cost: ₹2,391,599.76; Test cost: ₹2,200,948.26).
-- **IEEE-CIS:** $\tau^* = 0.3763$ (Validation cost: $93,700.71; Test cost: $94,856.71).
-- **ULB:** $\tau^* = 0.4555$ (Validation cost: €1,202.81; Test cost: €750.61).
 
-### Extended Boundary Exploration [0.001, 0.990]
-To address Reviewer 5's question regarding ultra-low thresholds ($\tau \le 0.001$), we extended the sweep to $\tau \in [0.001, 0.990]$:
-| Dataset | Operating $\tau^*$ | Cost at $\tau^*$ | Cost at $\tau = 0.01$ | Cost at $\tau = 0.001$ | Cost Ratio ($\tau=0.001$ vs $\tau^*$) |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **PaySim** | $0.2179$ | ₹2,391,599.76 | ₹11,046,851.26 | ₹31,593,351.26 | **13.21× higher cost** |
-| **IEEE-CIS** | $0.3763$ | $93,700.71 | $409,625.56 | $537,895.00 | **5.74× higher cost** |
-| **ULB** | $0.4555$ | €1,202.81 | €1,744.81 | €4,460.14 | **3.71× higher cost** |
+- **PaySim:** $\tau^* = 0.2179$ (Validation cost: ₹2,391,599.76; Test baseline cost: ₹2,200,948.26).
+- **IEEE-CIS:** $\tau^* = 0.3763$ (Validation cost: $93,700.71; Test baseline cost: $94,856.71).
+- **ULB:** $\tau^* = 0.4555$ (Validation cost: €1,202.81; Test baseline cost: €750.61).
 
-*Methodological Conclusion:* Ultra-low thresholds flood operational investigation queues with massive volumes of false positives, driving investigation overhead to unmanageable levels. The cost function is strictly convex, confirming that the global cost minimum is bounded within the interior interval $[0.20, 0.50]$.
+*Methodological Note:* The cost function exhibits strict empirical convexity across all three datasets (saved in `figures/fig4_cost_vs_threshold_curves.png`). Selecting $\tau^*$ on validation data strictly isolates threshold selection from test scoring, preventing test-favored threshold optimization.
 
 ---
 
-## 5. Operational Cost Schedules, Flat Penalties & Break-Even Analysis
+## 5. Operational Cost Schedules & Zero-Leak Economics
 
 ### Framing of Operational Cost Schedules
-In accordance with cost-sensitive learning literature (Elkan, 2001; Hand et al., 2000), false negative costs represent direct financial chargeback losses equal to the transaction amount ($C_{\text{FN}} = \text{Amount}$). False positive costs represent administrative review overheads. As stated in the manuscript, tiered operational cost schedules represent **illustrative operational assumptions**:
+In accordance with cost-sensitive fraud detection literature (Bahnsen et al., 2014; Elkan, 2001; Hand et al., 2000), false negative costs represent direct financial chargeback losses equal to the transaction amount ($C_{\text{FN}} = \text{Amount}$). False positive costs represent operational investigation overheads. As detailed in the manuscript, tiered cost schedules represent **illustrative operational assumptions** reflecting tiered audit workflows:
 - **PaySim (₹ INR):** Amount $\le 50\text{k} \to ₹500$; $\le 100\text{k} \to ₹1,000$; $\le 150\text{k} \to ₹1,500$; $\le 200\text{k} \to ₹2,000$; $\le 500\text{k} \to ₹3,000$; $\le 1\text{M} \to ₹5,000$; $> 1\text{M} \to ₹10,000$.
 - **IEEE-CIS (\$ USD):** Amount $\le \$68.5 \to \$5$; $\le \$125 \to \$10$; $\le \$276.85 \to \$15$; $\le \$554 \to \$20$; $\le \$1,651 \to \$30$; $\le \$2,755.95 \to \$50$; $> \$2,755.95 \to \$100$.
 - **ULB (€ EUR):** Amount $\le €20 \to €2$; $\le €50 \to €5$; $\le €100 \to €10$; $\le €250 \to €15$; $\le €500 \to €25$; $\le €1,000 \to €50$; $> €1,000 \to €100$.
 
-### Flat Penalty & Proportional Cost Evaluation
-Alongside tiered schedules, ACXIS was evaluated under flat administrative fees and proportional review percentages:
-- **Flat Penalties:**
-  - PaySim flat ₹1,000: Net savings = **₹42,000.00**; flat ₹1,500: Net savings = **₹63,000.00** ($\Delta\mathrm{FN} = 0$).
-  - IEEE-CIS flat \$10: Net savings = **\$300.00**; flat \$15: Net savings = **\$450.00** ($\Delta\mathrm{FN} = 0$).
-  - ULB flat €10 / €15: Net savings = **€0.00** (safely abstains).
-- **Proportional Investigation Costs (1.0% and 5.0% of Amount):**
-  - PaySim 1.0%: Net savings = **₹31,452.18**; 5.0%: Net savings = **₹157,260.90** ($\Delta\mathrm{FN} = 0$).
-  - IEEE-CIS 1.0%: Net savings = **$41.20**; 5.0%: Net savings = **$206.00** ($\Delta\mathrm{FN} = 0$).
-
-### Break-Even Sensitivity Analysis over $C_{\text{FN}} / C_{\text{FP}}$ Ratios
-Because ACXIS operates with strictly zero false negative leakage ($\Delta\mathrm{FN} = 0$), every suppressed alert is a pure false positive ($42$ on PaySim, $30$ on IEEE-CIS). Consequently, net financial savings:
+### Flat Penalty Sensitivity & Break-Even Analysis
+Under the amount-tiered safety guard (Algorithm 1), ACXIS suppresses strictly verified false alarms with zero false negative leakage ($\Delta\mathrm{FN} = 0$). Consequently, every suppressed transaction is a pure false positive ($42$ on PaySim, $30$ on IEEE-CIS, $0$ on ULB):
 $$\Delta\text{Cost} = \sum_{j \in \text{Suppressed FPs}} C_{\text{FP}}(j)$$
-are **mathematically guaranteed to remain strictly positive for any non-zero investigation cost ($C_{\text{FP}} > 0$)**. Sweeping $C_{\text{FN}} / C_{\text{FP}}$ ratios across $2:1$ to $1,000:1$ confirms that net financial savings remain strictly positive across all evaluated regimes (+0.97% to +2.63% on PaySim; +0.07% to +13.32% on IEEE-CIS).
+- **Flat Administrative Penalties:**
+  - PaySim: Flat ₹1,000 fee yields **₹42,000.00** net savings; flat ₹1,500 fee yields **₹63,000.00** net savings ($\Delta\mathrm{FN} = 0$).
+  - IEEE-CIS: Flat \$10 fee yields **\$300.00** net savings; flat \$15 fee yields **\$450.00** net savings ($\Delta\mathrm{FN} = 0$).
+  - ULB: Safe abstention preserves Stage 1 baseline recall with **€0.00** leakage ($\Delta\mathrm{FN} = 0$).
+- **Break-Even Economic Guarantee:** Because no true fraud alerts are suppressed, net financial savings are **mathematically guaranteed to remain strictly positive for any positive investigation cost ($C_{\text{FP}} > 0$)**, eliminating the downside financial risk of conventional alert-pruning heuristics.
 
 ---
 
@@ -309,17 +294,28 @@ python3 run_all.py --from-scratch
 
 ---
 
-## Citation & Authorship
-If using this code or benchmark data, please cite:
+## 11. Citation & Manuscript Status
+
+This replication package accompanies the manuscript currently under peer review in Elsevier *Array*:
+
+> **ACXIS: An Adaptive Cost-Sensitive XGBoost Framework with SHAP-based Integrated Suppression for Financial Fraud Detection and Prediction**  
+> *Authors:* Shyamshundar N. Patil, Dr. Manoj E. Patil  
+> *Journal:* Elsevier *Array*  
+> *Manuscript Reference:* `ARRAY-D-26-03794R2`  
+> *Status:* Under Peer Review (Revision R2)  
+
+If using this codebase, experimental scripts, or benchmark data in your research, please cite:
+
 ```bibtex
 @article{patil2026acxis,
-  title={ACXIS: An Adaptive Cost-Sensitive XGBoost Framework with SHAP-based Integrated Suppression for Financial Fraud Detection and Prediction},
+  title={{ACXIS}: An Adaptive Cost-Sensitive {XGBoost} Framework with {SHAP}-based Integrated Suppression for Financial Fraud Detection and Prediction},
   author={Patil, Shyamshundar N. and Patil, Manoj E.},
   journal={Array},
-  volume={26},
-  pages={100379},
   year={2026},
-  publisher={Elsevier},
-  doi={10.1016/j.array.2026.100379}
+  note={Under Review (Revision R2), Manuscript Ref: ARRAY-D-26-03794R2},
+  publisher={Elsevier}
 }
 ```
+
+### License
+This project is made publicly available for academic peer review and research replication under the Apache License 2.0.
