@@ -1,0 +1,223 @@
+{
+  "panel_a": [
+    {
+      "panel": "Panel A: Representation (PaySim)",
+      "model_name": "Probability-Only Filter [p_hat]",
+      "representation": "[p_hat]",
+      "fps_supp": 44,
+      "fns_leak": 2,
+      "cost": 2326162.77,
+      "recall": 0.9902557856272838,
+      "precision": 0.49005424954792043,
+      "f1": 0.6556451612903225,
+      "savings": -531370.7,
+      "savings_pct": -29.606254054822067,
+      "status": "LEAK (2 FN!)",
+      "tau_tiers": [
+        "inf",
+        "inf",
+        0.9461
+      ]
+    },
+    {
+      "panel": "Panel A: Representation (PaySim)",
+      "model_name": "Raw Features Only [x]",
+      "representation": "[x]",
+      "fps_supp": 114,
+      "fns_leak": 2,
+      "cost": 2272973.5,
+      "recall": 0.9902557856272838,
+      "precision": 0.5116425424795469,
+      "f1": 0.6746887966804979,
+      "savings": -478181.42999999993,
+      "savings_pct": -26.64272023443919,
+      "status": "LEAK (2 FN!)",
+      "tau_tiers": [
+        0.8856,
+        0.8854,
+        0.8054
+      ]
+    },
+    {
+      "panel": "Panel A: Representation (PaySim)",
+      "model_name": "SHAP Attributions Only [phi(x)]",
+      "representation": "[phi(x)]",
+      "fps_supp": 28,
+      "fns_leak": 0,
+      "cost": 1750292.07,
+      "recall": 0.9926918392204629,
+      "precision": 0.48598688133571855,
+      "f1": 0.6525220176140913,
+      "savings": 44500.0,
+      "savings_pct": 2.4793958444445323,
+      "status": "SAFE (0 leaks)",
+      "tau_tiers": [
+        0.946,
+        0.9191,
+        0.8912
+      ]
+    },
+    {
+      "panel": "Panel A: Representation (PaySim)",
+      "model_name": "ACXIS Joint Space [x, phi(x)] (Proposed)",
+      "representation": "[x, phi(x)]",
+      "fps_supp": 44,
+      "fns_leak": 0,
+      "cost": 1735292.07,
+      "recall": 0.9926918392204629,
+      "precision": 0.4906682721252258,
+      "f1": 0.6567284448025786,
+      "savings": 59500.0,
+      "savings_pct": 3.315147252684262,
+      "status": "SAFE (0 leaks)",
+      "tau_tiers": [
+        0.9326,
+        0.9119,
+        0.8712
+      ]
+    }
+  ],
+  "panel_b": [
+    {
+      "panel": "Panel B: Architecture (PaySim)",
+      "model_name": "Logistic Regression Meta",
+      "representation": "Linear on [x, phi(x)]",
+      "fps_supp": 75,
+      "fns_leak": 1,
+      "cost": 1739764.07,
+      "recall": 0.9914738124238733,
+      "precision": 0.49969306322897483,
+      "f1": 0.6644897959183673,
+      "savings": 55028.0,
+      "savings_pct": 3.0659818995077237,
+      "status": "LEAK (1 FN!)",
+      "tau_tiers": [
+        0.971,
+        0.979,
+        0.9883
+      ]
+    },
+    {
+      "panel": "Panel B: Architecture (PaySim)",
+      "model_name": "LightGBM (GBDT) Meta",
+      "representation": "Boosted Trees on [x, phi(x)]",
+      "fps_supp": 185,
+      "fns_leak": 1,
+      "cost": 1780956.25,
+      "recall": 0.9914738124238733,
+      "precision": 0.5358788676761027,
+      "f1": 0.6957264957264958,
+      "savings": 13835.820000000065,
+      "savings_pct": 0.7708870699434317,
+      "status": "LEAK (1 FN!)",
+      "tau_tiers": [
+        0.9952,
+        0.9789,
+        0.9926
+      ]
+    },
+    {
+      "panel": "Panel B: Architecture (PaySim)",
+      "model_name": "Permutation Saliency + RF*",
+      "representation": "Global PFI Weights on [x]",
+      "fps_supp": 7,
+      "fns_leak": 0,
+      "cost": 1776292.07,
+      "recall": 0.9926918392204629,
+      "precision": 0.4799764428739694,
+      "f1": 0.647082175466455,
+      "savings": 18500.0,
+      "savings_pct": 1.0307600701623336,
+      "status": "SAFE (0 leaks)",
+      "tau_tiers": [
+        0.9407,
+        0.93,
+        0.861
+      ]
+    },
+    {
+      "panel": "Panel B: Architecture (PaySim)",
+      "model_name": "Random Forest + TreeSHAP (ACXIS Proposed)",
+      "representation": "Bagged RF on [x, phi(x)]",
+      "fps_supp": 44,
+      "fns_leak": 0,
+      "cost": 1735292.07,
+      "recall": 0.9926918392204629,
+      "precision": 0.4906682721252258,
+      "f1": 0.6567284448025786,
+      "savings": 59500.0,
+      "savings_pct": 3.315147252684262,
+      "status": "SAFE (0 leaks)",
+      "tau_tiers": [
+        0.9326,
+        0.9119,
+        0.8712
+      ]
+    }
+  ],
+  "panel_c": [
+    {
+      "panel": "Panel C: Cross-Dataset (IEEE-CIS, Option A+C)",
+      "model_name": "Probability-Only Filter [p_hat]",
+      "representation": "[p_hat]",
+      "fps_supp": 25,
+      "fns_leak": 1,
+      "cost": 93521.058,
+      "recall": 0.8359148112294289,
+      "precision": 0.35986663888310066,
+      "f1": 0.5031318281136198,
+      "savings": 1536.5880000000034,
+      "savings_pct": 1.6164801724629319,
+      "status": "LEAK (1 FN!)",
+      "tau_tiers": [
+        0.9513,
+        0.9455,
+        "inf",
+        0.9566,
+        "inf"
+      ]
+    },
+    {
+      "panel": "Panel C: Cross-Dataset (IEEE-CIS, Option A+C)",
+      "model_name": "SHAP Attributions Only [phi(x)]",
+      "representation": "[phi(x)]",
+      "fps_supp": 128,
+      "fns_leak": 0,
+      "cost": 92376.058,
+      "recall": 0.8363988383349468,
+      "precision": 0.3678944006812859,
+      "f1": 0.511015821381044,
+      "savings": 2681.5880000000034,
+      "savings_pct": 2.821012420189748,
+      "status": "SAFE (0 leaks)",
+      "tau_tiers": [
+        0.805,
+        0.8385,
+        0.8327,
+        0.8194,
+        0.8635
+      ]
+    },
+    {
+      "panel": "Panel C: Cross-Dataset (IEEE-CIS, Option A+C)",
+      "model_name": "ACXIS Proposed [phi(x) + Co-Opt]",
+      "representation": "[phi(x)] + 5 Tiers",
+      "fps_supp": 128,
+      "fns_leak": 0,
+      "cost": 92376.058,
+      "recall": 0.8363988383349468,
+      "precision": 0.3678944006812859,
+      "f1": 0.511015821381044,
+      "savings": 2681.5880000000034,
+      "savings_pct": 2.821012420189748,
+      "status": "SAFE (0 leaks)",
+      "tau_tiers": [
+        0.805,
+        0.8385,
+        0.8327,
+        0.8194,
+        0.8635
+      ]
+    }
+  ]
+}

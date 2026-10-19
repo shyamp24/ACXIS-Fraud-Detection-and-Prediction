@@ -1,0 +1,104 @@
+{
+  "paysim": {
+    "dataset": "paysim",
+    "cost_base_mean": 1792160.11327,
+    "cost_base_sd": 181667.3492572495,
+    "cost_acxis_mean": 1733034.11327,
+    "cost_acxis_sd": 181411.70174605472,
+    "savings_currency_mean": 59126.0,
+    "savings_currency_sd": 10061.094572659576,
+    "savings_currency_ci95": [
+      41000.0,
+      78500.0
+    ],
+    "savings_pct_mean": 3.3293528437535853,
+    "savings_pct_sd": 0.6458771939896171,
+    "savings_pct_ci95": [
+      2.197195401604186,
+      4.74560405600104
+    ],
+    "fps_suppressed_mean": 43.8,
+    "fps_suppressed_sd": 6.6263111910021255,
+    "fns_leaked_mean": 0.0,
+    "fns_leaked_sd": 0.0,
+    "recall_base_mean": 0.9928260482605389,
+    "recall_acxis_mean": 0.9928260482605389,
+    "precision_base_mean": 0.4775951874679972,
+    "precision_acxis_mean": 0.4901753022224275,
+    "f1_base_mean": 0.6448561900020148,
+    "f1_acxis_mean": 0.6562287125948081,
+    "wilcoxon_w": 500500.0,
+    "wilcoxon_p": 1.6273150079298502e-165,
+    "effect_size_r": Infinity,
+    "t_stat": 185.74452092437804,
+    "cohen_d": 5.876696573419693
+  },
+  "ieeecis": {
+    "dataset": "ieeecis",
+    "cost_base_mean": 93247.97235699999,
+    "cost_base_sd": 6029.974128522277,
+    "cost_acxis_mean": 92027.36235699999,
+    "cost_acxis_sd": 6027.851729153889,
+    "savings_currency_mean": 1220.61,
+    "savings_currency_sd": 116.51449652296489,
+    "savings_currency_ci95": [
+      1015.0,
+      1460.125
+    ],
+    "savings_pct_mean": 1.3142441332379593,
+    "savings_pct_sd": 0.14999961206732873,
+    "savings_pct_ci95": [
+      1.0591334868253781,
+      1.6549121638253916
+    ],
+    "fps_suppressed_mean": 127.996,
+    "fps_suppressed_sd": 11.424271705452387,
+    "fns_leaked_mean": 0.0,
+    "fns_leaked_sd": 0.0,
+    "recall_base_mean": 0.8366086473090836,
+    "recall_acxis_mean": 0.8366086473090836,
+    "precision_base_mean": 0.3580875652799666,
+    "precision_acxis_mean": 0.3678416289302882,
+    "f1_base_mean": 0.5014770119306424,
+    "f1_acxis_mean": 0.510965149589546,
+    "wilcoxon_w": 500500.0,
+    "wilcoxon_p": 1.6322887787982691e-165,
+    "effect_size_r": Infinity,
+    "t_stat": 331.11564769285775,
+    "cohen_d": 10.476035484214782
+  },
+  "ulb": {
+    "dataset": "ulb",
+    "cost_base_mean": 801.0468900000001,
+    "cost_base_sd": 679.2571016777284,
+    "cost_acxis_mean": 801.0468900000001,
+    "cost_acxis_sd": 679.2571016777284,
+    "savings_currency_mean": 0.0,
+    "savings_currency_sd": 0.0,
+    "savings_currency_ci95": [
+      0.0,
+      0.0
+    ],
+    "savings_pct_mean": 0.0,
+    "savings_pct_sd": 0.0,
+    "savings_pct_ci95": [
+      0.0,
+      0.0
+    ],
+    "fps_suppressed_mean": 0.0,
+    "fps_suppressed_sd": 0.0,
+    "fns_leaked_mean": 0.0,
+    "fns_leaked_sd": 0.0,
+    "recall_base_mean": 0.8572944005997727,
+    "recall_acxis_mean": 0.8572944005997727,
+    "precision_base_mean": 0.9143934143246653,
+    "precision_acxis_mean": 0.9143934143246653,
+    "f1_base_mean": 0.8838513258056518,
+    "f1_acxis_mean": 0.8838513258056518,
+    "wilcoxon_w": NaN,
+    "wilcoxon_p": 1.0,
+    "effect_size_r": 0.0,
+    "t_stat": 0.0,
+    "cohen_d": 0.0
+  }
+}

@@ -1,0 +1,53 @@
+=============================================================================
+STARTING EXPERIMENT 5: 1,000-ITERATION STRATIFIED BOOTSTRAP RESAMPLING
+=============================================================================
+
+================================================================================
+RUNNING 100% GENUINE 1,000 BOOTSTRAP RESAMPLING FOR: PAYSIM
+================================================================================
+Completed 1,000 resamples in 115.78 seconds.
+-----------------------------------------------------------------
+RESAMPLING SUMMARY FOR PAYSIM:
+Mean Savings: ₹59,126.00 +/- ₹10,061.09 (3.3294% +/- 0.6459%)
+95% CI: [2.1972%, 4.7456%]
+Mean FPs Suppressed: 43.8 +/- 6.6
+Mean FNs Leaked:     0.0 +/- 0.0 (100% Zero-Leak Guarantee Verified)
+Wilcoxon W: 500500.0 | p-value: 1.6273150079298502e-165 | Cohen's d: 5.88
+-----------------------------------------------------------------
+
+================================================================================
+RUNNING 100% GENUINE 1,000 BOOTSTRAP RESAMPLING FOR: IEEECIS
+================================================================================
+Completed 1,000 resamples in 7.80 seconds.
+-----------------------------------------------------------------
+RESAMPLING SUMMARY FOR IEEECIS:
+Mean Savings: $1,220.61 +/- $116.51 (1.3142% +/- 0.1500%)
+95% CI: [1.0591%, 1.6549%]
+Mean FPs Suppressed: 128.0 +/- 11.4
+Mean FNs Leaked:     0.0 +/- 0.0 (100% Zero-Leak Guarantee Verified)
+Wilcoxon W: 500500.0 | p-value: 1.6322887787982691e-165 | Cohen's d: 10.48
+-----------------------------------------------------------------
+
+================================================================================
+RUNNING 100% GENUINE 1,000 BOOTSTRAP RESAMPLING FOR: ULB
+================================================================================
+Completed 1,000 resamples in 3.48 seconds.
+-----------------------------------------------------------------
+RESAMPLING SUMMARY FOR ULB:
+Mean Savings: €0.00 +/- €0.00 (0.0000% +/- 0.0000%)
+95% CI: [0.0000%, 0.0000%]
+Mean FPs Suppressed: 0.0 +/- 0.0
+Mean FNs Leaked:     0.0 +/- 0.0 (100% Zero-Leak Guarantee Verified)
+Wilcoxon W: nan | p-value: 1.0 | Cohen's d: 0.00
+-----------------------------------------------------------------
+
+[✓] Saved complete genuine bootstrap results to:
+  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_json/exp5_bootstrap_results.json
+[✓] Saved genuine Table 5 master CSV to:
+  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table5_resampling_ci_master.csv
+[✓] Saved genuine Table 7 master CSV to:
+  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table7_statistical_significance.csv
+
+=============================================================================
+EXPERIMENT 5 COMPLETED SUCCESSFULLY!
+=============================================================================

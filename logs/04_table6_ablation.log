@@ -1,0 +1,32 @@
+==========================================================================================
+GENUINE TABLE 6 ABLATION BENCHMARK (OPTION A+C)
+==========================================================================================
+
+>>> Loading PaySim Data...
+
+--- PANEL A: Feature Representation Ablation (PaySim) ---
+Probability-Only Filter [p_hat]            | Supp FP: 44 | Leak FN:2 | Cost: ₹2,326,162.77 | Savings: ₹-531,370.70 (-29.61%) [LEAK (2 FN!)]
+Raw Features Only [x]                      | Supp FP:114 | Leak FN:2 | Cost: ₹2,272,973.50 | Savings: ₹-478,181.43 (-26.64%) [LEAK (2 FN!)]
+SHAP Attributions Only [phi(x)]            | Supp FP: 28 | Leak FN:0 | Cost: ₹1,750,292.07 | Savings: ₹44,500.00 (+2.48%) [SAFE (0 leaks)]
+ACXIS Joint Space [x, phi(x)] (Proposed)   | Supp FP: 44 | Leak FN:0 | Cost: ₹1,735,292.07 | Savings: ₹59,500.00 (+3.32%) [SAFE (0 leaks)]
+
+--- PANEL B: Meta-Classifier Architecture Ablation (PaySim) ---
+Logistic Regression Meta                   | Supp FP: 75 | Leak FN:1 | Cost: ₹1,739,764.07 | Savings: ₹55,028.00 (+3.07%) [LEAK (1 FN!)]
+LightGBM (GBDT) Meta                       | Supp FP:185 | Leak FN:1 | Cost: ₹1,780,956.25 | Savings: ₹13,835.82 (+0.77%) [LEAK (1 FN!)]
+Permutation Saliency + RF*                 | Supp FP:  7 | Leak FN:0 | Cost: ₹1,776,292.07 | Savings: ₹18,500.00 (+1.03%) [SAFE (0 leaks)]
+Random Forest + TreeSHAP (ACXIS Proposed)  | Supp FP: 44 | Leak FN:0 | Cost: ₹1,735,292.07 | Savings: ₹59,500.00 (+3.32%) [SAFE (0 leaks)]
+
+>>> Loading IEEE-CIS Data...
+
+--- PANEL C: Cross-Dataset Validation (IEEE-CIS) under Option A+C ---
+Original Baseline Cost: $95,057.65 (Recall: 0.7899)
+Co-Optimized Baseline : $93,596.06 (Recall: 0.8364)
+Probability-Only Filter [p_hat]            | Supp FP: 25 | Leak FN:1 | Cost: $93,521.06 | Savings: $1,536.59 (+1.62%) [LEAK (1 FN!)]
+SHAP Attributions Only [phi(x)]            | Supp FP:128 | Leak FN:0 | Cost: $92,376.06 | Savings: $2,681.59 (+2.82%) [SAFE (0 leaks)]
+ACXIS Proposed [phi(x) + Co-Opt]           | Supp FP:128 | Leak FN:0 | Cost: $92,376.06 | Savings: $2,681.59 (+2.82%) [SAFE (0 leaks)]
+
+[✓] Saved complete genuine Table 6 master CSV to:
+  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table6_ablation_master.csv
+[✓] Saved complete genuine Table 6 JSON to:
+  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_json/exp4_table6_ablation.json
+==========================================================================================
