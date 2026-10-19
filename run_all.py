@@ -31,14 +31,16 @@ def main():
     args = parser.parse_args()
 
     step0_args = ["--force"] if args.from_scratch else []
+    step3_args = ["--from-scratch"] if args.from_scratch else []
 
     scripts = [
         ("Step 0: Stage 1 Training & TreeSHAP Attribution Extraction", "scripts/step0_train_stage1_and_shap.py", step0_args, "logs/00_stage1_and_shap.log"),
         ("Step 1: Stage 1 Validation Optimization Grid", "scripts/step1_data_and_stage1_coopt.py", [], "logs/01_stage1_coopt.log"),
         ("Step 2: Algorithm 1 Execution Engine", "scripts/step2_algorithm1_engine.py", [], "logs/02_algorithm1.log"),
-        ("Step 3: Comparative Baselines Benchmark (Table 4)", "scripts/step3_table4_master_baselines.py", [], "logs/03_table4_baselines.log"),
+        ("Step 3: Comparative Baselines Benchmark (Table 4)", "scripts/step3_table4_master_baselines.py", step3_args, "logs/03_table4_baselines.log"),
         ("Step 4: Ablation Benchmark Panels (Table 6)", "scripts/step4_table6_ablation_panels.py", [], "logs/04_table6_ablation.log"),
         ("Step 5: 1,000-Iteration Bootstrap Resampling (Tables 5 & 7)", "scripts/step5_bootstrap_resampling_1000.py", [], "logs/05_bootstrap.log"),
+        ("Step 5b: Multi-Seed & Split Robustness (5 Seeds)", "scripts/step5b_repeated_splits_5seeds.py", [], "logs/05b_multiseed.log"),
         ("Step 6: Latency & Hardware Throughput Benchmark (Table 3)", "scripts/step6_latency_timing_loop.py", [], "logs/06_latency.log"),
         ("Step 7: Synchronized Publication Figures Generation", "scripts/step7_generate_publication_figures.py", [], "logs/07_figures.log")
     ]

@@ -25,6 +25,7 @@ import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from cache_utils import load_stage1_cache
 
 # Directory Setup (Portable relative paths)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -103,12 +104,12 @@ def main():
     
     for idx, ds_name in enumerate(datasets):
         print(f"\n>>> Processing {ds_name.upper()}...")
-        npz_path = os.path.join(CACHE_DIR, f"{ds_name}_stage1_and_shap.npz")
-        if not os.path.exists(npz_path):
-            print(f"Error: {npz_path} not found!")
+        try:
+            data = load_stage1_cache(ds_name, CACHE_DIR)
+        except Exception as e:
+            print(f"Error loading cache for {ds_name}: {e}")
             continue
             
-        data = np.load(npz_path)
         p_val, p_test = data['p_val'], data['p_test']
         y_val, y_test = data['y_val'], data['y_test']
         amt_val, amt_test = data['amt_val'], data['amt_test']

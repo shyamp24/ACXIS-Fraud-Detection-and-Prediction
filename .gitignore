@@ -6,6 +6,11 @@ __pycache__/
 # Temporary compiler artifacts
 catboost_info/
 
+# Datasets & Large Monolithic Artifacts (>100MB)
+data/*.csv
+cache/ieeecis_stage1_and_shap.npz
+cache/step3_checkpoint_*.json
+
 # OS specific files
 .DS_Store
 .DS_Store?

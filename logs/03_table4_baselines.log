@@ -5,48 +5,49 @@ STARTING EXPERIMENT 3: COMPARATIVE BASELINES BENCHMARK (TABLE 4)
 ================================================================================
 GENUINE BASELINE BENCHMARK FOR: PAYSIM
 ================================================================================
-Loading PaySim dataset from: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/six.csv
+Loading PaySim dataset from: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/data/six.csv
 
 --- Training Logistic Regression ---
-Logistic Regression (fit+eval: 187.7s) -> ROC-AUC: 0.9887 | PR-AUC: 0.5682
+Logistic Regression (fit+eval: 155.2s) -> ROC-AUC: 0.9887 | PR-AUC: 0.5682
   tau=0.5:  Cost=₹56,100,609.89 | Rec=0.9464 | Prec=0.0249
   tau=0.8712: Cost=₹29,132,574.50 | Rec=0.8027 | Prec=0.0890
 
 --- Training Decision Tree ---
-Decision Tree (fit+eval: 67.1s) -> ROC-AUC: 0.9917 | PR-AUC: 0.7722
+Decision Tree (fit+eval: 58.3s) -> ROC-AUC: 0.9917 | PR-AUC: 0.7722
   tau=0.5:  Cost=₹8,598,278.87 | Rec=0.9842 | Prec=0.1407
   tau=0.9306: Cost=₹7,552,479.39 | Rec=0.9562 | Prec=0.2099
 
 --- Training Random Forest ---
-Random Forest (fit+eval: 606.0s) -> ROC-AUC: 0.9991 | PR-AUC: 0.8870
+Random Forest (fit+eval: 482.0s) -> ROC-AUC: 0.9991 | PR-AUC: 0.8870
   tau=0.5:  Cost=₹19,255,385.53 | Rec=0.9903 | Prec=0.0787
   tau=0.7722: Cost=₹9,666,656.22 | Rec=0.9330 | Prec=0.3352
 
 --- Training LightGBM ---
-LightGBM (fit+eval: 92.5s) -> ROC-AUC: 0.9416 | PR-AUC: 0.3575
-  tau=0.5:  Cost=₹31,580,517.52 | Rec=0.8210 | Prec=0.4107
-  tau=0.1486: Cost=₹27,970,589.91 | Rec=0.8819 | Prec=0.2815
+LightGBM (fit+eval: 74.0s) -> ROC-AUC: 0.9492 | PR-AUC: 0.3900
+  tau=0.5:  Cost=₹47,311,169.14 | Rec=0.8368 | Prec=0.4334
+  tau=0.2080: Cost=₹44,031,805.01 | Rec=0.8867 | Prec=0.3353
 
 --- Training CatBoost (Fairly Tuned) ---
-CatBoost (Fairly Tuned) (fit+eval: 219.5s) -> ROC-AUC: 0.9986 | PR-AUC: 0.9540
+CatBoost (Fairly Tuned) (fit+eval: 179.2s) -> ROC-AUC: 0.9986 | PR-AUC: 0.9540
   tau=0.5:  Cost=₹2,737,505.53 | Rec=0.9939 | Prec=0.3785
   tau=0.8811: Cost=₹3,113,489.08 | Rec=0.9854 | Prec=0.4475
 
 --- Training SMOTE + XGBoost ---
-SMOTE + XGBoost (fit+eval: 30.9s) -> ROC-AUC: 0.9985 | PR-AUC: 0.9250
+SMOTE + XGBoost (fit+eval: 25.9s) -> ROC-AUC: 0.9985 | PR-AUC: 0.9250
   tau=0.5:  Cost=₹7,894,598.74 | Rec=0.9732 | Prec=0.2905
   tau=0.7722: Cost=₹8,705,981.77 | Rec=0.9574 | Prec=0.4244
 
 --- Training ADASYN + XGBoost ---
-ADASYN + XGBoost (fit+eval: 30.1s) -> ROC-AUC: 0.9985 | PR-AUC: 0.9085
+ADASYN + XGBoost (fit+eval: 29.0s) -> ROC-AUC: 0.9985 | PR-AUC: 0.9085
   tau=0.5:  Cost=₹9,250,483.58 | Rec=0.9720 | Prec=0.2579
   tau=0.5346: Cost=₹9,351,167.46 | Rec=0.9695 | Prec=0.2704
+[PAYSIM] Alignment verification PASSED: Labels and transaction amounts match Stage 1 cache exactly.
 
 --- Evaluating Bayes Minimum Risk (Bahnsen et al., 2014) ---
 Bayes Minimum Risk -> Cost=₹10,226,158.53 | Rec=0.9927 | Prec=0.1308
 
 --- Training Instance-Weighted CS-XGBoost (Höppner et al., 2022) ---
-Instance-Weighted CS-XGBoost (fit+eval: 111.7s) -> ROC-AUC: 0.9996 | PR-AUC: 0.9461
+Instance-Weighted CS-XGBoost (fit+eval: 98.1s) -> ROC-AUC: 0.9996 | PR-AUC: 0.9461
   tau=0.5:  Cost=₹2,667,929.30 | Rec=0.9695 | Prec=0.5293
   tau=0.4951: Cost=₹2,367,511.02 | Rec=0.9708 | Prec=0.5268
 
@@ -66,58 +67,18 @@ ACXIS Proposed:   Cost = ₹2,139,948.26 (Savings: ₹61,000.00)
 ================================================================================
 GENUINE BASELINE BENCHMARK FOR: IEEECIS
 ================================================================================
-Loading IEEE-CIS transaction (/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/Datasets/IEEE-ICS/ieee-fraud-detection/train_transaction.csv) and identity (/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/Datasets/IEEE-ICS/ieee-fraud-detection/train_identity.csv)...
-
---- Training Logistic Regression ---
-/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/sklearn/linear_model/_logistic.py:469: ConvergenceWarning: lbfgs failed to converge (status=1):
-STOP: TOTAL NO. of ITERATIONS REACHED LIMIT.
-
-Increase the number of iterations (max_iter) or scale the data as shown in:
-    https://scikit-learn.org/stable/modules/preprocessing.html
-Please also refer to the documentation for alternative solver options:
-    https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
-  n_iter_i = _check_optimize_result(
-Logistic Regression (fit+eval: 335.8s) -> ROC-AUC: 0.7722 | PR-AUC: 0.1500
-  tau=0.5:  Cost=$254,795.87 | Rec=0.6776 | Prec=0.0869
-  tau=0.6435: Cost=$227,382.38 | Rec=0.4898 | Prec=0.1367
-
---- Training Decision Tree ---
-Decision Tree (fit+eval: 47.6s) -> ROC-AUC: 0.8576 | PR-AUC: 0.4092
-  tau=0.5:  Cost=$170,970.59 | Rec=0.7323 | Prec=0.1678
-  tau=0.6534: Cost=$166,845.04 | Rec=0.7014 | Prec=0.1875
-
---- Training Random Forest ---
-Random Forest (fit+eval: 112.7s) -> ROC-AUC: 0.8806 | PR-AUC: 0.5053
-  tau=0.5:  Cost=$168,816.43 | Rec=0.7265 | Prec=0.1844
-  tau=0.5742: Cost=$169,943.68 | Rec=0.6626 | Prec=0.2478
-
---- Training LightGBM ---
-LightGBM (fit+eval: 64.1s) -> ROC-AUC: 0.9395 | PR-AUC: 0.6819
-  tau=0.5:  Cost=$117,312.16 | Rec=0.7076 | Prec=0.4895
-  tau=0.3664: Cost=$108,691.40 | Rec=0.7740 | Prec=0.3456
-
---- Training CatBoost (Fairly Tuned) ---
-CatBoost (Fairly Tuned) (fit+eval: 150.8s) -> ROC-AUC: 0.9499 | PR-AUC: 0.7041
-  tau=0.5:  Cost=$101,752.91 | Rec=0.8233 | Prec=0.3209
-  tau=0.6138: Cost=$98,960.00 | Rec=0.7841 | Prec=0.4168
-
---- Training SMOTE + XGBoost ---
-SMOTE + XGBoost (fit+eval: 434.0s) -> ROC-AUC: 0.9039 | PR-AUC: 0.5959
-  tau=0.5:  Cost=$230,444.37 | Rec=0.3993 | Prec=0.8436
-  tau=0.0793: Cost=$133,057.08 | Rec=0.7357 | Prec=0.2645
-
---- Training ADASYN + XGBoost ---
-ADASYN + XGBoost (fit+eval: 602.2s) -> ROC-AUC: 0.9038 | PR-AUC: 0.6014
-  tau=0.5:  Cost=$224,694.86 | Rec=0.4051 | Prec=0.8541
-  tau=0.0892: Cost=$135,781.88 | Rec=0.7178 | Prec=0.2831
-
---- Evaluating Bayes Minimum Risk (Bahnsen et al., 2014) ---
-Bayes Minimum Risk -> Cost=$181,625.38 | Rec=0.9429 | Prec=0.1261
-
---- Training Instance-Weighted CS-XGBoost (Höppner et al., 2022) ---
-Instance-Weighted CS-XGBoost (fit+eval: 150.0s) -> ROC-AUC: 0.9114 | PR-AUC: 0.6285
-  tau=0.5:  Cost=$224,494.15 | Rec=0.3843 | Prec=0.8911
-  tau=0.0694: Cost=$123,592.43 | Rec=0.7217 | Prec=0.3272
+Loading IEEE-CIS transaction (/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/data/train_transaction.csv) and identity (/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/data/train_identity.csv)...
+[Checkpoint] Loaded 13 previously evaluated models for IEEECIS
+Skipping Logistic Regression (already evaluated in checkpoint)
+Skipping Decision Tree (already evaluated in checkpoint)
+Skipping Random Forest (already evaluated in checkpoint)
+Skipping LightGBM (already evaluated in checkpoint)
+Skipping CatBoost (Fairly Tuned) (already evaluated in checkpoint)
+Skipping SMOTE + XGBoost (already in checkpoint)
+Skipping ADASYN + XGBoost (already in checkpoint)
+[IEEECIS] Alignment verification PASSED: Labels and transaction amounts match Stage 1 cache exactly.
+Skipping Bayes Minimum Risk (already in checkpoint)
+Skipping Instance-Weighted CS-XGBoost (already in checkpoint)
 
 --- Evaluating XAI Heuristic Rule Filter ---
 XAI Heuristic Rule Filter -> Cost=$249,246.15 | Rec=0.2924 | Prec=0.8629

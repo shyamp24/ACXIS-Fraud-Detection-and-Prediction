@@ -27,7 +27,7 @@ This replication package implements the unified ACXIS framework:
    Candidate alerts in test partition whose meta-probability satisfies $q_i \ge \tau_{\text{meta}, k}$ are suppressed as verified false alarms. If a tier's calibrated threshold reaches 1.0 or suppresses zero alerts out-of-fold, the guard safely abstains ($\tau_{\text{meta}, k} = \infty$).
 
 3. **5-Fold Cross-Fitting Meta-Ensemble:**  
-   To prevent single-model variance shift between validation calibration and test scoring, test candidate alerts are scored by the cross-fitting ensemble average $\bar{q}(x) = \frac{1}{5}\sum_{j=1}^5 m_j(x)$, ensuring exact distribution alignment with the OOF calibration thresholds.
+   To stabilize test scoring and mitigate fold-specific variance, test candidate alerts are scored by the ensemble average of the five cross-fitted fold models $\bar{q}(x) = \frac{1}{5}\sum_{j=1}^5 m_j(x)$. While out-of-fold calibration uses single-fold held-out scores, ensembling across the fold models on test evaluations yields conservative, variance-reduced probability estimates.
 
 ---
 
@@ -37,7 +37,11 @@ This replication package implements the unified ACXIS framework:
 06_ACXIS_GitHub_Replication_Package_Final/
 ├── README.md                                  # Complete replication documentation
 ├── run_all.py                                 # Master orchestrator script
+├── data/                                      # Dataset instructions and raw files
+│   └── README.md                              # Download links, file aliases, and MD5 hashes
 ├── scripts/                                   # Standalone execution scripts
+│   ├── cache_utils.py                         # Centralized robust cache loader (handles split NPZs)
+│   ├── step0_generate_paysim_raw_splits.py    # PaySim deterministic raw split generator
 │   ├── step0_train_stage1_and_shap.py         # Step 0: End-to-end training & TreeSHAP calculation
 │   ├── step1_data_and_stage1_coopt.py         # Step 1: 100-step validation cost minimization sweep
 │   ├── step2_algorithm1_engine.py             # Step 2: Algorithm 1 implementation & evaluation
@@ -52,9 +56,9 @@ This replication package implements the unified ACXIS framework:
 │   ├── table2_experimental_settings.csv       # Complete hyperparameter settings
 │   ├── table3_latency_and_throughput.csv      # Single-row & batch throughput metrics
 │   ├── table4_baseline_benchmarks.csv         # Side-by-side comparative benchmarks
+│   ├── table5_bootstrap_distribution_*.csv    # Full 1,000 empirical bootstrap draws
 │   ├── table5_resampling_ci_master.csv        # 1,000 bootstrap resampling means & 95% CIs
-│   ├── table6_ablation_master.csv             # Representation & architecture ablations
-│   └── table7_statistical_significance.csv    # Statistical significance tests
+│   └── table6_ablation_master.csv             # Representation & architecture ablations
 ├── results_json/                              # Structured JSON results
 │   ├── exp1_stage1_coopt_grid.json            # 100-step validation cost curves across datasets
 │   ├── exp2_algorithm1_results.json           # Algorithm 1 exact metrics & tier thresholds

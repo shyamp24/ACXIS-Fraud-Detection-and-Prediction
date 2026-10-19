@@ -1,34 +1,35 @@
 ================================================================================
 EXPERIMENT 6: 100% GENUINE HARDWARE LATENCY & THROUGHPUT BENCHMARK (TABLE 3)
 ================================================================================
-Loading PaySim transactions from: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/six.csv
-Training Stage 1 XGBoost model on 25,000 transactions...
-Training Stage 3 Random Forest meta-model on joint space...
-Initializing TreeExplainer...
+Loading PaySim transactions from: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/data/six.csv
+Loading genuine deployed Stage 1 XGBoost model from /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/cache/paysim_xgb_stage1.json...
+Loading candidate features for Stage 3 Random Forest timing...
+Training genuine Stage 3 Random Forest on real candidate space (1518 alerts, 22 features)...
+Initializing TreeExplainer on genuine Stage 1 model...
 
 0. Measuring Single-Item Preprocessing Latency (10,000 trials)...
-  Preprocessing: Mean=0.0027 ms | p95=0.0037 ms | p99=0.0045 ms
+  Preprocessing: Mean=0.0019 ms | p95=0.0019 ms | p99=0.0027 ms
 
 1. Measuring Stage 1 Fast-Path Scoring (10,000 trials)...
-  Stage 1 Core: Mean=0.6201 ms | p95=0.8902 ms | p99=1.8668 ms
+  Stage 1 Core: Mean=0.5467 ms | p95=0.8344 ms | p99=1.7158 ms
 
 2. Measuring TreeSHAP Attribution (1,000 trials)...
-  TreeSHAP: Mean=1.1362 ms | p95=1.3726 ms | p99=4.5441 ms
+  TreeSHAP: Mean=3.4912 ms | p95=4.3655 ms | p99=5.9078 ms
 
 3. Measuring Stage 3 Meta-Classifier Inference (10,000 trials)...
-  Stage 3 Meta: Mean=5.4506 ms | p95=8.0003 ms | p99=15.5813 ms
+  Stage 3 Meta: Mean=4.9470 ms | p95=6.0970 ms | p99=10.3198 ms
 
 4. Measuring Full Triggered ACXIS Pipeline (1,000 trials)...
-  Full ACXIS Triggered: Mean=9.4991 ms | p95=10.0343 ms | p99=29.7184 ms
+  Full ACXIS Triggered: Mean=11.6947 ms | p95=14.7062 ms | p99=19.2839 ms
 
 5. Measuring Baseline LIME Explainer Latency (100 trials)...
-  LIME: Mean=179.5568 ms | p95=269.1889 ms | p99=309.2068 ms
+  LIME: Mean=175.6956 ms | p95=212.8126 ms | p99=262.7964 ms
 
 6. Measuring Batch Throughput (B=1,000, 100 trials)...
-  Stage 1 Throughput : 680,116.4 tx/sec
-  TreeSHAP Throughput: 8,400.7 tx/sec
-  Stage 3 Throughput : 97,364.9 tx/sec
-  Full Batch Trigger : 7,646.5 tx/sec
+  Stage 1 Throughput : 227,967.4 tx/sec
+  TreeSHAP Throughput: 1,301.7 tx/sec
+  Stage 3 Throughput : 137,259.3 tx/sec
+  Full Batch Trigger : 1,282.2 tx/sec
 
 [✓] Saved Table 3 Latency CSV to:
   /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table3_latency_and_throughput.csv

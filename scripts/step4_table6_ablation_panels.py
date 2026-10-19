@@ -29,6 +29,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from lightgbm import LGBMClassifier
 from sklearn.model_selection import StratifiedKFold
+from cache_utils import load_stage1_cache
 
 # Directory Setup (Portable relative paths)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -182,7 +183,7 @@ def main():
     tau_ie = float(grid_data['ieeecis']['optimal_tau_validation'])
     
     # Load PaySim data
-    ps_data = np.load(os.path.join(CACHE_DIR, "paysim_stage1_and_shap.npz"))
+    ps_data = load_stage1_cache("paysim", CACHE_DIR)
     p_v_ps, p_t_ps = ps_data['p_val'], ps_data['p_test']
     y_v_ps, y_t_ps = ps_data['y_val'], ps_data['y_test']
     amt_v_ps, amt_t_ps = ps_data['amt_val'], ps_data['amt_test']
@@ -296,7 +297,7 @@ def main():
     # -------------------------------------------------------------------------
     # PANEL C: Cross-Dataset Validation (IEEE-CIS)
     # -------------------------------------------------------------------------
-    ie_d = np.load(os.path.join(CACHE_DIR, "ieeecis_stage1_and_shap.npz"))
+    ie_d = load_stage1_cache("ieeecis", CACHE_DIR)
     p_v_ie, p_t_ie = ie_d['p_val'], ie_d['p_test']
     y_v_ie, y_t_ie = ie_d['y_val'], ie_d['y_test']
     amt_v_ie, amt_t_ie = ie_d['amt_val'], ie_d['amt_test']

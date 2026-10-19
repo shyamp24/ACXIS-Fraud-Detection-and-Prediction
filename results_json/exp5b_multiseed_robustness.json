@@ -1,0 +1,170 @@
+{
+  "paysim": {
+    "seeds": [
+      {
+        "seed": 42,
+        "base_cost": 2200948.26,
+        "acxis_cost": 2139948.26,
+        "savings": 61000.0,
+        "savings_pct": 2.7715326665607307,
+        "fps_suppressed": 42,
+        "fns_leaked": 0
+      },
+      {
+        "seed": 101,
+        "base_cost": 2200948.26,
+        "acxis_cost": 2485400.6799999997,
+        "savings": -284452.4199999999,
+        "savings_pct": -12.924084821512341,
+        "fps_suppressed": 63,
+        "fns_leaked": 1
+      },
+      {
+        "seed": 202,
+        "base_cost": 2200948.26,
+        "acxis_cost": 2896139.71,
+        "savings": -695191.4500000002,
+        "savings_pct": -31.585996937520022,
+        "fps_suppressed": 59,
+        "fns_leaked": 2
+      },
+      {
+        "seed": 303,
+        "base_cost": 2200948.26,
+        "acxis_cost": 2168948.26,
+        "savings": 32000.0,
+        "savings_pct": 1.4539187759007113,
+        "fps_suppressed": 37,
+        "fns_leaked": 0
+      },
+      {
+        "seed": 404,
+        "base_cost": 2200948.26,
+        "acxis_cost": 2160448.26,
+        "savings": 40500.0,
+        "savings_pct": 1.8401159507493376,
+        "fps_suppressed": 39,
+        "fns_leaked": 0
+      }
+    ],
+    "mean_savings": -169228.77400000003,
+    "std_savings": 326878.29984921135,
+    "mean_savings_pct": -7.6889028731643165,
+    "std_savings_pct": 14.851703049539717,
+    "mean_fps_suppressed": 48.0,
+    "std_fps_suppressed": 12.083045973594572,
+    "mean_fns_leaked": 0.6
+  },
+  "ieeecis": {
+    "seeds": [
+      {
+        "seed": 42,
+        "base_cost": 94851.712,
+        "acxis_cost": 94471.712,
+        "savings": 380.0,
+        "savings_pct": 0.4006253466463525,
+        "fps_suppressed": 30,
+        "fns_leaked": 0
+      },
+      {
+        "seed": 101,
+        "base_cost": 94851.712,
+        "acxis_cost": 94661.712,
+        "savings": 190.0,
+        "savings_pct": 0.20031267332317626,
+        "fps_suppressed": 22,
+        "fns_leaked": 0
+      },
+      {
+        "seed": 202,
+        "base_cost": 94851.712,
+        "acxis_cost": 94776.712,
+        "savings": 75.0,
+        "savings_pct": 0.0790707921012538,
+        "fps_suppressed": 7,
+        "fns_leaked": 0
+      },
+      {
+        "seed": 303,
+        "base_cost": 94851.712,
+        "acxis_cost": 94666.712,
+        "savings": 185.0,
+        "savings_pct": 0.1950412871830927,
+        "fps_suppressed": 21,
+        "fns_leaked": 0
+      },
+      {
+        "seed": 404,
+        "base_cost": 94851.712,
+        "acxis_cost": 94591.712,
+        "savings": 260.0,
+        "savings_pct": 0.2741120792843465,
+        "fps_suppressed": 28,
+        "fns_leaked": 0
+      }
+    ],
+    "mean_savings": 218.0,
+    "std_savings": 112.17174332246067,
+    "mean_savings_pct": 0.22983243570764436,
+    "std_savings_pct": 0.11826011461180654,
+    "mean_fps_suppressed": 21.6,
+    "std_fps_suppressed": 9.016651263079881,
+    "mean_fns_leaked": 0.0
+  },
+  "ulb": {
+    "seeds": [
+      {
+        "seed": 42,
+        "base_cost": 784.61,
+        "acxis_cost": 784.61,
+        "savings": 0.0,
+        "savings_pct": 0.0,
+        "fps_suppressed": 0,
+        "fns_leaked": 0
+      },
+      {
+        "seed": 101,
+        "base_cost": 784.61,
+        "acxis_cost": 796.0000000000001,
+        "savings": -11.3900000000001,
+        "savings_pct": -1.45167662915335,
+        "fps_suppressed": 0,
+        "fns_leaked": 1
+      },
+      {
+        "seed": 202,
+        "base_cost": 784.61,
+        "acxis_cost": 784.61,
+        "savings": 0.0,
+        "savings_pct": 0.0,
+        "fps_suppressed": 0,
+        "fns_leaked": 0
+      },
+      {
+        "seed": 303,
+        "base_cost": 784.61,
+        "acxis_cost": 784.61,
+        "savings": 0.0,
+        "savings_pct": 0.0,
+        "fps_suppressed": 0,
+        "fns_leaked": 0
+      },
+      {
+        "seed": 404,
+        "base_cost": 784.61,
+        "acxis_cost": 784.61,
+        "savings": 0.0,
+        "savings_pct": 0.0,
+        "fps_suppressed": 0,
+        "fns_leaked": 0
+      }
+    ],
+    "mean_savings": -2.27800000000002,
+    "std_savings": 5.0937628527445655,
+    "mean_savings_pct": -0.29033532583067,
+    "std_savings_pct": 0.6492095248269287,
+    "mean_fps_suppressed": 0.0,
+    "std_fps_suppressed": 0.0,
+    "mean_fns_leaked": 0.2
+  }
+}

@@ -30,10 +30,12 @@ from xgboost import XGBClassifier
 from sklearn.ensemble import RandomForestClassifier
 import shap
 from lime.lime_tabular import LimeTabularExplainer
+from cache_utils import load_stage1_cache
 
 # Directory Setup (Portable relative paths)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PKG_DIR = os.path.dirname(SCRIPT_DIR)
+CACHE_DIR = os.path.join(PKG_DIR, "cache")
 RESULTS_CSV_DIR = os.path.join(PKG_DIR, "results_csv")
 RESULTS_JSON_DIR = os.path.join(PKG_DIR, "results_json")
 LOGS_DIR = os.path.join(PKG_DIR, "logs")
@@ -50,7 +52,7 @@ DATASET_CANDIDATES = [
     os.path.join(DATA_DIR, "six.csv"),
     os.path.join(DATA_DIR, "paysim.csv"),
     os.path.join(DATA_DIR, "PS_20174392719_1491204439457_log.csv"),
-    "/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/six.csv"
+    os.path.join(PKG_DIR, "..", "01_R2_Experiments", "data", "six.csv")
 ]
 
 def resolve_file(candidates):
@@ -88,17 +90,38 @@ def run_latency_benchmark():
     y_real = df['isFraud'].astype(int).values
     n_feats = X_real.shape[1]
     
-    print(f"Training Stage 1 XGBoost model on {len(X_real):,} transactions...")
-    xgb = XGBClassifier(n_estimators=100, max_depth=6, learning_rate=0.10, tree_method='hist')
-    xgb.fit(X_real[:10000], y_real[:10000])
+    # Load or train genuine Stage 1 XGBoost model
+    xgb_saved = os.path.join(CACHE_DIR, "paysim_xgb_stage1.json")
+    if os.path.isfile(xgb_saved):
+        print(f"Loading genuine deployed Stage 1 XGBoost model from {xgb_saved}...")
+        xgb = XGBClassifier()
+        xgb.load_model(xgb_saved)
+    else:
+        print(f"Training genuine Stage 1 XGBoost model (500 trees, depth 5, scale_pos_weight=10)...")
+        xgb = XGBClassifier(n_estimators=500, max_depth=5, learning_rate=0.05, scale_pos_weight=10.0, tree_method='hist')
+        xgb.fit(X_real[:10000], y_real[:10000])
+        xgb.save_model(xgb_saved)
     
-    print("Training Stage 3 Random Forest meta-model on joint space...")
+    # Train Stage 3 Random Forest on genuine candidate feature space
+    print("Loading candidate features for Stage 3 Random Forest timing...")
+    ps_data = load_stage1_cache("paysim", CACHE_DIR)
+    tau_ps = 0.21792179217921794
+    cand_v = ps_data['p_val'] >= tau_ps
+    cand_npz = os.path.join(CACHE_DIR, "paysim_cand_raw_X.npz")
+    full_npz = np.load(os.path.join(CACHE_DIR, "paysim_full_raw_splits.npz"))
+    X_cand_v = full_npz['X_val'][cand_v]
+    X_cand_t = full_npz['X_test'][ps_data['p_test'] >= tau_ps]
+    np.savez_compressed(cand_npz, X_cand_v=X_cand_v, X_cand_t=X_cand_t)
+        
+    s_v = ps_data['shap_val'][cand_v]
+    y_meta_v = (ps_data['y_val'][cand_v] == 0).astype(int)
+    X_joint_v = np.hstack([X_cand_v, s_v])
+
+    print(f"Training genuine Stage 3 Random Forest on real candidate space ({X_joint_v.shape[0]} alerts, {X_joint_v.shape[1]} features)...")
     rf = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=42)
-    y_dummy = np.zeros(2000, dtype=int)
-    y_dummy[:100] = 1
-    rf.fit(np.hstack([X_real[:2000], np.zeros((2000, n_feats), dtype=np.float32)]), y_dummy)
+    rf.fit(X_joint_v, y_meta_v)
     
-    print("Initializing TreeExplainer...")
+    print("Initializing TreeExplainer on genuine Stage 1 model...")
     explainer = shap.TreeExplainer(xgb)
     
     # 0. Preprocessing timing

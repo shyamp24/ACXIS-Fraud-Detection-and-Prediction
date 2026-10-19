@@ -1,0 +1,39 @@
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/sklearn/model_selection/_split.py:737: UserWarning: The least populated class in y has only 4 members, which is less than n_splits=5.
+  warnings.warn(
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/sklearn/model_selection/_split.py:737: UserWarning: The least populated class in y has only 4 members, which is less than n_splits=5.
+  warnings.warn(
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/sklearn/model_selection/_split.py:737: UserWarning: The least populated class in y has only 4 members, which is less than n_splits=5.
+  warnings.warn(
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/sklearn/model_selection/_split.py:737: UserWarning: The least populated class in y has only 4 members, which is less than n_splits=5.
+  warnings.warn(
+/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/sklearn/model_selection/_split.py:737: UserWarning: The least populated class in y has only 4 members, which is less than n_splits=5.
+  warnings.warn(
+================================================================================
+MULTI-SEED EVALUATION ACROSS 5 INDEPENDENT SEEDS (42, 101, 202, 303, 404)
+================================================================================
+
+>>> Running 5-Seed Evaluation on PAYSIM...
+  Seed  42: Base=₹2,200,948.26 | ACXIS=₹2,139,948.26 | Sav=₹61,000.00 (+2.77%) | Supp=42 | Leak=0
+  Seed 101: Base=₹2,200,948.26 | ACXIS=₹2,485,400.68 | Sav=₹-284,452.42 (-12.92%) | Supp=63 | Leak=1
+  Seed 202: Base=₹2,200,948.26 | ACXIS=₹2,896,139.71 | Sav=₹-695,191.45 (-31.59%) | Supp=59 | Leak=2
+  Seed 303: Base=₹2,200,948.26 | ACXIS=₹2,168,948.26 | Sav=₹32,000.00 (+1.45%) | Supp=37 | Leak=0
+  Seed 404: Base=₹2,200,948.26 | ACXIS=₹2,160,448.26 | Sav=₹40,500.00 (+1.84%) | Supp=39 | Leak=0
+
+>>> Running 5-Seed Evaluation on IEEECIS...
+  Seed  42: Base=$94,851.71 | ACXIS=$94,471.71 | Sav=$380.00 (+0.40%) | Supp=30 | Leak=0
+  Seed 101: Base=$94,851.71 | ACXIS=$94,661.71 | Sav=$190.00 (+0.20%) | Supp=22 | Leak=0
+  Seed 202: Base=$94,851.71 | ACXIS=$94,776.71 | Sav=$75.00 (+0.08%) | Supp= 7 | Leak=0
+  Seed 303: Base=$94,851.71 | ACXIS=$94,666.71 | Sav=$185.00 (+0.20%) | Supp=21 | Leak=0
+  Seed 404: Base=$94,851.71 | ACXIS=$94,591.71 | Sav=$260.00 (+0.27%) | Supp=28 | Leak=0
+
+>>> Running 5-Seed Evaluation on ULB...
+  Seed  42: Base=€784.61 | ACXIS=€784.61 | Sav=€0.00 (+0.00%) | Supp= 0 | Leak=0
+  Seed 101: Base=€784.61 | ACXIS=€796.00 | Sav=€-11.39 (-1.45%) | Supp= 0 | Leak=1
+  Seed 202: Base=€784.61 | ACXIS=€784.61 | Sav=€0.00 (+0.00%) | Supp= 0 | Leak=0
+  Seed 303: Base=€784.61 | ACXIS=€784.61 | Sav=€0.00 (+0.00%) | Supp= 0 | Leak=0
+  Seed 404: Base=€784.61 | ACXIS=€784.61 | Sav=€0.00 (+0.00%) | Supp= 0 | Leak=0
+
+[✓] Saved Table 5b Multi-Seed Robustness CSV to: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table5b_multiseed_robustness.csv
+[✓] Saved Multi-Seed Master JSON to: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_json/exp5b_multiseed_robustness.json
+
+================================================================================

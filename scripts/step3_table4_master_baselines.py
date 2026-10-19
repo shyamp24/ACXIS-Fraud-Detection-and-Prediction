@@ -52,6 +52,8 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PKG_DIR = os.path.dirname(SCRIPT_DIR)
 CACHE_DIR = os.path.join(PKG_DIR, "cache")
 RESULTS_CSV_DIR = os.path.join(PKG_DIR, "results_csv")
+from cache_utils import load_stage1_cache
+
 RESULTS_JSON_DIR = os.path.join(PKG_DIR, "results_json")
 LOGS_DIR = os.path.join(PKG_DIR, "logs")
 DATA_DIR = os.environ.get("ACXIS_DATA_DIR", os.path.join(PKG_DIR, "data"))
@@ -64,17 +66,17 @@ DATASET_FALLBACKS = {
         os.path.join(DATA_DIR, "six.csv"),
         os.path.join(DATA_DIR, "paysim.csv"),
         os.path.join(DATA_DIR, "PS_20174392719_1491204439457_log.csv"),
-        "/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/six.csv"
+        os.path.join(PKG_DIR, "..", "01_R2_Experiments", "data", "six.csv")
     ],
     'ieeecis_tx': [
         os.path.join(DATA_DIR, "train_transaction.csv"),
-        os.path.join(DATA_DIR, "ieee-fraud-detection/train_transaction.csv"),
-        "/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/Datasets/IEEE-ICS/ieee-fraud-detection/train_transaction.csv"
+        os.path.join(DATA_DIR, "ieee-fraud-detection", "train_transaction.csv"),
+        os.path.join(PKG_DIR, "..", "01_R2_Experiments", "data", "train_transaction.csv")
     ],
     'ieeecis_id': [
         os.path.join(DATA_DIR, "train_identity.csv"),
-        os.path.join(DATA_DIR, "ieee-fraud-detection/train_identity.csv"),
-        "/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/Datasets/IEEE-ICS/ieee-fraud-detection/train_identity.csv"
+        os.path.join(DATA_DIR, "ieee-fraud-detection", "train_identity.csv"),
+        os.path.join(PKG_DIR, "..", "01_R2_Experiments", "data", "train_identity.csv")
     ]
 }
 
@@ -145,7 +147,7 @@ def save_checkpoint(ds_name, results):
     with open(chk_path, "w") as f:
         json.dump(results, f, indent=2)
 
-def run_benchmark_for_dataset(ds_name):
+def run_benchmark_for_dataset(ds_name, from_scratch=False):
     print("\n" + "=" * 80)
     print(f"GENUINE BASELINE BENCHMARK FOR: {ds_name.upper()}")
     print("=" * 80)
@@ -212,7 +214,13 @@ def run_benchmark_for_dataset(ds_name):
     # Check for existing checkpoint
     chk_path = os.path.join(CACHE_DIR, f"step3_checkpoint_{ds_name}.json")
     results = {}
-    if os.path.exists(chk_path):
+    if from_scratch:
+        if os.path.exists(chk_path):
+            try:
+                os.remove(chk_path)
+            except OSError:
+                pass
+    elif os.path.exists(chk_path):
         try:
             with open(chk_path) as f:
                 results = json.load(f)
@@ -332,12 +340,20 @@ def run_benchmark_for_dataset(ds_name):
         print("Skipping ADASYN + XGBoost (already in checkpoint)")
 
     # 3. Cost-Sensitive Literature Baselines
-    # Load Stage 1 Core from Cache
-    npz_data = np.load(os.path.join(CACHE_DIR, f"{ds_name}_stage1_and_shap.npz"))
+    # Load Stage 1 Core from Cache via portable cache loader
+    npz_data = load_stage1_cache(ds_name, CACHE_DIR)
     p_val_core = npz_data['p_val']
     p_test_core = npz_data['p_test']
     shap_val_core = npz_data['shap_val']
     shap_test_core = npz_data['shap_test']
+
+    # Explicit Alignment Assertions: Verify raw split exactly matches cached arrays
+    assert np.array_equal(y_val.values, npz_data['y_val']), f"Alignment assertion failed: y_val does not match cached y_val for {ds_name}!"
+    assert np.array_equal(y_test.values, npz_data['y_test']), f"Alignment assertion failed: y_test does not match cached y_test for {ds_name}!"
+    assert np.allclose(amt_val, npz_data['amt_val']), f"Alignment assertion failed: amt_val does not match cached amt_val for {ds_name}!"
+    assert np.allclose(amt_test, npz_data['amt_test']), f"Alignment assertion failed: amt_test does not match cached amt_test for {ds_name}!"
+    print(f"[{ds_name.upper()}] Alignment verification PASSED: Labels and transaction amounts match Stage 1 cache exactly.")
+
     opt_tau_core = find_optimal_threshold(y_val, p_val_core, amt_val, brackets)
     
     if 'Bayes Minimum Risk (Bahnsen et al., 2014)' not in results:
@@ -480,15 +496,22 @@ def run_benchmark_for_dataset(ds_name):
     return results
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="ACXIS Baseline Benchmarks (Table 4)")
+    parser.add_argument("--from-scratch", "--force", action="store_true", help="Force re-evaluation of all baselines without checkpoints")
+    args, _ = parser.parse_known_args()
+
     print("=============================================================================")
     print("STARTING EXPERIMENT 3: COMPARATIVE BASELINES BENCHMARK (TABLE 4)")
+    if args.from_scratch:
+        print("MODE: Force re-evaluation from scratch (clearing checkpoints)")
     print("=============================================================================")
     
     all_results = {}
     master_rows = []
     
     for ds in ['paysim', 'ieeecis']:
-        res_ds = run_benchmark_for_dataset(ds)
+        res_ds = run_benchmark_for_dataset(ds, from_scratch=args.from_scratch)
         all_results[ds] = res_ds
         
         for model_name, m_data in res_ds.items():

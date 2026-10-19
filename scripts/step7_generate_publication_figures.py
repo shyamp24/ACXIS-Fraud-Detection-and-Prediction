@@ -31,6 +31,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from matplotlib.patches import FancyBboxPatch
 import matplotlib.patches as patches
+from cache_utils import load_stage1_cache
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PKG_DIR = os.path.dirname(SCRIPT_DIR)
@@ -141,7 +142,7 @@ def generate_figure_1():
              r"2. Stratify Alerts into $K$ Amount Tertiles" + "\n" +
              r"3. Calibrate Strict Tier Guard Thresholds:" + "\n" +
              r"   $\tau_k = \max_{i \in \mathrm{Fraud}_k} q_{\mathrm{OOF}, i} + \varepsilon$" + "\n" +
-             r"4. Provable Zero False Negatives: $\Delta\mathrm{FN} = 0$", facecolor='#FFFFFF', edgecolor='#0D9488', lw=1.5)
+             r"4. Preserves Stage 1 Recall: $\Delta\mathrm{FN} = 0$", facecolor='#FFFFFF', edgecolor='#0D9488', lw=1.5)
     draw_arrow(10.1, 5.8, 10.8, 5.8, label=r"OOF Preds $q$")
 
     # Phase 3 Components
@@ -153,7 +154,7 @@ def generate_figure_1():
 
     # Fast-path auto release
     draw_box(3.7, 0.5, 2.8, 0.7, r"Auto-Clear Legitimate ($\hat{p} < \tau^*$)", 
-             "Direct Approval (> 99.7% of traffic)", facecolor='#DCFCE7', edgecolor='#16A34A')
+             "Direct Approval (Bulk Traffic)", facecolor='#DCFCE7', edgecolor='#16A34A')
     draw_arrow(5.1, 1.7, 5.1, 1.2, label=r"$\hat{p} < \tau^*$", color='#16A34A')
 
     # Triggered Stage 3
@@ -172,7 +173,7 @@ def generate_figure_1():
 
     # Operational Decision Boxes
     draw_box(13.6, 1.4, 1.8, 0.8, "Suppressed Alarm", 
-             r"Auto-Cleared FP" + "\n" + r"$\Delta\mathrm{FN} = 0$ Guaranteed", facecolor='#DCFCE7', edgecolor='#16A34A', lw=1.2)
+             r"Auto-Cleared FP" + "\n" + r"$\Delta\mathrm{FN} = 0$ (Validation Guard)", facecolor='#DCFCE7', edgecolor='#16A34A', lw=1.2)
     draw_box(13.6, 0.45, 1.8, 0.8, "Human Triage", 
              r"High-Risk Fraud Alert" + "\n" + r"Prioritized Queue", facecolor='#FEE2E2', edgecolor='#DC2626', lw=1.2)
 
@@ -200,7 +201,7 @@ def generate_figure_4():
     with open(res_path) as f:
         acx_data = json.load(f)
     ps = acx_data['paysim']
-    ps_data = np.load(os.path.join(CACHE_DIR, "paysim_stage1_and_shap.npz"))
+    ps_data = load_stage1_cache("paysim", CACHE_DIR)
     y_test = ps_data['y_test']
     p_test = ps_data['p_test']
     tau_1 = ps['tau_1']
@@ -375,13 +376,15 @@ def generate_figure_10():
     ps_csv = os.path.join(RESULTS_CSV_DIR, "table5_bootstrap_distribution_paysim.csv")
     ie_csv = os.path.join(RESULTS_CSV_DIR, "table5_bootstrap_distribution_ieeecis.csv")
     
-    if os.path.exists(ps_csv) and os.path.exists(ie_csv):
-        ps_samples = pd.read_csv(ps_csv)['savings_pct'].values
-        ie_samples = pd.read_csv(ie_csv)['savings_pct'].values
-    else:
-        rng = np.random.RandomState(42)
-        ps_samples = rng.normal(ps_b['savings_pct_mean'], ps_b['savings_pct_sd'], size=1000)
-        ie_samples = rng.normal(ie_b['savings_pct_mean'], ie_b['savings_pct_sd'], size=1000)
+    if not (os.path.exists(ps_csv) and os.path.exists(ie_csv)):
+        raise FileNotFoundError(
+            f"Bootstrap distribution CSVs not found:\n  {ps_csv}\n  {ie_csv}\n"
+            f"Please run 'python scripts/step5_bootstrap_resampling_1000.py' to generate genuine empirical distributions. "
+            f"Per Rule 0, synthetic data generation is strictly prohibited."
+        )
+
+    ps_samples = pd.read_csv(ps_csv)['savings_pct'].values
+    ie_samples = pd.read_csv(ie_csv)['savings_pct'].values
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5.0), dpi=300)
 

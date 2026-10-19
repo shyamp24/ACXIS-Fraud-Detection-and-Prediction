@@ -27,6 +27,7 @@ import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import StratifiedKFold
+from cache_utils import load_stage1_cache
 
 # Directory Setup (Portable relative paths)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -101,13 +102,8 @@ def derive_validation_optimal_tau(y_val, p_val, amt_val, brackets):
     return float(thresholds[opt_idx])
 
 def run_dataset_algorithm1(ds_name, n_tiers=3, rf_depth=5, rf_cw=None):
-    npz_path = os.path.join(CACHE_DIR, f"{ds_name}_stage1_and_shap.npz")
     raw_npz_path = os.path.join(CACHE_DIR, f"{ds_name}_cand_raw_X.npz")
-    
-    if not os.path.exists(npz_path):
-        raise FileNotFoundError(f"Missing required cache file: {npz_path}")
-        
-    data = np.load(npz_path)
+    data = load_stage1_cache(ds_name, CACHE_DIR)
     p_val, p_test = data['p_val'], data['p_test']
     y_val, y_test = data['y_val'], data['y_test']
     amt_val, amt_test = data['amt_val'], data['amt_test']

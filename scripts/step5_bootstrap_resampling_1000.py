@@ -25,6 +25,7 @@ import time
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
+from cache_utils import load_stage1_cache
 
 # Directory Setup (Portable relative paths)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -87,7 +88,7 @@ def get_genuine_predictions_and_vectors(ds_name):
         acx_all = json.load(f)
     cfg = acx_all[ds_name]
     
-    npz_data = np.load(os.path.join(CACHE_DIR, f"{ds_name}_stage1_and_shap.npz"))
+    npz_data = load_stage1_cache(ds_name, CACHE_DIR)
     p_val, p_test = npz_data['p_val'], npz_data['p_test']
     y_val, y_test = npz_data['y_val'], npz_data['y_test']
     amt_val, amt_test = npz_data['amt_val'], npz_data['amt_test']
