@@ -12,6 +12,9 @@ Step 4: Ablation benchmark panels (Table 6)
 Step 5: 1,000-iteration stratified bootstrap resampling (Tables 5 & 8)
 Step 6: Latency and throughput hardware benchmark (Table 3)
 Step 7: Synchronized publication figures generation
+Step 8: SHAP Faithfulness & Progressive Deletion (Fig 9 & Table 9)
+Step 9: Cost-Sensitivity & Break-Even Analysis (Table 7)
+Step 10: Table 8 Bootstrap Percentiles & Risk Bounds
 
 Strictly adheres to Rule 0 (100% Genuine Execution, Zero Derived Numbers).
 =============================================================================
@@ -41,7 +44,10 @@ def main():
         ("Step 4: Ablation Benchmark Panels (Table 6)", "scripts/step4_table6_ablation_panels.py", [], "logs/04_table6_ablation.log"),
         ("Step 5: 1,000-Iteration Bootstrap Resampling (Tables 5 & 8)", "scripts/step5_bootstrap_resampling_1000.py", [], "logs/05_bootstrap.log"),
         ("Step 6: Latency & Hardware Throughput Benchmark (Table 3)", "scripts/step6_latency_timing_loop.py", [], "logs/06_latency.log"),
-        ("Step 7: Synchronized Publication Figures Generation", "scripts/step7_generate_publication_figures.py", [], "logs/07_figures.log")
+        ("Step 7: Synchronized Publication Figures Generation", "scripts/step7_generate_publication_figures.py", [], "logs/07_figures.log"),
+        ("Step 8: SHAP Faithfulness & Progressive Deletion (Fig 9 & Table 9)", "scripts/step8_faithfulness_and_progressive_deletion.py", [], "logs/08_faithfulness.log"),
+        ("Step 9: Cost-Sensitivity & Break-Even Analysis (Table 7)", "scripts/step9_cost_sensitivity_and_breakeven.py", [], "logs/09_cost_sensitivity.log"),
+        ("Step 10: Table 8 Bootstrap Percentiles & Risk Bounds", "scripts/step10_table8_bootstrap_percentiles.py", [], "logs/10_table8_percentiles.log")
     ]
 
     print("=" * 80)

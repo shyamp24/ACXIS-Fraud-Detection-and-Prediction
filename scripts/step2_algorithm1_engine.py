@@ -207,7 +207,16 @@ def run_dataset_algorithm1(ds_name, n_tiers=3, rf_depth=5, rf_cw=None):
     cand_test_idx = np.where(cand_test_mask)[0]
     
     pred_acxis = base_pred_test.copy()
-    pred_acxis[cand_test_idx[supp_test == 1]] = 0
+    supp_alert_indices = cand_test_idx[supp_test == 1]
+    pred_acxis[supp_alert_indices] = 0
+    
+    # Save suppressed test indices and meta probabilities to cache for downstream sensitivity and ablation benchmarks
+    np.savez_compressed(
+        os.path.join(CACHE_DIR, f"{ds_name}_suppressed_test_alerts.npz"),
+        supp_indices=supp_alert_indices,
+        supp_mask=supp_test,
+        q_test=q_test
+    )
     
     # 5. Evaluate Operational Costs
     base_eval = evaluate_cost(y_test, base_pred_test, amt_test, brackets)

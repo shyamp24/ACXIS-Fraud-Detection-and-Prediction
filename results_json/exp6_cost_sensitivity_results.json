@@ -1,0 +1,740 @@
+{
+  "paysim": {
+    "scenarios": [
+      {
+        "category": "Tiered Multiplier",
+        "scenario": "Low Cost (-50%)",
+        "cost_without": 1553448.2599999998,
+        "cost_with": 1522948.2599999998,
+        "savings": 30500.0,
+        "pct": 1.9633740489045968
+      },
+      {
+        "category": "Tiered Multiplier",
+        "scenario": "Baseline Tiered (1.0x)",
+        "cost_without": 2200948.26,
+        "cost_with": 2139948.26,
+        "savings": 61000.0,
+        "pct": 2.7715326665607307
+      },
+      {
+        "category": "Tiered Multiplier",
+        "scenario": "High Cost (+50%)",
+        "cost_without": 2848448.26,
+        "cost_with": 2756948.26,
+        "savings": 91500.0,
+        "pct": 3.2122753038877385
+      },
+      {
+        "category": "Tiered Multiplier",
+        "scenario": "Very High Cost (+100%)",
+        "cost_without": 3495948.26,
+        "cost_with": 3373948.26,
+        "savings": 122000.0,
+        "pct": 3.4897541647255386
+      },
+      {
+        "category": "Flat Penalty",
+        "scenario": "Flat \u20b91,000",
+        "cost_without": 1625948.2599999998,
+        "cost_with": 1583948.2599999998,
+        "savings": 42000.0,
+        "pct": 2.583108025835952
+      },
+      {
+        "category": "Flat Penalty",
+        "scenario": "Flat \u20b91,500",
+        "cost_without": 1985948.2599999998,
+        "cost_with": 1922948.2599999998,
+        "savings": 63000.0,
+        "pct": 3.172288083678475
+      },
+      {
+        "category": "Proportional Cost",
+        "scenario": "FP Cost = 0.5%",
+        "cost_without": 1533660.65705,
+        "cost_with": 1503273.88215,
+        "savings": 30386.774900000004,
+        "pct": 1.981323232118964
+      },
+      {
+        "category": "Proportional Cost",
+        "scenario": "FP Cost = 1.0%",
+        "cost_without": 2161373.0541,
+        "cost_with": 2100599.5042999997,
+        "savings": 60773.54980000001,
+        "pct": 2.8118028807991333
+      },
+      {
+        "category": "Proportional Cost",
+        "scenario": "FP Cost = 2.0%",
+        "cost_without": 3416797.8482,
+        "cost_with": 3295250.7486,
+        "savings": 121547.09960000002,
+        "pct": 3.5573395032437207
+      },
+      {
+        "category": "Proportional Cost",
+        "scenario": "FP Cost = 5.0%",
+        "cost_without": 7183072.2305,
+        "cost_with": 6879204.4815,
+        "savings": 303867.749,
+        "pct": 4.230331246144916
+      }
+    ],
+    "breakeven_sweep": [
+      {
+        "ratio_cfp_to_mean_amt": 0.001,
+        "fixed_cfp": 180.1303398476414,
+        "cost_without": 1035642.1046903017,
+        "cost_with": 1028076.6304167007,
+        "savings": 7565.474273600939,
+        "savings_pct": 0.7305104957917212
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.0013869188565300285,
+        "fixed_cfp": 249.82616496785627,
+        "cost_without": 1085823.0987768564,
+        "cost_with": 1075330.3998482064,
+        "savings": 10492.698928649963,
+        "savings_pct": 0.9663359473996859
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.00192354391459856,
+        "fixed_cfp": 346.48861904850116,
+        "cost_without": 1155420.0657149206,
+        "cost_with": 1140867.5437148835,
+        "savings": 14552.522000037048,
+        "savings_pct": 1.2595005428638302
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.0026677993265203275,
+        "fixed_cfp": 480.5515993314155,
+        "cost_without": 1251945.411518619,
+        "cost_with": 1231762.2443466994,
+        "savings": 20183.167171919453,
+        "savings_pct": 1.6121443464086127
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.0037000211913891527,
+        "fixed_cfp": 666.4860746484031,
+        "cost_without": 1385818.2337468502,
+        "cost_with": 1357825.8186116172,
+        "savings": 27992.41513523293,
+        "savings_pct": 2.0199196729826228
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.005131629159898318,
+        "fixed_cfp": 924.3621045445507,
+        "cost_without": 1571488.9752720762,
+        "cost_with": 1532665.7668812051,
+        "savings": 38823.20839087113,
+        "savings_pct": 2.470472844656741
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.007117153246582319,
+        "fixed_cfp": 1282.0152330546175,
+        "cost_without": 1828999.2277993246,
+        "cost_with": 1775154.5880110306,
+        "savings": 53844.639788293935,
+        "savings_pct": 2.9439399957035794
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.00987091404249892,
+        "fixed_cfp": 1778.0511010821865,
+        "cost_without": 2186145.052779174,
+        "cost_with": 2111466.9065337223,
+        "savings": 74678.14624545183,
+        "savings_pct": 3.415973983543131
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.013690156816728805,
+        "fixed_cfp": 2466.0125999648644,
+        "cost_without": 2681477.3319747024,
+        "cost_with": 2577904.8027761783,
+        "savings": 103572.52919852431,
+        "savings_pct": 3.8625174251333716
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.018987136637974283,
+        "fixed_cfp": 3420.159375331911,
+        "cost_without": 3368463.0102389758,
+        "cost_with": 3224816.3164750356,
+        "savings": 143646.69376394027,
+        "savings_pct": 4.264458102324515
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.02633361783471869,
+        "fixed_cfp": 4743.483529985789,
+        "cost_without": 4321256.401589768,
+        "cost_with": 4122030.0933303647,
+        "savings": 199226.30825940313,
+        "savings_pct": 4.610379244936931
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.036522591135626795,
+        "fixed_cfp": 6578.82675337691,
+        "cost_without": 5642703.522431375,
+        "cost_with": 5366392.798789545,
+        "savings": 276310.72364183026,
+        "savings_pct": 4.896779044715275
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.05065387033533725,
+        "fixed_cfp": 9124.29887810266,
+        "cost_without": 7475443.452233915,
+        "cost_with": 7092222.899353604,
+        "savings": 383220.55288031173,
+        "savings_pct": 5.126392237851689
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.07025280792430623,
+        "fixed_cfp": 12654.662166656357,
+        "cost_without": 10017305.019992577,
+        "cost_with": 9485809.20899301,
+        "savings": 531495.810999567,
+        "savings_pct": 5.305776453235731
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.09743494403440249,
+        "fixed_cfp": 17550.989581952843,
+        "cost_without": 13542660.759006046,
+        "cost_with": 12805519.196564026,
+        "savings": 737141.5624420193,
+        "savings_pct": 5.443107344705586
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.13513436116626068,
+        "fixed_cfp": 24341.798401972454,
+        "cost_without": 18432043.10942017,
+        "cost_with": 17409687.576537326,
+        "savings": 1022355.532882843,
+        "savings_pct": 5.546620777814598
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.1874203936666262,
+        "fixed_cfp": 33760.09920554812,
+        "cost_without": 25213219.687994648,
+        "cost_with": 23795295.521361627,
+        "savings": 1417924.166633021,
+        "savings_pct": 5.623733042345917
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.259936878074525,
+        "fixed_cfp": 46822.51818649912,
+        "cost_without": 34618161.35427936,
+        "cost_with": 32651615.590446398,
+        "savings": 1966545.7638329628,
+        "savings_pct": 5.680676520360219
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.3605113577091053,
+        "fixed_cfp": 64939.03338307576,
+        "cost_without": 47662052.295814544,
+        "cost_with": 44934612.893725365,
+        "savings": 2727439.402089182,
+        "savings_pct": 5.722454805683415
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.5,
+        "fixed_cfp": 90065.16992382071,
+        "cost_without": 65752870.60515091,
+        "cost_with": 61970133.46835044,
+        "savings": 3782737.13680047,
+        "savings_pct": 5.752961204562436
+      }
+    ]
+  },
+  "ieeecis": {
+    "scenarios": [
+      {
+        "category": "Tiered Multiplier",
+        "scenario": "Low Cost (-50%)",
+        "cost_without": 84594.212,
+        "cost_with": 84434.212,
+        "savings": 160.0,
+        "pct": 0.18913823560410967
+      },
+      {
+        "category": "Tiered Multiplier",
+        "scenario": "Baseline Tiered (1.0x)",
+        "cost_without": 94856.712,
+        "cost_with": 94536.712,
+        "savings": 320.0,
+        "pct": 0.3373509298951876
+      },
+      {
+        "category": "Tiered Multiplier",
+        "scenario": "High Cost (+50%)",
+        "cost_without": 105119.212,
+        "cost_with": 104639.212,
+        "savings": 480.0,
+        "pct": 0.4566244275118805
+      },
+      {
+        "category": "Tiered Multiplier",
+        "scenario": "Very High Cost (+100%)",
+        "cost_without": 115381.712,
+        "cost_with": 114741.712,
+        "savings": 640.0,
+        "pct": 0.5546806239103126
+      },
+      {
+        "category": "Flat Penalty",
+        "scenario": "Flat $10",
+        "cost_without": 92371.712,
+        "cost_with": 92071.712,
+        "savings": 300.0,
+        "pct": 0.3247747535522563
+      },
+      {
+        "category": "Flat Penalty",
+        "scenario": "Flat $15",
+        "cost_without": 101391.712,
+        "cost_with": 100941.712,
+        "savings": 450.0,
+        "pct": 0.44382325845331416
+      },
+      {
+        "category": "Proportional Cost",
+        "scenario": "FP Cost = 0.5%",
+        "cost_without": 75999.334235,
+        "cost_with": 75975.632035,
+        "savings": 23.7022,
+        "pct": 0.031187378466645065
+      },
+      {
+        "category": "Proportional Cost",
+        "scenario": "FP Cost = 1.0%",
+        "cost_without": 77666.95647,
+        "cost_with": 77619.55207,
+        "savings": 47.4044,
+        "pct": 0.06103548040833896
+      },
+      {
+        "category": "Proportional Cost",
+        "scenario": "FP Cost = 2.0%",
+        "cost_without": 81002.20094,
+        "cost_with": 80907.39214,
+        "savings": 94.8088,
+        "pct": 0.1170447208838521
+      },
+      {
+        "category": "Proportional Cost",
+        "scenario": "FP Cost = 5.0%",
+        "cost_without": 91007.93435,
+        "cost_with": 90770.91235,
+        "savings": 237.022,
+        "pct": 0.26044102823876475
+      }
+    ],
+    "breakeven_sweep": [
+      {
+        "ratio_cfp_to_mean_amt": 0.001,
+        "fixed_cfp": 0.1346190742371389,
+        "cost_without": 74574.5648099238,
+        "cost_with": 74570.52623769669,
+        "savings": 4.038572227114167,
+        "savings_pct": 0.005415482125048546
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.0013869188565300285,
+        "fixed_cfp": 0.1867057325081037,
+        "cost_without": 74668.52914144463,
+        "cost_with": 74662.92796946938,
+        "savings": 5.601171975243111,
+        "savings_pct": 0.007501382496276053
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.00192354391459856,
+        "fixed_cfp": 0.25894570103774034,
+        "cost_without": 74798.85004467209,
+        "cost_with": 74791.08167364095,
+        "savings": 7.76837103113221,
+        "savings_pct": 0.010385682435615932
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.0026677993265203275,
+        "fixed_cfp": 0.35913667558662915,
+        "cost_without": 74979.59456275828,
+        "cost_with": 74968.82046249068,
+        "savings": 10.774100267598875,
+        "savings_pct": 0.014369376535613168
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.0037000211913891527,
+        "fixed_cfp": 0.4980934274426035,
+        "cost_without": 75230.27254310646,
+        "cost_with": 75215.32974028318,
+        "savings": 14.942802823278104,
+        "savings_pct": 0.01986275247735674
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.005131629159898318,
+        "fixed_cfp": 0.6908151668338184,
+        "cost_without": 75577.94256096821,
+        "cost_with": 75557.2181059632,
+        "savings": 20.72445500501455,
+        "savings_pct": 0.027421300848850545
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.007117153246582319,
+        "fixed_cfp": 0.9581045812587594,
+        "cost_without": 76060.1326645908,
+        "cost_with": 76031.38952715303,
+        "savings": 28.743137437762783,
+        "savings_pct": 0.03779001749117896
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.00987091404249892,
+        "fixed_cfp": 1.328813310275579,
+        "cost_without": 76728.89121173715,
+        "cost_with": 76689.02681242889,
+        "savings": 39.86439930826737,
+        "savings_pct": 0.05195487472673051
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.013690156816728805,
+        "fixed_cfp": 1.8429562368292882,
+        "cost_without": 77656.40505124003,
+        "cost_with": 77601.11636413514,
+        "savings": 55.28868710487865,
+        "savings_pct": 0.07119655753881153
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.018987136637974283,
+        "fixed_cfp": 2.55603075661816,
+        "cost_without": 78942.79148493917,
+        "cost_with": 78866.11056224062,
+        "savings": 76.6809226985448,
+        "savings_pct": 0.09713480009529954
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.02633361783471869,
+        "fixed_cfp": 3.54500725422444,
+        "cost_without": 80726.90508662089,
+        "cost_with": 80620.55486899415,
+        "savings": 106.35021762673321,
+        "savings_pct": 0.1317407344089535
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.036522591135626795,
+        "fixed_cfp": 4.916637407419615,
+        "cost_without": 83201.32588298498,
+        "cost_with": 83053.82676076239,
+        "savings": 147.49912222258845,
+        "savings_pct": 0.1772797736781652
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.05065387033533725,
+        "fixed_cfp": 6.818977131071173,
+        "cost_without": 86633.14674445239,
+        "cost_with": 86428.57743052025,
+        "savings": 204.56931393213517,
+        "savings_pct": 0.23613284478234067
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.07025280792430623,
+        "fixed_cfp": 9.45736796532964,
+        "cost_without": 91392.80380945466,
+        "cost_with": 91109.08277049477,
+        "savings": 283.7210389598892,
+        "savings_pct": 0.3104413335993288
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.09743494403440249,
+        "fixed_cfp": 13.116601964258702,
+        "cost_without": 97994.0619435227,
+        "cost_with": 97600.56388459494,
+        "savings": 393.49805892776106,
+        "savings_pct": 0.401552962621906
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.13513436116626068,
+        "fixed_cfp": 18.191662597829186,
+        "cost_without": 107149.47132648385,
+        "cost_with": 106603.72144854897,
+        "savings": 545.7498779348756,
+        "savings_pct": 0.5093351102703799
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.1874203936666262,
+        "fixed_cfp": 25.23035988856135,
+        "cost_without": 119847.28123896467,
+        "cost_with": 119090.37044230783,
+        "savings": 756.9107966568405,
+        "savings_pct": 0.631562759565341
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.259936878074525,
+        "fixed_cfp": 34.992461886484605,
+        "cost_without": 137458.11324321822,
+        "cost_with": 136408.33938662367,
+        "savings": 1049.773856594538,
+        "savings_pct": 0.7637045437522262
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.3605113577091053,
+        "fixed_cfp": 48.53170522677379,
+        "cost_without": 161882.9082290999,
+        "cost_with": 160426.9570722967,
+        "savings": 1455.9511568032137,
+        "savings_pct": 0.8993853475517766
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.5,
+        "fixed_cfp": 67.30953711856945,
+        "cost_without": 195758.11696189927,
+        "cost_with": 193738.8308483422,
+        "savings": 2019.2861135570836,
+        "savings_pct": 1.0315210142474451
+      }
+    ]
+  },
+  "ulb": {
+    "scenarios": [
+      {
+        "category": "Tiered Multiplier",
+        "scenario": "Low Cost (-50%)",
+        "cost_without": 748.61,
+        "cost_with": 748.61,
+        "savings": 0.0,
+        "pct": 0.0
+      },
+      {
+        "category": "Tiered Multiplier",
+        "scenario": "Baseline Tiered (1.0x)",
+        "cost_without": 752.61,
+        "cost_with": 752.61,
+        "savings": 0.0,
+        "pct": 0.0
+      },
+      {
+        "category": "Tiered Multiplier",
+        "scenario": "High Cost (+50%)",
+        "cost_without": 756.61,
+        "cost_with": 756.61,
+        "savings": 0.0,
+        "pct": 0.0
+      },
+      {
+        "category": "Tiered Multiplier",
+        "scenario": "Very High Cost (+100%)",
+        "cost_without": 760.61,
+        "cost_with": 760.61,
+        "savings": 0.0,
+        "pct": 0.0
+      },
+      {
+        "category": "Flat Penalty",
+        "scenario": "Flat \u20ac10",
+        "cost_without": 784.61,
+        "cost_with": 784.61,
+        "savings": 0.0,
+        "pct": 0.0
+      },
+      {
+        "category": "Flat Penalty",
+        "scenario": "Flat \u20ac15",
+        "cost_without": 804.61,
+        "cost_with": 804.61,
+        "savings": 0.0,
+        "pct": 0.0
+      },
+      {
+        "category": "Proportional Cost",
+        "scenario": "FP Cost = 0.5%",
+        "cost_without": 744.6238500000001,
+        "cost_with": 744.6238500000001,
+        "savings": 0.0,
+        "pct": 0.0
+      },
+      {
+        "category": "Proportional Cost",
+        "scenario": "FP Cost = 1.0%",
+        "cost_without": 744.6377,
+        "cost_with": 744.6377,
+        "savings": 0.0,
+        "pct": 0.0
+      },
+      {
+        "category": "Proportional Cost",
+        "scenario": "FP Cost = 2.0%",
+        "cost_without": 744.6654,
+        "cost_with": 744.6654,
+        "savings": 0.0,
+        "pct": 0.0
+      },
+      {
+        "category": "Proportional Cost",
+        "scenario": "FP Cost = 5.0%",
+        "cost_without": 744.7485,
+        "cost_with": 744.7485,
+        "savings": 0.0,
+        "pct": 0.0
+      }
+    ],
+    "breakeven_sweep": [
+      {
+        "ratio_cfp_to_mean_amt": 0.001,
+        "fixed_cfp": 0.08951519995786666,
+        "cost_without": 744.9680607998315,
+        "cost_with": 744.9680607998315,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.0013869188565300285,
+        "fixed_cfp": 0.12415031876762128,
+        "cost_without": 745.1066012750705,
+        "cost_with": 745.1066012750705,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.00192354391459856,
+        "fixed_cfp": 0.17218641814302768,
+        "cost_without": 745.2987456725721,
+        "cost_with": 745.2987456725721,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.0026677993265203275,
+        "fixed_cfp": 0.23880859016092912,
+        "cost_without": 745.5652343606438,
+        "cost_with": 745.5652343606438,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.0037000211913891527,
+        "fixed_cfp": 0.331208136795544,
+        "cost_without": 745.9348325471822,
+        "cost_with": 745.9348325471822,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.005131629159898318,
+        "fixed_cfp": 0.4593588103579172,
+        "cost_without": 746.4474352414317,
+        "cost_with": 746.4474352414317,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.007117153246582319,
+        "fixed_cfp": 0.6370933959985962,
+        "cost_without": 747.1583735839944,
+        "cost_with": 747.1583735839944,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.00987091404249892,
+        "fixed_cfp": 0.8835968442812048,
+        "cost_without": 748.1443873771249,
+        "cost_with": 748.1443873771249,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.013690156816728805,
+        "fixed_cfp": 1.2254771249040302,
+        "cost_without": 749.5119084996161,
+        "cost_with": 749.5119084996161,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.018987136637974283,
+        "fixed_cfp": 1.699637332775604,
+        "cost_without": 751.4085493311024,
+        "cost_with": 751.4085493311024,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.02633361783471869,
+        "fixed_cfp": 2.3572590660888872,
+        "cost_without": 754.0390362643556,
+        "cost_with": 754.0390362643556,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.036522591135626795,
+        "fixed_cfp": 3.269327048485041,
+        "cost_without": 757.6873081939402,
+        "cost_with": 757.6873081939402,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.05065387033533725,
+        "fixed_cfp": 4.534291331707564,
+        "cost_without": 762.7471653268303,
+        "cost_with": 762.7471653268303,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.07025280792430623,
+        "fixed_cfp": 6.288694148945871,
+        "cost_without": 769.7647765957835,
+        "cost_with": 769.7647765957835,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.09743494403440249,
+        "fixed_cfp": 8.721908498123085,
+        "cost_without": 779.4976339924924,
+        "cost_with": 779.4976339924924,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.13513436116626068,
+        "fixed_cfp": 12.096579360976396,
+        "cost_without": 792.9963174439056,
+        "cost_with": 792.9963174439056,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.1874203936666262,
+        "fixed_cfp": 16.77697401525013,
+        "cost_without": 811.7178960610005,
+        "cost_with": 811.7178960610005,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.259936878074525,
+        "fixed_cfp": 23.268301617264708,
+        "cost_without": 837.6832064690589,
+        "cost_with": 837.6832064690589,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.3605113577091053,
+        "fixed_cfp": 32.271246272412554,
+        "cost_without": 873.6949850896502,
+        "cost_with": 873.6949850896502,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      },
+      {
+        "ratio_cfp_to_mean_amt": 0.5,
+        "fixed_cfp": 44.75759997893333,
+        "cost_without": 923.6403999157333,
+        "cost_with": 923.6403999157333,
+        "savings": 0.0,
+        "savings_pct": 0.0
+      }
+    ]
+  }
+}

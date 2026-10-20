@@ -1,0 +1,31 @@
+dataset,category,scenario,cost_without,cost_with,savings,savings_pct,currency
+PaySim Mobile Money,Tiered Multiplier,Low Cost (-50%),1553448.26,1522948.26,30500.0,1.96,₹
+PaySim Mobile Money,Tiered Multiplier,Baseline Tiered (1.0x),2200948.26,2139948.26,61000.0,2.77,₹
+PaySim Mobile Money,Tiered Multiplier,High Cost (+50%),2848448.26,2756948.26,91500.0,3.21,₹
+PaySim Mobile Money,Tiered Multiplier,Very High Cost (+100%),3495948.26,3373948.26,122000.0,3.49,₹
+PaySim Mobile Money,Flat Penalty,"Flat ₹1,000 per False Alarm",1625948.26,1583948.26,42000.0,2.58,₹
+PaySim Mobile Money,Flat Penalty,"Flat ₹1,500 per False Alarm",1985948.26,1922948.26,63000.0,3.17,₹
+PaySim Mobile Money,Proportional Cost,FP Cost = 0.5% of Amount,1533660.66,1503273.88,30386.77,1.98,₹
+PaySim Mobile Money,Proportional Cost,FP Cost = 1.0% of Amount,2161373.05,2100599.5,60773.55,2.81,₹
+PaySim Mobile Money,Proportional Cost,FP Cost = 2.0% of Amount,3416797.85,3295250.75,121547.1,3.56,₹
+PaySim Mobile Money,Proportional Cost,FP Cost = 5.0% of Amount,7183072.23,6879204.48,303867.75,4.23,₹
+IEEE-CIS E-Commerce,Tiered Multiplier,Low Cost (-50%),84594.21,84434.21,160.0,0.19,$
+IEEE-CIS E-Commerce,Tiered Multiplier,Baseline Tiered (1.0x),94856.71,94536.71,320.0,0.34,$
+IEEE-CIS E-Commerce,Tiered Multiplier,High Cost (+50%),105119.21,104639.21,480.0,0.46,$
+IEEE-CIS E-Commerce,Tiered Multiplier,Very High Cost (+100%),115381.71,114741.71,640.0,0.55,$
+IEEE-CIS E-Commerce,Flat Penalty,Flat $10 per False Alarm,92371.71,92071.71,300.0,0.32,$
+IEEE-CIS E-Commerce,Flat Penalty,Flat $15 per False Alarm,101391.71,100941.71,450.0,0.44,$
+IEEE-CIS E-Commerce,Proportional Cost,FP Cost = 0.5% of Amount,75999.33,75975.63,23.7,0.03,$
+IEEE-CIS E-Commerce,Proportional Cost,FP Cost = 1.0% of Amount,77666.96,77619.55,47.4,0.06,$
+IEEE-CIS E-Commerce,Proportional Cost,FP Cost = 2.0% of Amount,81002.2,80907.39,94.81,0.12,$
+IEEE-CIS E-Commerce,Proportional Cost,FP Cost = 5.0% of Amount,91007.93,90770.91,237.02,0.26,$
+ULB Credit Card,Tiered Multiplier,Low Cost (-50%),748.61,748.61,0.0,0.0,€
+ULB Credit Card,Tiered Multiplier,Baseline Tiered (1.0x),752.61,752.61,0.0,0.0,€
+ULB Credit Card,Tiered Multiplier,High Cost (+50%),756.61,756.61,0.0,0.0,€
+ULB Credit Card,Tiered Multiplier,Very High Cost (+100%),760.61,760.61,0.0,0.0,€
+ULB Credit Card,Flat Penalty,Flat €10 per False Alarm,784.61,784.61,0.0,0.0,€
+ULB Credit Card,Flat Penalty,Flat €15 per False Alarm,804.61,804.61,0.0,0.0,€
+ULB Credit Card,Proportional Cost,FP Cost = 0.5% of Amount,744.62,744.62,0.0,0.0,€
+ULB Credit Card,Proportional Cost,FP Cost = 1.0% of Amount,744.64,744.64,0.0,0.0,€
+ULB Credit Card,Proportional Cost,FP Cost = 2.0% of Amount,744.67,744.67,0.0,0.0,€
+ULB Credit Card,Proportional Cost,FP Cost = 5.0% of Amount,744.75,744.75,0.0,0.0,€

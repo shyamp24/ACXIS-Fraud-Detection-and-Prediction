@@ -1,0 +1,230 @@
+{
+  "candidate_alerts": {
+    "total_alerts": 1528,
+    "true_frauds": 808,
+    "false_alarms": 720,
+    "baseline_mean_p": 0.6725010275840759
+  },
+  "top_attribution_frequency": {
+    "step": {
+      "count": 14,
+      "pct": 0.9162303664921465
+    },
+    "amount": {
+      "count": 421,
+      "pct": 27.55235602094241
+    },
+    "oldbalanceOrg": {
+      "count": 975,
+      "pct": 63.80890052356021
+    },
+    "newbalanceOrig": {
+      "count": 20,
+      "pct": 1.3089005235602094
+    },
+    "oldbalanceDest": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "newbalanceDest": {
+      "count": 98,
+      "pct": 6.4136125654450264
+    },
+    "type_CASH_IN": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "type_CASH_OUT": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "type_DEBIT": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "type_PAYMENT": {
+      "count": 0,
+      "pct": 0.0
+    },
+    "type_TRANSFER": {
+      "count": 0,
+      "pct": 0.0
+    }
+  },
+  "overall_attribution_mass_share": {
+    "step": {
+      "mean_abs_shap": 0.6658159494400024,
+      "mass_share_pct": 6.047852337360382
+    },
+    "amount": {
+      "mean_abs_shap": 1.9085229635238647,
+      "mass_share_pct": 17.335818707942963
+    },
+    "oldbalanceOrg": {
+      "mean_abs_shap": 4.422284126281738,
+      "mass_share_pct": 40.16924202442169
+    },
+    "newbalanceOrig": {
+      "mean_abs_shap": 1.2471137046813965,
+      "mass_share_pct": 11.327994614839554
+    },
+    "oldbalanceDest": {
+      "mean_abs_shap": 0.13434062898159027,
+      "mass_share_pct": 1.2202655896544456
+    },
+    "newbalanceDest": {
+      "mean_abs_shap": 1.1018123626708984,
+      "mass_share_pct": 10.00816896557808
+    },
+    "type_CASH_IN": {
+      "mean_abs_shap": 0.00864572823047638,
+      "mass_share_pct": 0.07853234419599175
+    },
+    "type_CASH_OUT": {
+      "mean_abs_shap": 0.6427744626998901,
+      "mass_share_pct": 5.838558077812195
+    },
+    "type_DEBIT": {
+      "mean_abs_shap": 0.0011791986180469394,
+      "mass_share_pct": 0.010711096547311172
+    },
+    "type_PAYMENT": {
+      "mean_abs_shap": 0.26265695691108704,
+      "mass_share_pct": 2.3858102038502693
+    },
+    "type_TRANSFER": {
+      "mean_abs_shap": 0.6139854192733765,
+      "mass_share_pct": 5.577056482434273
+    }
+  },
+  "protocol_a_median": {
+    "morf": [
+      0.6725,
+      0.0611,
+      0.0288,
+      0.0092,
+      0.0025,
+      0.0004,
+      0.0003,
+      0.0001,
+      0.0001,
+      0.0001,
+      0.0001,
+      0.0
+    ],
+    "gain": [
+      0.6725,
+      0.5748,
+      0.5747,
+      0.5747,
+      0.044,
+      0.044,
+      0.0431,
+      0.0151,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "random": [
+      0.6725,
+      0.6047,
+      0.4883,
+      0.4549,
+      0.3895,
+      0.3333,
+      0.2945,
+      0.2625,
+      0.2333,
+      0.1779,
+      0.1335,
+      0.0
+    ],
+    "lerf": [
+      0.6725,
+      0.784,
+      0.7869,
+      0.7884,
+      0.7856,
+      0.7579,
+      0.7411,
+      0.6992,
+      0.6449,
+      0.641,
+      0.6178,
+      0.0
+    ],
+    "audc_morf": 0.0399,
+    "audc_gain": 0.2006,
+    "audc_random": 0.3371,
+    "audc_lerf": 0.6894
+  },
+  "protocol_b_mean": {
+    "morf": [
+      0.6725,
+      0.643,
+      0.1294,
+      0.0656,
+      0.0258,
+      0.0087,
+      0.0017,
+      0.0014,
+      0.0009,
+      0.0009,
+      0.0,
+      0.0
+    ],
+    "gain": [
+      0.6725,
+      0.4312,
+      0.0715,
+      0.0715,
+      0.0338,
+      0.0338,
+      0.0212,
+      0.006,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "random": [
+      0.6725,
+      0.6203,
+      0.5846,
+      0.4894,
+      0.4298,
+      0.3807,
+      0.2422,
+      0.1786,
+      0.0951,
+      0.0366,
+      0.0057,
+      0.0
+    ],
+    "lerf": [
+      0.6725,
+      0.8754,
+      0.8855,
+      0.8859,
+      0.8852,
+      0.8729,
+      0.8419,
+      0.7367,
+      0.4531,
+      0.2501,
+      0.0035,
+      0.0
+    ],
+    "audc_morf": 0.1103,
+    "audc_gain": 0.0914,
+    "audc_random": 0.309,
+    "audc_lerf": 0.6388
+  },
+  "single_feature_reliance": {
+    "feature": "oldbalanceOrg",
+    "base_pr_auc": 0.961,
+    "permuted_pr_auc": 0.004,
+    "drop_pct": 99.58
+  }
+}

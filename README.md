@@ -272,9 +272,12 @@ Hardware: Apple Silicon workstation, Python 3.12, scikit-learn, XGBoost, SHAP.
 │   ├── step4_table6_ablation_panels.py        # Ablation benchmark (Panels A, B, C)
 │   ├── step5_bootstrap_resampling_1000.py     # 1,000-iteration stratified bootstrap resampling
 │   ├── step6_latency_timing_loop.py           # Single-row tail latency & batch throughput
-│   └── step7_generate_publication_figures.py  # Publication-ready vector figures
+│   ├── step7_generate_publication_figures.py  # Publication-ready vector figures
+│   ├── step8_faithfulness_and_progressive_deletion.py # SHAP faithfulness & progressive deletion
+│   ├── step9_cost_sensitivity_and_breakeven.py # Cost-sensitivity & break-even analysis
+│   └── step10_table8_bootstrap_percentiles.py # Table 8 bootstrap percentiles & risk bounds
 ├── cache/                                     # Versioned plain binary caches (<59MB each, No Git LFS)
-├── results_csv/                               # Generated tables in CSV format (Tables 1-6)
+├── results_csv/                               # Generated tables in CSV format (Tables 1-9)
 ├── results_json/                              # Complete structured JSON benchmark logs
 ├── figures/                                   # High-DPI and vector publication figures
 └── logs/                                      # Full console execution logs for all steps
