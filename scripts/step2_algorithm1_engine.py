@@ -101,7 +101,7 @@ def derive_validation_optimal_tau(y_val, p_val, amt_val, brackets):
     opt_idx = int(np.argmin(costs))
     return float(thresholds[opt_idx])
 
-def run_dataset_algorithm1(ds_name, n_tiers=3, rf_depth=5, rf_cw=None):
+def run_dataset_algorithm1(ds_name, n_tiers=3, rf_depth=5, rf_cw=None, seed=42):
     raw_npz_path = os.path.join(CACHE_DIR, f"{ds_name}_cand_raw_X.npz")
     data = load_stage1_cache(ds_name, CACHE_DIR)
     p_val, p_test = data['p_val'], data['p_test']
@@ -154,12 +154,12 @@ def run_dataset_algorithm1(ds_name, n_tiers=3, rf_depth=5, rf_cw=None):
     amt_test_c = amt_test[cand_test_mask]
     
     # 1. 5-Fold Stratified OOF Cross-Fitting on Validation Candidates
-    skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
     oof_q = np.zeros(n_cand_v, dtype=float)
     oof_models = []
     
     for fold, (tr, va) in enumerate(skf.split(X_val, meta_y_val), 1):
-        clf = RandomForestClassifier(n_estimators=100, max_depth=rf_depth, class_weight=rf_cw, random_state=42 + fold, n_jobs=-1)
+        clf = RandomForestClassifier(n_estimators=100, max_depth=rf_depth, class_weight=rf_cw, random_state=seed + fold, n_jobs=-1)
         clf.fit(X_val[tr], meta_y_val[tr])
         oof_q[va] = clf.predict_proba(X_val[va])[:, 1]
         oof_models.append(clf)

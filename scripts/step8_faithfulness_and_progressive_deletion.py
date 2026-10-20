@@ -37,6 +37,13 @@ os.makedirs(RESULTS_JSON_DIR, exist_ok=True)
 os.makedirs(RESULTS_CSV_DIR, exist_ok=True)
 os.makedirs(FIGURES_DIR, exist_ok=True)
 
+def calc_trapz(y, dx=1.0):
+    """Numpy 1.x and 2.x compatible trapezoidal integration."""
+    if hasattr(np, "trapezoid"):
+        return float(np.trapezoid(y, dx=dx))
+    return float(np.trapz(y, dx=dx))
+
+
 def main():
     print("=" * 80)
     print("STEP 8: PROGRESSIVE FEATURE DELETION FAITHFULNESS BENCHMARK (FIG. 9)")
@@ -160,15 +167,15 @@ def main():
     rand_A = list(np.mean(rand_A_reps, axis=0))
     rand_B = list(np.mean(rand_B_reps, axis=0))
 
-    audc_morf_A = float(np.trapz(morf_A, dx=1.0) / len(feature_names))
-    audc_lerf_A = float(np.trapz(lerf_A, dx=1.0) / len(feature_names))
-    audc_gain_A = float(np.trapz(gain_A, dx=1.0) / len(feature_names))
-    audc_rand_A = float(np.trapz(rand_A, dx=1.0) / len(feature_names))
+    audc_morf_A = float(calc_trapz(morf_A, dx=1.0) / len(feature_names))
+    audc_lerf_A = float(calc_trapz(lerf_A, dx=1.0) / len(feature_names))
+    audc_gain_A = float(calc_trapz(gain_A, dx=1.0) / len(feature_names))
+    audc_rand_A = float(calc_trapz(rand_A, dx=1.0) / len(feature_names))
 
-    audc_morf_B = float(np.trapz(morf_B, dx=1.0) / len(feature_names))
-    audc_lerf_B = float(np.trapz(lerf_B, dx=1.0) / len(feature_names))
-    audc_gain_B = float(np.trapz(gain_B, dx=1.0) / len(feature_names))
-    audc_rand_B = float(np.trapz(rand_B, dx=1.0) / len(feature_names))
+    audc_morf_B = float(calc_trapz(morf_B, dx=1.0) / len(feature_names))
+    audc_lerf_B = float(calc_trapz(lerf_B, dx=1.0) / len(feature_names))
+    audc_gain_B = float(calc_trapz(gain_B, dx=1.0) / len(feature_names))
+    audc_rand_B = float(calc_trapz(rand_B, dx=1.0) / len(feature_names))
 
     print(f"\nAUDC Protocol A (Median): MoRF={audc_morf_A:.4f}, Gain={audc_gain_A:.4f}, Random={audc_rand_A:.4f}, LeRF={audc_lerf_A:.4f}")
     print(f"AUDC Protocol B (Mean)  : MoRF={audc_morf_B:.4f}, Gain={audc_gain_B:.4f}, Random={audc_rand_B:.4f}, LeRF={audc_lerf_B:.4f}")

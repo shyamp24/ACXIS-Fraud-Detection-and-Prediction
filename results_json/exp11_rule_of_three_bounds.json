@@ -1,0 +1,26 @@
+{
+  "paysim": {
+    "dataset": "PaySim",
+    "candidate_true_frauds_evaluated": 808,
+    "false_negative_leaks_observed": 0,
+    "rule_of_three_upper_bound_pct": 0.3713,
+    "exact_95_upper_bound_pct": 0.3708,
+    "formula": "3 / N"
+  },
+  "ieee-cis": {
+    "dataset": "IEEE-CIS",
+    "candidate_true_frauds_evaluated": 1642,
+    "false_negative_leaks_observed": 0,
+    "rule_of_three_upper_bound_pct": 0.1827,
+    "exact_95_upper_bound_pct": 0.1824,
+    "formula": "3 / N"
+  },
+  "ulb": {
+    "dataset": "ULB",
+    "candidate_true_frauds_evaluated": 41,
+    "false_negative_leaks_observed": 0,
+    "rule_of_three_upper_bound_pct": 7.3171,
+    "exact_95_upper_bound_pct": 7.3067,
+    "formula": "3 / N"
+  }
+}

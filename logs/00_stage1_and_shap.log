@@ -1,8 +1,8 @@
 ================================================================================
 CACHE INTEGRITY & PROVENANCE CHECK
 ================================================================================
-  [✓] PAYSIM  : /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/cache/paysim_stage1_and_shap.npz (57.20 MB)
+  [✓] PAYSIM  : ./cache/paysim_stage1_and_shap.npz (57.20 MB)
   [✓] IEEECIS : Split files present (58.4MB val, 58.3MB test) [Plain Git Safe]
-  [✓] ULB     : /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/cache/ulb_stage1_and_shap.npz (6.39 MB)
+  [✓] ULB     : ./cache/ulb_stage1_and_shap.npz (6.39 MB)
 
 All cache files verified and ready for experimental steps 1 through 7.

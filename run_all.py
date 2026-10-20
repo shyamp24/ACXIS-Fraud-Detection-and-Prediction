@@ -43,11 +43,13 @@ def main():
         ("Step 3: Comparative Baselines Benchmark (Table 4)", "scripts/step3_table4_master_baselines.py", step3_args, "logs/03_table4_baselines.log"),
         ("Step 4: Ablation Benchmark Panels (Table 6)", "scripts/step4_table6_ablation_panels.py", [], "logs/04_table6_ablation.log"),
         ("Step 5: 1,000-Iteration Bootstrap Resampling (Tables 5 & 8)", "scripts/step5_bootstrap_resampling_1000.py", [], "logs/05_bootstrap.log"),
+        ("Step 5b: Multi-Seed Robustness Evaluation (10 Seeds)", "scripts/step5b_multiseed_robustness.py", [], "logs/05b_multiseed.log"),
         ("Step 6: Latency & Hardware Throughput Benchmark (Table 3)", "scripts/step6_latency_timing_loop.py", [], "logs/06_latency.log"),
         ("Step 7: Synchronized Publication Figures Generation", "scripts/step7_generate_publication_figures.py", [], "logs/07_figures.log"),
         ("Step 8: SHAP Faithfulness & Progressive Deletion (Fig 9 & Table 9)", "scripts/step8_faithfulness_and_progressive_deletion.py", [], "logs/08_faithfulness.log"),
         ("Step 9: Cost-Sensitivity & Break-Even Analysis (Table 7)", "scripts/step9_cost_sensitivity_and_breakeven.py", [], "logs/09_cost_sensitivity.log"),
-        ("Step 10: Table 8 Bootstrap Percentiles & Risk Bounds", "scripts/step10_table8_bootstrap_percentiles.py", [], "logs/10_table8_percentiles.log")
+        ("Step 10: Table 8 Bootstrap Percentiles & Risk Bounds", "scripts/step10_table8_bootstrap_percentiles.py", [], "logs/10_table8_percentiles.log"),
+        ("Step 11: Rule-of-Three False Negative Risk Bounds", "scripts/step11_rule_of_three_evaluation.py", [], "logs/11_rule_of_three.log")
     ]
 
     print("=" * 80)

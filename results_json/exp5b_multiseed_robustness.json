@@ -1,0 +1,106 @@
+{
+  "paysim": {
+    "dataset": "PaySim",
+    "seeds_evaluated": 10,
+    "mean_savings": -131061.12700000001,
+    "std_savings": 186341.1332898963,
+    "mean_savings_pct": -5.954757291750239,
+    "std_savings_pct": 8.466402262899916,
+    "mean_fps_suppressed": 46.6,
+    "std_fps_suppressed": 21.965629717558492,
+    "max_fns_leaked": 2,
+    "min_fns_leaked": 0,
+    "detailed_runs": [
+      {
+        "seed": 42,
+        "fps_suppressed": 42,
+        "fns_leaked": 0,
+        "savings": 61000.0,
+        "savings_pct": 2.7715326665607307,
+        "acxis_recall": 0.9841656516443362,
+        "acxis_precision": 0.5437415881561238
+      },
+      {
+        "seed": 43,
+        "fps_suppressed": 49,
+        "fns_leaked": 1,
+        "savings": -277452.4199999999,
+        "savings_pct": -12.60604008928406,
+        "acxis_recall": 0.9829476248477467,
+        "acxis_precision": 0.5460081190798376
+      },
+      {
+        "seed": 44,
+        "fps_suppressed": 77,
+        "fns_leaked": 2,
+        "savings": -281645.1000000001,
+        "savings_pct": -12.79653434470105,
+        "acxis_recall": 0.9817295980511571,
+        "acxis_precision": 0.5562456866804693
+      },
+      {
+        "seed": 45,
+        "fps_suppressed": 5,
+        "fns_leaked": 0,
+        "savings": 7000.0,
+        "savings_pct": 0.31804473222828056,
+        "acxis_recall": 0.9841656516443362,
+        "acxis_precision": 0.5305318450426789
+      },
+      {
+        "seed": 46,
+        "fps_suppressed": 46,
+        "fns_leaked": 0,
+        "savings": 51500.0,
+        "savings_pct": 2.339900529965207,
+        "acxis_recall": 0.9841656516443362,
+        "acxis_precision": 0.5452091767881242
+      },
+      {
+        "seed": 47,
+        "fps_suppressed": 76,
+        "fns_leaked": 1,
+        "savings": -255952.41999999993,
+        "savings_pct": -11.62918841172577,
+        "acxis_recall": 0.9829476248477467,
+        "acxis_precision": 0.5561681598897312
+      },
+      {
+        "seed": 48,
+        "fps_suppressed": 25,
+        "fns_leaked": 0,
+        "savings": 40000.0,
+        "savings_pct": 1.8173984698758892,
+        "acxis_recall": 0.9841656516443362,
+        "acxis_precision": 0.5375914836992681
+      },
+      {
+        "seed": 49,
+        "fps_suppressed": 37,
+        "fns_leaked": 0,
+        "savings": 42500.0,
+        "savings_pct": 1.930985874243132,
+        "acxis_recall": 0.9841656516443362,
+        "acxis_precision": 0.5419181757209927
+      },
+      {
+        "seed": 50,
+        "fps_suppressed": 47,
+        "fns_leaked": 2,
+        "savings": -417108.91000000015,
+        "savings_pct": -18.951327370140007,
+        "acxis_recall": 0.9817295980511571,
+        "acxis_precision": 0.5449628127112914
+      },
+      {
+        "seed": 51,
+        "fps_suppressed": 62,
+        "fns_leaked": 1,
+        "savings": -280452.4199999999,
+        "savings_pct": -12.742344974524752,
+        "acxis_recall": 0.9829476248477467,
+        "acxis_precision": 0.5508532423208191
+      }
+    ]
+  }
+}

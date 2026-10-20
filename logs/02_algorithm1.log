@@ -66,8 +66,8 @@ False Positives Suppressed: 0 | False Negatives Leaked: 0 (Zero Leak Verificatio
 Net Financial Savings: €0.00 (+0.00%)
 
 [✓] Saved Algorithm 1 Master JSON to:
-  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_json/exp2_algorithm1_results.json
+  ./results_json/exp2_algorithm1_results.json
 [✓] Saved Algorithm 1 Summary CSV to:
-  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table1_algorithm1_summary.csv
+  ./results_csv/table1_algorithm1_summary.csv
 
 ================================================================================

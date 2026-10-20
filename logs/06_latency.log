@@ -1,8 +1,8 @@
 ================================================================================
 EXPERIMENT 6: 100% GENUINE HARDWARE LATENCY & THROUGHPUT BENCHMARK (TABLE 3)
 ================================================================================
-Loading PaySim transactions from: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/data/six.csv
-Loading genuine deployed Stage 1 XGBoost model from /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/cache/paysim_xgb_stage1.json...
+Loading PaySim transactions from: ./data/six.csv
+Loading genuine deployed Stage 1 XGBoost model from ./cache/paysim_xgb_stage1.json...
 Loading candidate features for Stage 3 Random Forest timing...
 Training genuine Stage 3 Random Forest on real candidate space (1518 alerts, 22 features)...
 Initializing TreeExplainer on genuine Stage 1 model...
@@ -32,8 +32,8 @@ Initializing TreeExplainer on genuine Stage 1 model...
   Full Batch Trigger : 1,282.2 tx/sec
 
 [✓] Saved Table 3 Latency CSV to:
-  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table3_latency_and_throughput.csv
+  ./results_csv/table3_latency_and_throughput.csv
 [✓] Saved Latency JSON to:
-  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_json/exp6_latency_results.json
+  ./results_json/exp6_latency_results.json
 
 ================================================================================

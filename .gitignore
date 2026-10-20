@@ -19,3 +19,4 @@ cache/step3_checkpoint_*.json
 .Trashes
 ehthumbs.db
 Thumbs.db
+cache/*checkpoint*.json
