@@ -241,7 +241,7 @@ All timing measurements are executed on genuine models using high-resolution mon
 7. **Batch Throughput ($B=1000$):** Measured via vectorized batch execution: `xgb_model.predict_proba(batch_1000)[:, 1]` and `meta_rf.predict_proba(batch_1000)[:, 1]`.
 
 ### Measured Latency & Throughput Benchmark (Table 3)
-Hardware: Apple Silicon workstation, Python 3.12, scikit-learn, XGBoost, SHAP.
+Hardware: Dual-Core Intel Core i5-5287U CPU @ 2.90GHz (MacBook Pro, 2 physical cores, 4 threads, 8 GB 1867 MHz RAM, macOS Sonoma 14.8.8), Python 3.12.4, scikit-learn 1.4.2, XGBoost 2.1.0, LightGBM 4.4.0, CatBoost 1.2.7, SHAP 0.46.0.
 | Pipeline Stage | Mean Latency | Standard Deviation | Median ($p_{50}$) | $p_{95}$ Tail | $p_{99}$ Tail | Measured Throughput ($B=1000$) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Feature Preprocessing** | 0.0019 ms | 0.0020 ms | 0.0018 ms | 0.0019 ms | 0.0027 ms | — |
