@@ -14,7 +14,7 @@ Evaluates operational cost robustness across:
 4. Break-Even Investigation Cost Ratio Sweep:
    - Sweeps CFP / mean(Amount) in [0.001, 0.50] (ratios from 2:1 to 1000:1)
 
-Complies strictly with RULE 0: 100% genuine execution on real dataset arrays.
+Evaluates financial cost sensitivity across varying penalty multipliers.
 
 Outputs:
 - results_json/exp6_cost_sensitivity_results.json

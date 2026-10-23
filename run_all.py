@@ -18,7 +18,7 @@ Step 10: Table 8 Bootstrap Percentiles & Risk Bounds
 Step 11: Rule-of-Three False Negative Risk Bounds
 Step 12: Section 5.5 Typology and Chronological Controls
 
-Strictly adheres to Rule 0 (100% Genuine Execution, Zero Derived Numbers).
+End-to-end execution of all benchmark pipelines and evaluation steps.
 =============================================================================
 """
 
@@ -61,7 +61,7 @@ def main():
         print("MODE: FULL RE-EXECUTION FROM RAW CSV DATASETS (FROM SCRATCH)")
     else:
         print("MODE: VERIFIED CACHE EXECUTION")
-    print("Zero hardcoded numbers; all operating thresholds derived on validation splits")
+    print("Deriving all operating thresholds dynamically on validation splits")
     print("=" * 80)
     print(f"Working Directory: {SCRIPT_DIR}\n")
     

@@ -2,9 +2,10 @@
 """
 scripts/step6_latency_timing_loop.py
 =============================================================================
-EXPERIMENT 6: 100% GENUINE LATENCY & THROUGHPUT BENCHMARK (TABLE 3)
-ZERO SHORTCUTS, ZERO 1/LATENCY RECIPROCALS, MEASURED TIMING LOOPS
-Strictly adheres to Rule 0 and Rule 2 of Forensic Peer-Review Verification.
+STEP 6: LATENCY AND THROUGHPUT BENCHMARK (TABLE 3)
+=============================================================================
+Measures single-item (B=1) latency distributions and batched (B=1000)
+throughput across all pipeline execution stages.
 
 Measures:
 1. Preprocessing / Feature Encoding (10,000 trials)
@@ -75,7 +76,7 @@ def compute_percentiles(times_ms):
 
 def run_latency_benchmark():
     print("=" * 80)
-    print("EXPERIMENT 6: 100% GENUINE HARDWARE LATENCY & THROUGHPUT BENCHMARK (TABLE 3)")
+    print("STEP 6: HARDWARE LATENCY & THROUGHPUT BENCHMARK (TABLE 3)")
     print("=" * 80)
     
     csv_path = resolve_file(DATASET_CANDIDATES)
@@ -90,19 +91,19 @@ def run_latency_benchmark():
     y_real = df['isFraud'].astype(int).values
     n_feats = X_real.shape[1]
     
-    # Load or train genuine Stage 1 XGBoost model
+    # Load or train Stage 1 XGBoost model
     xgb_saved = os.path.join(CACHE_DIR, "paysim_xgb_stage1.json")
     if os.path.isfile(xgb_saved):
-        print(f"Loading genuine deployed Stage 1 XGBoost model from {xgb_saved}...")
+        print(f"Loading Stage 1 XGBoost model from {xgb_saved}...")
         xgb = XGBClassifier()
         xgb.load_model(xgb_saved)
     else:
-        print(f"Training genuine Stage 1 XGBoost model (500 trees, depth 5, scale_pos_weight=10)...")
+        print(f"Training Stage 1 XGBoost model (500 trees, depth 5, scale_pos_weight=10)...")
         xgb = XGBClassifier(n_estimators=500, max_depth=5, learning_rate=0.05, scale_pos_weight=10.0, tree_method='hist')
         xgb.fit(X_real[:10000], y_real[:10000])
         xgb.save_model(xgb_saved)
     
-    # Train Stage 3 Random Forest on genuine candidate feature space
+    # Train Stage 3 Random Forest on candidate alert feature space
     print("Loading candidate features for Stage 3 Random Forest timing...")
     ps_data = load_stage1_cache("paysim", CACHE_DIR)
     tau_ps = 0.21792179217921794
@@ -117,11 +118,11 @@ def run_latency_benchmark():
     y_meta_v = (ps_data['y_val'][cand_v] == 0).astype(int)
     X_joint_v = np.hstack([X_cand_v, s_v])
 
-    print(f"Training genuine Stage 3 Random Forest on real candidate space ({X_joint_v.shape[0]} alerts, {X_joint_v.shape[1]} features)...")
+    print(f"Training Stage 3 Random Forest on candidate alerts ({X_joint_v.shape[0]} alerts, {X_joint_v.shape[1]} features)...")
     rf = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=42)
     rf.fit(X_joint_v, y_meta_v)
     
-    print("Initializing TreeExplainer on genuine Stage 1 model...")
+    print("Initializing TreeExplainer on Stage 1 model...")
     explainer = shap.TreeExplainer(xgb)
     
     # 0. Preprocessing timing
@@ -225,7 +226,7 @@ def run_latency_benchmark():
     stats_lime = compute_percentiles(t_lime)
     print(f"  LIME: Mean={stats_lime['mean']:.4f} ms | p95={stats_lime['p95']:.4f} ms | p99={stats_lime['p99']:.4f} ms")
     
-    # 6. Genuine Batch Throughput (B=1000)
+    # 6. Batch Throughput Measurement (B=1000)
     print(f"\n6. Measuring Batch Throughput (B={BATCH_SIZE:,}, {N_BATCH_TRIALS} trials)...")
     batch_X = X_real[:BATCH_SIZE]
     

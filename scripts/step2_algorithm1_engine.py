@@ -3,7 +3,7 @@
 scripts/step2_algorithm1_engine.py
 =============================================================================
 EXPERIMENT 2: PURE ALGORITHM 1 ENGINE WITH AMOUNT-TIERED SAFETY THRESHOLDS
-Zero shortcuts, zero hardcoded numbers, 100% real script execution.
+End-to-end implementation of the decoupled three-stage ACXIS architecture.
 
 All operating thresholds tau_1 are dynamically ingested from Step 1 validation
 optimization (exp1_stage1_coopt_grid.json), or derived algorithmically on the
@@ -261,7 +261,7 @@ def run_dataset_algorithm1(ds_name, n_tiers=3, rf_depth=5, rf_cw=None, seed=42):
 def main():
     print("=" * 80)
     print("STEP 2: PURE ALGORITHM 1 ENGINE BENCHMARK")
-    print("Zero hardcoded numbers; all tau_1 derived from validation cost minima")
+    print("Operating thresholds tau_1 derived from validation cost minima")
     print("=" * 80)
     
     results = {}

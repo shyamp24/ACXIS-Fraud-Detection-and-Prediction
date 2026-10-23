@@ -3,8 +3,8 @@
 scripts/step5_bootstrap_resampling_1000.py
 =============================================================================
 EXPERIMENT 5: 1,000-ITERATION STRATIFIED BOOTSTRAP RESAMPLING (TABLES 5 & 7)
-Strictly adheres to Rule 0 and the 7 Forensic Peer-Review Verification Rules.
-Zero shortcuts, zero hardcoded numbers, 100% genuine execution on local machine.
+Quantifies sampling variability via 1,000 stratified bootstrap test resamples.
+Computes empirical percentiles, standard deviations, and 95% confidence intervals.
 
 Evaluates across PaySim, IEEE-CIS, and ULB:
 1. Empirical Mean +/- SD across 1,000 test set resamples
@@ -83,7 +83,7 @@ def evaluate_cost_fast(y_true, y_pred, amounts, brackets):
     
     return total_cost, fn_cost, fp_cost, rec, prec, f1, fp, fn
 
-def get_genuine_predictions_and_vectors(ds_name):
+def get_model_predictions_and_vectors(ds_name):
     with open(os.path.join(RESULTS_JSON_DIR, "exp2_algorithm1_results.json")) as f:
         acx_all = json.load(f)
     cfg = acx_all[ds_name]
@@ -166,7 +166,7 @@ def run_bootstrap_for_dataset(ds_name, n_iterations=1000, seed=42):
     print(f"RUNNING 1,000 STRATIFIED BOOTSTRAP REPLICATES: {ds_name.upper()}")
     print("=" * 80)
     
-    d = get_genuine_predictions_and_vectors(ds_name)
+    d = get_model_predictions_and_vectors(ds_name)
     y_test = d['y_test']
     amt_test = d['amt_test']
     base_pred = d['base_pred']

@@ -6,7 +6,7 @@ EXPERIMENT 1: 100-STEP EXHAUSTIVE THRESHOLD SEARCH (0.01 TO 0.99)
 Calibrates Stage 1 operational cost curves, evaluates boundary conditions,
 and determines optimal operating points (tau*) purely on validation splits.
 
-Zero shortcuts, zero hardcoding, zero test-set leakage.
+Performs threshold optimization strictly on validation partitions.
 All operating thresholds tau* are derived 100% algorithmically by minimizing
 the asymmetric operational cost function on the validation partition.
 

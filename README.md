@@ -231,7 +231,7 @@ To address Reviewer 1 and Reviewer 5's request for empirical data resampling bey
 ## 9. Hardware Timing Loops, Tail Latencies & Exact Function Calls (Table 3)
 
 ### Exact Function Calls Timed in `step6_latency_timing_loop.py`
-All timing measurements are executed on genuine models using high-resolution monotonic clocks (`time.perf_counter_ns()`):
+All timing measurements are executed using high-resolution monotonic clocks (`time.perf_counter_ns()`):
 1. **Feature Preprocessing:** `pipe.transform(sample_row)`
 2. **Stage 1 Fast-Path Inference:** `xgb_model.predict_proba(sample_row)[:, 1]`
 3. **Stage 2 TreeSHAP Attribution:** `shap_explainer.shap_values(sample_row)`

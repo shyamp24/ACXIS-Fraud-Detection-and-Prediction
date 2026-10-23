@@ -8,7 +8,7 @@ Progressive Feature Deletion Protocols (Samek et al., 2017; Petsiuk et al., 2018
 alongside Global XGBoost Gain and 50-replicate Random baseline across the
 candidate alert pool (p >= tau* = 0.2179, N = 1,528) on PaySim.
 
-Complies strictly with RULE 0: 100% genuine execution, zero hardcoded numbers.
+Evaluates progressive feature deletion across PaySim candidate alerts.
 
 Outputs:
 - results_json/exp5_faithfulness_benchmarks.json

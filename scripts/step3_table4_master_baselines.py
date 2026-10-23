@@ -2,9 +2,10 @@
 """
 scripts/step3_table4_master_baselines.py
 =============================================================================
-100% GENUINE COMPARATIVE BASELINE BENCHMARK (TABLE 4)
-ZERO SHORTCUTS, ZERO ESTIMATED NUMBERS, ZERO SYNTHETIC SUBSETS
-Strictly follows Rule 0 and the 7 Forensic Peer-Review Verification Rules.
+STEP 3: COMPARATIVE BASELINE BENCHMARKS (TABLE 4)
+=============================================================================
+Evaluates 13 literature comparative baseline models on the standardized
+held-out test partitions under identical deployment constraints.
 
 Evaluates across PaySim and IEEE-CIS:
 1. Logistic Regression
@@ -149,7 +150,7 @@ def save_checkpoint(ds_name, results):
 
 def run_benchmark_for_dataset(ds_name, from_scratch=False):
     print("\n" + "=" * 80)
-    print(f"GENUINE BASELINE BENCHMARK FOR: {ds_name.upper()}")
+    print(f"RUNNING BASELINE BENCHMARK FOR: {ds_name.upper()}")
     print("=" * 80)
     
     if ds_name == 'paysim':
@@ -542,12 +543,12 @@ def main():
     out_json = os.path.join(RESULTS_JSON_DIR, "exp3_table4_baselines.json")
     with open(out_json, "w") as f:
         json.dump(all_results, f, indent=2)
-    print(f"\n[✓] Saved complete genuine baseline results to:\n  {out_json}")
+    print(f"\n[✓] Saved complete baseline results to:\n  {out_json}")
     
     df_master = pd.DataFrame(master_rows)
     out_csv = os.path.join(RESULTS_CSV_DIR, "table4_baseline_benchmarks.csv")
     df_master.to_csv(out_csv, index=False)
-    print(f"[✓] Saved genuine Table 4 master CSV to:\n  {out_csv}")
+    print(f"[✓] Saved Table 4 master CSV to:\n  {out_csv}")
     print("\n=============================================================================")
     print("EXPERIMENT 3 COMPLETED SUCCESSFULLY!")
     print("=============================================================================")

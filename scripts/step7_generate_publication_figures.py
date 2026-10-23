@@ -3,7 +3,7 @@
 scripts/step7_generate_publication_figures.py
 =============================================================================
 EXPERIMENT 7: GENERATE HIGH-DPI SYNCHRONIZED PUBLICATION FIGURES
-Strictly adheres to Rule 0 and the 7 Forensic Peer-Review Verification Rules.
+Generates publication-quality figures directly from empirical benchmark logs.
 All numbers, thresholds, and data points are loaded dynamically from executed
 JSON/CSV artifacts to guarantee 100% synchronization across code, tables, and figures.
 
@@ -386,8 +386,7 @@ def generate_figure_10():
     if not (os.path.exists(ps_csv) and os.path.exists(ie_csv)):
         raise FileNotFoundError(
             f"Bootstrap distribution CSVs not found:\n  {ps_csv}\n  {ie_csv}\n"
-            f"Please run 'python scripts/step5_bootstrap_resampling_1000.py' to generate genuine empirical distributions. "
-            f"Per Rule 0, synthetic data generation is strictly prohibited."
+            f"Please run 'python scripts/step5_bootstrap_resampling_1000.py' to generate empirical distributions first."
         )
 
     ps_samples = pd.read_csv(ps_csv)['savings_pct'].values

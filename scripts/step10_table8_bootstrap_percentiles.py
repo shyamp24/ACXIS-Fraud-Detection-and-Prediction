@@ -3,8 +3,8 @@
 scripts/step10_table8_bootstrap_percentiles.py
 =============================================================================
 GENERATION SCRIPT FOR TABLE 8: BOOTSTRAP RESAMPLING METRIC DISTRIBUTIONS
-Strictly adheres to Rule 0 and the 7 Forensic Peer-Review Verification Rules.
-Zero shortcuts, zero hardcoded numbers, 100% genuine execution on local machine.
+Extracts bootstrap percentile distribution and empirical confidence bounds.
+Computes Q1, median, Q3, and tail percentiles across 1,000 resamples.
 
 Computes the empirical bootstrap distribution percentiles (2.5%, Q1, Median,
 Q3, 97.5%), Mean +/- SD, False Positives Suppressed, False Negatives Leaked,

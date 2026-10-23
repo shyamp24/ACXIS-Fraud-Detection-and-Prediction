@@ -369,12 +369,12 @@ def main():
     df_out = pd.DataFrame(rows)
     csv_path = os.path.join(RESULTS_CSV_DIR, "table6_ablation_master.csv")
     df_out.to_csv(csv_path, index=False)
-    print(f"\n[✓] Saved complete genuine Table 6 master CSV to:\n  {csv_path}")
+    print(f"\n[✓] Saved complete Table 6 master CSV to:\n  {csv_path}")
 
     json_path = os.path.join(RESULTS_JSON_DIR, "exp4_table6_ablation.json")
     with open(json_path, "w") as f:
         json.dump(json_results, f, indent=2)
-    print(f"[✓] Saved complete genuine Table 6 JSON to:\n  {json_path}")
+    print(f"[✓] Saved complete Table 6 JSON to:\n  {json_path}")
     print("=" * 90)
 
 if __name__ == '__main__':
