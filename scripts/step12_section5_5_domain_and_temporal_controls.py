@@ -53,7 +53,7 @@ PAY_FALLBACKS = [
     os.path.join(DATA_DIR, "paysim.csv"),
     os.path.join(DATA_DIR, "PS_20174392719_1491204439457_log.csv"),
     os.path.join(PKG_DIR, "..", "01_R2_Experiments", "data", "six.csv"),
-    "/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Reports/Report  2/Project Phase 2/six.csv"
+    os.path.join(PKG_DIR, "..", "..", "..", "..", "Reports", "Report  2", "Project Phase 2", "six.csv")
 ]
 
 def resolve_paysim_csv():
