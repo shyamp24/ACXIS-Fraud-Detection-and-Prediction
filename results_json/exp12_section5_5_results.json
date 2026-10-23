@@ -1,0 +1,83 @@
+{
+  "transfer_cashout": {
+    "n_subset": 2770409,
+    "fraud_count": 8213,
+    "roc_auc": 0.9998,
+    "pr_auc": 0.972,
+    "opt_tau": 0.2527,
+    "stage1_tau05": {
+      "total_cost": 5336347.48,
+      "fn_cost": 5018347.48,
+      "fp_cost": 318000.0,
+      "fp_count": 153,
+      "fn_count": 48,
+      "recall": 0.9415347137637028,
+      "precision": 0.8347732181425486,
+      "f1": 0.8849456210646822
+    },
+    "stage2_tuned": {
+      "total_cost": 1763733.01,
+      "fn_cost": 857733.01,
+      "fp_cost": 906000.0,
+      "fp_count": 540,
+      "fn_count": 16,
+      "recall": 0.9805115712545676,
+      "precision": 0.5985130111524164,
+      "f1": 0.7433056325023084
+    },
+    "stage3_acxis": {
+      "total_cost": 1710233.01,
+      "fn_cost": 857733.01,
+      "fp_cost": 852500.0,
+      "fp_count": 508,
+      "fn_count": 16,
+      "recall": 0.9805115712545676,
+      "precision": 0.612,
+      "f1": 0.7538,
+      "fps_suppressed": 32,
+      "fn_leaks": 0,
+      "savings_currency": 53500.0,
+      "savings_pct": 3.0333
+    }
+  },
+  "chronological_split": {
+    "n_train": 5090096,
+    "n_val": 636262,
+    "n_test": 636262,
+    "opt_tau_chrono": 0.03696969696969697,
+    "cost_tau05": {
+      "total_cost": 132349949.97999999,
+      "fn_cost": 132297449.97999999,
+      "fp_cost": 52500.0,
+      "fp_count": 16,
+      "fn_count": 861,
+      "recall": 0.7712539851222104,
+      "precision": 0.9945186707776635,
+      "f1": 0.8687715098009875
+    },
+    "cost_tuned": {
+      "total_cost": 4808912.08,
+      "fn_cost": 2737912.08,
+      "fp_cost": 2071000.0,
+      "fp_count": 1402,
+      "fn_count": 57,
+      "recall": 0.9848565356004251,
+      "precision": 0.7255823057349775,
+      "f1": 0.835568578834667
+    },
+    "stage3_acxis": {
+      "total_cost": 4554412.08,
+      "fn_cost": 2737912.08,
+      "fp_cost": 1816500.0,
+      "fp_count": 1267,
+      "fn_count": 57,
+      "recall": 0.9848565356004251,
+      "precision": 0.7452754322637716,
+      "f1": 0.8484779125658045,
+      "fps_suppressed": 135,
+      "fn_leaks": 0,
+      "savings_currency": 254500.0,
+      "savings_pct": 5.292257691657643
+    }
+  }
+}

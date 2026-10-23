@@ -15,6 +15,8 @@ Step 7: Synchronized publication figures generation
 Step 8: SHAP Faithfulness & Progressive Deletion (Fig 9 & Table 9)
 Step 9: Cost-Sensitivity & Break-Even Analysis (Table 7)
 Step 10: Table 8 Bootstrap Percentiles & Risk Bounds
+Step 11: Rule-of-Three False Negative Risk Bounds
+Step 12: Section 5.5 Typology and Chronological Controls
 
 Strictly adheres to Rule 0 (100% Genuine Execution, Zero Derived Numbers).
 =============================================================================
@@ -49,7 +51,8 @@ def main():
         ("Step 8: SHAP Faithfulness & Progressive Deletion (Fig 9 & Table 9)", "scripts/step8_faithfulness_and_progressive_deletion.py", [], "logs/08_faithfulness.log"),
         ("Step 9: Cost-Sensitivity & Break-Even Analysis (Table 7)", "scripts/step9_cost_sensitivity_and_breakeven.py", [], "logs/09_cost_sensitivity.log"),
         ("Step 10: Table 8 Bootstrap Percentiles & Risk Bounds", "scripts/step10_table8_bootstrap_percentiles.py", [], "logs/10_table8_percentiles.log"),
-        ("Step 11: Rule-of-Three False Negative Risk Bounds", "scripts/step11_rule_of_three_evaluation.py", [], "logs/11_rule_of_three.log")
+        ("Step 11: Rule-of-Three False Negative Risk Bounds", "scripts/step11_rule_of_three_evaluation.py", [], "logs/11_rule_of_three.log"),
+        ("Step 12: Section 5.5 Typology and Chronological Controls", "scripts/step12_section5_5_domain_and_temporal_controls.py", [], "logs/12_domain_controls.log")
     ]
 
     print("=" * 80)

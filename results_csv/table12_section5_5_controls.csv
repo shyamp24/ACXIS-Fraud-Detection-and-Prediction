@@ -1,0 +1,3 @@
+Control_Setting,Dataset_Size,Frauds,Stage1_Cost,Stage1_Recall,Stage2_Tuned_Cost,Stage2_Recall,ACXIS_Cost,ACXIS_Savings,FN_Leaks
+PaySim Typology Subset (TRANSFER+CASH_OUT),"2,770,409","8,213","Rs. 5,336,347.48",0.9415,"Rs. 1,763,733.01",0.9805,"Rs. 1,710,233.01","Rs. 53,500.00",0
+PaySim Chronological Temporal Split (80/10/10),"6,362,620","8,213","Rs. 132,349,949.98",0.7713,"Rs. 4,808,912.08",0.9849,"Rs. 4,554,412.08","Rs. 254,500.00 (5.29%)",0

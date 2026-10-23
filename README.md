@@ -277,7 +277,8 @@ Hardware: Apple Silicon workstation, Python 3.12, scikit-learn, XGBoost, SHAP.
 │   ├── step8_faithfulness_and_progressive_deletion.py # SHAP faithfulness & progressive deletion
 │   ├── step9_cost_sensitivity_and_breakeven.py # Cost-sensitivity & break-even analysis
 │   ├── step10_table8_bootstrap_percentiles.py # Table 8 bootstrap percentiles & risk bounds
-│   └── step11_rule_of_three_evaluation.py     # Rule-of-Three false negative leakage bounds
+│   ├── step11_rule_of_three_evaluation.py     # Rule-of-Three false negative leakage bounds
+│   └── step12_section5_5_domain_and_temporal_controls.py # Section 5.5 typology & temporal streaming controls
 ├── cache/                                     # Versioned plain binary caches (<59MB each, No Git LFS)
 ├── results_csv/                               # Generated tables in CSV format (Tables 1-9)
 ├── results_json/                              # Complete structured JSON benchmark logs
