@@ -15,7 +15,7 @@ This repository contains the complete replication code, dataset pre-processing s
 2. [Data Provenance, Fixed Seeds & Exact Split Protocols](#2-data-provenance-fixed-seeds--exact-split-protocols)
 3. [Hyperparameter Settings & Preprocessing Pipelines (Table 2)](#3-hyperparameter-settings--preprocessing-pipelines-table-2)
 4. [Validation Cost Optimization Grid (Table 2)](#4-validation-cost-optimization-grid-table-2)
-5. [Operational Cost Schedules & Zero-Leak Economics](#5-operational-cost-schedules--zero-leak-economics)
+5. [Operational Cost Schedules & Safety Guard Economics](#5-operational-cost-schedules--safety-guard-economics)
 6. [Comparative Baseline Benchmarks: 13 Literature Models (Table 4)](#6-comparative-baseline-benchmarks-13-literature-models-table-4)
 7. [Comprehensive Ablation Studies: Panels A, B, and C (Table 6)](#7-comprehensive-ablation-studies-panels-a-b-and-c-table-6)
 8. [Data Resampling & Statistical Significance (Tables 5 & 8)](#8-data-resampling--statistical-significance-tables-5--8)
@@ -133,7 +133,7 @@ $$\tau^* = \arg\min_{\tau \in [0.01, 0.99]} \left( \sum_{i \in \text{FN}(\tau)} 
 
 ---
 
-## 5. Operational Cost Schedules & Zero-Leak Economics
+## 5. Operational Cost Schedules & Safety Guard Economics
 
 ### Framing of Operational Cost Schedules
 In accordance with cost-sensitive fraud detection literature (Bahnsen et al., 2014; Elkan, 2001; Hand et al., 2000), false negative costs represent direct financial chargeback losses equal to the transaction amount ($C_{\text{FN}} = \text{Amount}$). False positive costs represent operational investigation overheads. As detailed in the manuscript, tiered cost schedules represent **illustrative operational assumptions** reflecting tiered audit workflows:
