@@ -1,7 +1,7 @@
 Pipeline Stage,Type / Scope,Mean Latency (ms),Std Dev (ms),p50 Tail (ms),p95 Tail (ms),p99 Tail (ms),Batch Throughput (tx/s)
-Feature Preprocessing,Single Transaction,0.0019,0.0033,0.0018,0.002,0.0024,N/A
-Stage 1 Core (Fast-Path XGBoost),All Transactions (100%),0.7099,1.2027,0.6176,0.9735,1.5762,"114,515.7"
-Stage 2 TreeSHAP Attribution,Candidate Alerts Only,3.7969,1.9114,3.6968,4.1544,5.4583,970.1
-Stage 3 Meta-Classifier (Random Forest),Candidate Alerts Only,5.2502,5.2003,4.8771,5.7447,8.7518,"107,016.2"
-Full Triggered ACXIS Pipeline,Candidate Alerts End-to-End,12.4598,8.2295,11.5573,16.1762,43.8808,953.4
-LIME Baseline Explainer,Baseline Comparison,208.923,34.366,200.5164,293.2763,339.6052,N/A
+Feature Preprocessing,Single Transaction,0.0019,0.0020,0.0018,0.0019,0.0027,N/A
+Stage 1 Core (Fast-Path XGBoost),All Transactions (100%),0.5467,0.3444,0.4624,0.8344,1.7158,"227,967.4"
+Stage 2 TreeSHAP Attribution,Candidate Alerts Only,3.4912,0.8676,3.2926,4.3655,5.9078,"1,301.7"
+Stage 3 Meta-Classifier (Random Forest),Candidate Alerts Only,4.9470,1.7017,4.6395,6.0970,10.3198,"137,259.3"
+Full Triggered ACXIS Pipeline,Candidate Alerts End-to-End,11.6947,2.0084,11.0611,14.7062,19.2839,"1,282.2"
+LIME Baseline Explainer,Baseline Comparison,175.6956,24.4376,167.9571,212.8126,262.7964,N/A
