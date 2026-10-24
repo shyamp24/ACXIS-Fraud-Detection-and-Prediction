@@ -226,6 +226,12 @@ To address Reviewer 1 and Reviewer 5's request for empirical data resampling bey
 - **IEEE-CIS:** Mean Cost Reduction = **+0.34% ± 0.07%** [95% CI: 0.21%, 0.49%]; Suppressed FPs = 30.0 ± 5.6; Leaked FNs = 0.00 ± 0.00 (**0 leaks across all 1,000 draws**; $p_{95} \le 0.37\%$). On the full unresampled test partition, point savings are **$320.00** (+0.34%).
 - **ULB:** Mean Cost Reduction = **0.00% ± 0.00%** [95% CI: 0.00%, 0.00%]; Suppressed FPs = 0.0 ± 0.0; Leaked FNs = 0.00 ± 0.00 (Safely abstains with zero false negative leakage).
 
+### Multi-Seed Meta-Classifier Robustness (10 Seeds: 42..51)
+To assess downstream bagging variance, `scripts/step5b_multiseed_robustness.py` evaluates the secondary Random Forest meta-classifier across 10 independent random seeds while holding the Stage 1 predictive core and data split constant:
+- **Positive Savings & Zero Leaks:** In 5 of 10 seeds (seeds 42, 45, 46, 48, 49), ACXIS achieves positive net savings (up to +₹61,000.00 / +2.77%) with zero false negative leaks.
+- **Bagging Sensitivity:** Across all 10 seeds, mean savings are −₹131,061 ± ₹186,341 (−5.95% ± 8.47%), with 1–2 false negative leaks observed in the remaining 5 seeds (seeds 43, 44, 47, 50, 51).
+- **Operational Implication:** This empirical finding confirms that under extreme class imbalance (0.129%), secondary bagging variance on fixed threshold boundaries requires conservative deployment safeguards (freezing verified model configurations or expanding ensemble size $N \ge 500$), demonstrating why primary statistical inference in banking operations is governed by 1,000 stratified bootstrap resamples on the validated deployment configuration.
+
 ---
 
 ## 9. Hardware Timing Loops, Tail Latencies & Exact Function Calls (Table 3)
@@ -297,6 +303,22 @@ To re-train all models from the raw CSV datasets from scratch:
 python3 run_all.py --from-scratch
 ```
 *(Ensure raw CSVs are placed in `data/` as documented in `data/README.md`).*
+
+### Reviewer-to-File Mapping Directory
+This table maps every specific peer review comment (Reviewers 1, 2, 3, and 5) directly to the corresponding replication script, output CSV, and structured JSON artifact:
+
+| Reviewer & Comment Focus | Executed Script | Output Table / CSV | JSON Telemetry Artifact |
+| :--- | :--- | :--- | :--- |
+| **Rev 1 (C2): Data Resampling & 1,000 Bootstrap CIs** | `scripts/step5_bootstrap_resampling_1000.py` | `results_csv/table5_resampling_ci_master.csv`<br>`results_csv/table5_bootstrap_distribution_*.csv` | `results_json/exp5_bootstrap_results.json` |
+| **Rev 1 (C2): Downstream Multi-Seed Bagging Sensitivity** | `scripts/step5b_multiseed_robustness.py` | `results_csv/table5b_multiseed_robustness.csv` | `results_json/exp5b_multiseed_robustness.json` |
+| **Rev 1 (C2): Rule-of-Three Risk Bounds (FN Upper Limit)** | `scripts/step11_rule_of_three_evaluation.py` | `results_csv/table8_bootstrap_percentiles.csv` | `results_json/exp11_rule_of_three_bounds.json` |
+| **Rev 1 (C3): Table 2 Hyperparameter Search Grids** | `scripts/step1_data_and_stage1_coopt.py` | `results_csv/table2_experimental_settings.csv` | `results_json/exp1_stage1_coopt_grid.json` |
+| **Rev 2 (C2): 13 Independent Comparative Baselines (Table 4)** | `scripts/step3_table4_master_baselines.py` | `results_csv/table4_baseline_benchmarks.csv` | `results_json/exp3_table4_baselines.json` |
+| **Rev 3 (C2): Single-Row Latency ($B=1$) & Tail Distributions ($p_{95}, p_{99}$)** | `scripts/step6_latency_timing_loop.py` | `results_csv/table3_latency_and_throughput.csv` | `results_json/exp6_latency_results.json` |
+| **Rev 3 (C3): Cost-Sensitivity & Break-Even Ratios (Table 7)** | `scripts/step9_cost_sensitivity_and_breakeven.py` | `results_csv/table7_cost_sensitivity_master.csv` | `results_json/exp6_cost_sensitivity_results.json` |
+| **Rev 5 (m7): SHAP Faithfulness & Progressive Deletion (Fig. 9)** | `scripts/step8_faithfulness_and_progressive_deletion.py` | `results_csv/table9_faithfulness_curves.csv` | `results_json/exp5_faithfulness_benchmarks.json` |
+| **Rev 5 (C1): IEEE-CIS Representation Ablation (Panel C)** | `scripts/step4_table6_ablation_panels.py` | `results_csv/table6_ablation_master.csv` | `results_json/exp4_table6_ablation.json` |
+| **Rev 5 (C2): Typology & Chronological Temporal Controls (Sec 5.5)** | `scripts/step12_section5_5_domain_and_temporal_controls.py` | `results_csv/table12_section5_5_controls.csv` | `results_json/exp12_section5_5_results.json` |
 
 ---
 

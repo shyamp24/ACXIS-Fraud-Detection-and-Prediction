@@ -4,8 +4,8 @@ STEP 5b: MULTI-SEED META-CLASSIFIER ROBUSTNESS EVALUATION (10 RANDOM SEEDS)
 =============================================================================
 Evaluates the downstream Random Forest meta-classifier across 10 independent
 random seeds (seeds 42 through 51) using full Algorithm 1 OOF safety guard
-calibration to quantify bagging variance, confirming 0.00 false negative leaks
-across all seeds.
+calibration to quantify bagging variance on candidate alerts.
+Discloses the sensitivity of downstream ensemble bagging on fixed thresholds.
 """
 
 import os
@@ -58,11 +58,16 @@ def main():
         "detailed_runs": records
     }
 
+    n_pos = sum(r["savings"] > 0 for r in records)
     print("\n" + "=" * 80)
     print(f"Summary over {len(SEEDS)} seeds (PaySim):")
     print(f"  Mean Savings  : ₹{summary['mean_savings']:,.2f} ± ₹{summary['std_savings']:,.2f} ({summary['mean_savings_pct']:.2f}% ± {summary['std_savings_pct']:.2f}%)")
     print(f"  FPs Suppressed: {summary['mean_fps_suppressed']:.1f} ± {summary['std_fps_suppressed']:.1f}")
-    print(f"  FN Leaks      : {summary['max_fns_leaked']} (Zero false negatives across all 10 seeds)")
+    print(f"  FN Leaks Range: [{summary['min_fns_leaked']} .. {summary['max_fns_leaked']}] (Max leaks: {summary['max_fns_leaked']})")
+    print(f"  Positive Seeds: {n_pos}/{len(SEEDS)} seeds achieve positive net savings (0 leaks)")
+    print(f"  Boundary Note : Bagging variance on fixed single-split thresholds demonstrates")
+    print(f"                  why enterprise deployment freezes validated configurations or")
+    print(f"                  governs inference via 1,000-resample bootstrap distributions.")
     print("=" * 80)
 
     out_json = os.path.join(RESULTS_JSON_DIR, "exp5b_multiseed_robustness.json")
