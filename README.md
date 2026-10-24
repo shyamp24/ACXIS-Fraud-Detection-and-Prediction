@@ -226,11 +226,11 @@ To address Reviewer 1 and Reviewer 5's request for empirical data resampling bey
 - **IEEE-CIS:** Mean Cost Reduction = **+0.34% ± 0.07%** [95% CI: 0.21%, 0.49%]; Suppressed FPs = 30.0 ± 5.6; Leaked FNs = 0.00 ± 0.00 (**0 leaks across all 1,000 draws**; $p_{95} \le 0.37\%$). On the full unresampled test partition, point savings are **$320.00** (+0.34%).
 - **ULB:** Mean Cost Reduction = **0.00% ± 0.00%** [95% CI: 0.00%, 0.00%]; Suppressed FPs = 0.0 ± 0.0; Leaked FNs = 0.00 ± 0.00 (Safely abstains with zero false negative leakage).
 
-### Multi-Seed Meta-Classifier Robustness (10 Seeds: 42..51)
-To assess downstream bagging variance, `scripts/step5b_multiseed_robustness.py` evaluates the secondary Random Forest meta-classifier across 10 independent random seeds while holding the Stage 1 predictive core and data split constant:
-- **Positive Savings & Zero Leaks:** In 5 of 10 seeds (seeds 42, 45, 46, 48, 49), ACXIS achieves positive net savings (up to +₹61,000.00 / +2.77%) with zero false negative leaks.
-- **Bagging Sensitivity:** Across all 10 seeds, mean savings are −₹131,061 ± ₹186,341 (−5.95% ± 8.47%), with 1–2 false negative leaks observed in the remaining 5 seeds (seeds 43, 44, 47, 50, 51).
-- **Operational Implication:** All headline PaySim benchmark results reflect the frozen seed-42 configuration, the most favorable of the ten evaluated seeds. This empirical finding confirms that under extreme class imbalance (0.129%), secondary bagging variance on fixed threshold boundaries requires conservative deployment safeguards (freezing verified model configurations and validation gating), demonstrating why primary statistical inference in banking operations is governed by 1,000 stratified bootstrap resamples on the frozen validated configuration.
+### Multi-Seed Meta-Classifier Robustness across PaySim & IEEE-CIS (10 Seeds: 42..51)
+To assess downstream bagging variance, `scripts/step5b_multiseed_robustness.py` evaluates the secondary Random Forest meta-classifier across 10 independent random seeds (seeds 42 through 51) while holding the Stage 1 predictive core and data split constant:
+- **PaySim (Extreme 0.129% Imbalance):** In 5 of 10 seeds (seeds 42, 45, 46, 48, 49), ACXIS achieves positive net savings (up to +₹61,000.00 / +2.77%) with zero false negative leaks. Across all 10 seeds, mean savings are −₹131,061 ± ₹186,341 (−5.95% ± 8.47%), with 1–2 false negative leaks observed in the remaining 5 seeds (seeds 43, 44, 47, 50, 51). All headline PaySim benchmark results reflect the frozen seed-42 configuration, the most favorable of the ten evaluated seeds.
+- **IEEE-CIS (Distributed 3.50% Multi-Attribute Signals):** ACXIS achieves positive net savings across all 10 seeds (**10/10 seeds positive**, zero false negative leaks across all 10 seeds), delivering a mean net savings of **+$209.50 ± $91.15** (+0.22% ± 0.10%; suppressing 24.4 ± 9.9 false alarms with 0 leaks).
+- **Operational Implication:** Secondary bagging variance on fixed threshold boundaries under extreme class imbalance demonstrates why enterprise compliance engines freeze validated deployment configurations and enforce strict validation-gate verification, and why primary statistical inference is governed by 1,000 stratified bootstrap resamples on the frozen validated configuration.
 
 ---
 

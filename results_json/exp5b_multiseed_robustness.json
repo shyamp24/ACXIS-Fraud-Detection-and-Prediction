@@ -1,6 +1,6 @@
 {
   "paysim": {
-    "dataset": "PaySim",
+    "dataset": "paysim",
     "seeds_evaluated": 10,
     "mean_savings": -131061.12700000001,
     "std_savings": 186341.1332898963,
@@ -12,6 +12,7 @@
     "min_fns_leaked": 0,
     "detailed_runs": [
       {
+        "dataset": "paysim",
         "seed": 42,
         "fps_suppressed": 42,
         "fns_leaked": 0,
@@ -21,6 +22,7 @@
         "acxis_precision": 0.5437415881561238
       },
       {
+        "dataset": "paysim",
         "seed": 43,
         "fps_suppressed": 49,
         "fns_leaked": 1,
@@ -30,6 +32,7 @@
         "acxis_precision": 0.5460081190798376
       },
       {
+        "dataset": "paysim",
         "seed": 44,
         "fps_suppressed": 77,
         "fns_leaked": 2,
@@ -39,6 +42,7 @@
         "acxis_precision": 0.5562456866804693
       },
       {
+        "dataset": "paysim",
         "seed": 45,
         "fps_suppressed": 5,
         "fns_leaked": 0,
@@ -48,6 +52,7 @@
         "acxis_precision": 0.5305318450426789
       },
       {
+        "dataset": "paysim",
         "seed": 46,
         "fps_suppressed": 46,
         "fns_leaked": 0,
@@ -57,6 +62,7 @@
         "acxis_precision": 0.5452091767881242
       },
       {
+        "dataset": "paysim",
         "seed": 47,
         "fps_suppressed": 76,
         "fns_leaked": 1,
@@ -66,6 +72,7 @@
         "acxis_precision": 0.5561681598897312
       },
       {
+        "dataset": "paysim",
         "seed": 48,
         "fps_suppressed": 25,
         "fns_leaked": 0,
@@ -75,6 +82,7 @@
         "acxis_precision": 0.5375914836992681
       },
       {
+        "dataset": "paysim",
         "seed": 49,
         "fps_suppressed": 37,
         "fns_leaked": 0,
@@ -84,6 +92,7 @@
         "acxis_precision": 0.5419181757209927
       },
       {
+        "dataset": "paysim",
         "seed": 50,
         "fps_suppressed": 47,
         "fns_leaked": 2,
@@ -93,6 +102,7 @@
         "acxis_precision": 0.5449628127112914
       },
       {
+        "dataset": "paysim",
         "seed": 51,
         "fps_suppressed": 62,
         "fns_leaked": 1,
@@ -100,6 +110,120 @@
         "savings_pct": -12.742344974524752,
         "acxis_recall": 0.9829476248477467,
         "acxis_precision": 0.5508532423208191
+      }
+    ]
+  },
+  "ieeecis": {
+    "dataset": "ieeecis",
+    "seeds_evaluated": 10,
+    "mean_savings": 209.5,
+    "std_savings": 91.14853567422549,
+    "mean_savings_pct": 0.22085943691575563,
+    "std_savings_pct": 0.09609076021338953,
+    "mean_fps_suppressed": 24.4,
+    "std_fps_suppressed": 9.901739465591106,
+    "max_fns_leaked": 0,
+    "min_fns_leaked": 0,
+    "detailed_runs": [
+      {
+        "dataset": "ieeecis",
+        "seed": 42,
+        "fps_suppressed": 30,
+        "fns_leaked": 0,
+        "savings": 320.0,
+        "savings_pct": 0.3373509298951876,
+        "acxis_recall": 0.7947725072604066,
+        "acxis_precision": 0.4806791569086651
+      },
+      {
+        "dataset": "ieeecis",
+        "seed": 43,
+        "fps_suppressed": 2,
+        "fns_leaked": 0,
+        "savings": 10.0,
+        "savings_pct": 0.010542216559224613,
+        "acxis_recall": 0.7947725072604066,
+        "acxis_precision": 0.47677119628339143
+      },
+      {
+        "dataset": "ieeecis",
+        "seed": 44,
+        "fps_suppressed": 23,
+        "fns_leaked": 0,
+        "savings": 230.0,
+        "savings_pct": 0.24247098086216606,
+        "acxis_recall": 0.7947725072604066,
+        "acxis_precision": 0.47969617294770667
+      },
+      {
+        "dataset": "ieeecis",
+        "seed": 45,
+        "fps_suppressed": 28,
+        "fns_leaked": 0,
+        "savings": 230.0,
+        "savings_pct": 0.24247098086216606,
+        "acxis_recall": 0.7947725072604066,
+        "acxis_precision": 0.4803978935049737
+      },
+      {
+        "dataset": "ieeecis",
+        "seed": 46,
+        "fps_suppressed": 33,
+        "fns_leaked": 0,
+        "savings": 265.0,
+        "savings_pct": 0.27936873881945223,
+        "acxis_recall": 0.7947725072604066,
+        "acxis_precision": 0.48110167008496924
+      },
+      {
+        "dataset": "ieeecis",
+        "seed": 47,
+        "fps_suppressed": 25,
+        "fns_leaked": 0,
+        "savings": 200.0,
+        "savings_pct": 0.21084433118449225,
+        "acxis_recall": 0.7947725072604066,
+        "acxis_precision": 0.4799766150248465
+      },
+      {
+        "dataset": "ieeecis",
+        "seed": 48,
+        "fps_suppressed": 18,
+        "fns_leaked": 0,
+        "savings": 140.0,
+        "savings_pct": 0.14759103182914457,
+        "acxis_recall": 0.7947725072604066,
+        "acxis_precision": 0.4789964994165694
+      },
+      {
+        "dataset": "ieeecis",
+        "seed": 49,
+        "fps_suppressed": 36,
+        "fns_leaked": 0,
+        "savings": 305.0,
+        "savings_pct": 0.32153760505635065,
+        "acxis_recall": 0.7947725072604066,
+        "acxis_precision": 0.481524926686217
+      },
+      {
+        "dataset": "ieeecis",
+        "seed": 50,
+        "fps_suppressed": 31,
+        "fns_leaked": 0,
+        "savings": 245.0,
+        "savings_pct": 0.258284305701003,
+        "acxis_recall": 0.7947725072604066,
+        "acxis_precision": 0.4808199121522694
+      },
+      {
+        "dataset": "ieeecis",
+        "seed": 51,
+        "fps_suppressed": 18,
+        "fns_leaked": 0,
+        "savings": 150.0,
+        "savings_pct": 0.15813324838836917,
+        "acxis_recall": 0.7947725072604066,
+        "acxis_precision": 0.4789964994165694
       }
     ]
   }
