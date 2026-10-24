@@ -37,7 +37,7 @@ def evaluate_dataset(dataset_name, curr_symbol):
     records = []
     for s in SEEDS:
         print(f"\n--- {dataset_name.upper()} Seed {s} ---")
-        res = run_dataset_algorithm1(dataset_name, n_tiers=3, rf_depth=5, seed=s)
+        res = run_dataset_algorithm1(dataset_name, n_tiers=3, rf_depth=5, seed=s, save_cache=False)
         records.append({
             "dataset": dataset_name,
             "seed": s,

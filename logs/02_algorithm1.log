@@ -2,7 +2,7 @@
   warnings.warn(
 ================================================================================
 STEP 2: PURE ALGORITHM 1 ENGINE BENCHMARK
-Zero hardcoded numbers; all tau_1 derived from validation cost minima
+Operating thresholds tau_1 derived from validation cost minima
 ================================================================================
 [PAYSIM] Ingested validation-optimal tau* from Step 1 JSON: 0.2179
 
@@ -66,8 +66,8 @@ False Positives Suppressed: 0 | False Negatives Leaked: 0 (Zero Leak Verificatio
 Net Financial Savings: €0.00 (+0.00%)
 
 [✓] Saved Algorithm 1 Master JSON to:
-  ./results_json/exp2_algorithm1_results.json
+  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_json/exp2_algorithm1_results.json
 [✓] Saved Algorithm 1 Summary CSV to:
-  ./results_csv/table1_algorithm1_summary.csv
+  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table1_algorithm1_summary.csv
 
 ================================================================================

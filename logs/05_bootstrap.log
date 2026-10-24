@@ -11,7 +11,7 @@ RUNNING 1,000 STRATIFIED BOOTSTRAP REPLICATES: PAYSIM
   Iteration  500/1000 | Mean Savings: ₹60,349.00 (2.83%) | Max Leaked FN: 0
   Iteration  750/1000 | Mean Savings: ₹60,409.33 (2.83%) | Max Leaked FN: 0
   Iteration 1000/1000 | Mean Savings: ₹60,226.50 (2.83%) | Max Leaked FN: 0
-Completed 1,000 iterations in 75.4s
+Completed 1,000 iterations in 95.1s
 
 --- 1,000-ITERATION RESAMPLING RESULTS ---
 Baseline Cost : ₹2,192,028.16 ± ₹383,841.86 [95% CI: ₹1,506,258.33, ₹2,979,305.94]
@@ -28,7 +28,7 @@ RUNNING 1,000 STRATIFIED BOOTSTRAP REPLICATES: IEEECIS
   Iteration  500/1000 | Mean Savings: $321.18 (0.34%) | Max Leaked FN: 0
   Iteration  750/1000 | Mean Savings: $320.84 (0.34%) | Max Leaked FN: 0
   Iteration 1000/1000 | Mean Savings: $320.67 (0.34%) | Max Leaked FN: 0
-Completed 1,000 iterations in 4.2s
+Completed 1,000 iterations in 5.0s
 
 --- 1,000-ITERATION RESAMPLING RESULTS ---
 Baseline Cost : $95,272.19 ± $7,049.36 [95% CI: $82,219.48, $109,734.75]
@@ -45,7 +45,7 @@ RUNNING 1,000 STRATIFIED BOOTSTRAP REPLICATES: ULB
   Iteration  500/1000 | Mean Savings: €0.00 (0.00%) | Max Leaked FN: 0
   Iteration  750/1000 | Mean Savings: €0.00 (0.00%) | Max Leaked FN: 0
   Iteration 1000/1000 | Mean Savings: €0.00 (0.00%) | Max Leaked FN: 0
-Completed 1,000 iterations in 2.6s
+Completed 1,000 iterations in 2.3s
 
 --- 1,000-ITERATION RESAMPLING RESULTS ---
 Baseline Cost : €727.66 ± €596.66 [95% CI: €13.22, €2,103.63]
@@ -56,8 +56,8 @@ Suppressed FP : 0.0 ± 0.0 [95% CI: 0, 0]
 Leaked FN     : 0.0000 (Max across all resamples = 0)
 
 [✓] Saved complete 1,000-Bootstrap Master JSON to:
-  ./results_json/exp5_bootstrap_results.json
+  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_json/exp5_bootstrap_results.json
 [✓] Saved Table 5 Resampling CI Master CSV to:
-  ./results_csv/table5_resampling_ci_master.csv
+  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table5_resampling_ci_master.csv
 
 ================================================================================

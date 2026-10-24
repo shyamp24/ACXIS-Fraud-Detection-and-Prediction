@@ -3,20 +3,20 @@ GENERATING SYNCHRONIZED PUBLICATION FIGURES FOR REPLICATION PACKAGE
 =============================================================================
 Generating Figure 1: Vector Architecture Diagram...
   [✓] Saved Figure 1 to:
-    ./figures/fig1_acxis_architecture.pdf
-    ./figures/fig1_acxis_architecture.png
+    /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/figures/fig1_acxis_architecture.pdf
+    /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/figures/fig1_acxis_architecture.png
 Generating Figure 4: Before vs. After Confusion Matrix...
   [✓] Saved Figure 4 to:
-    ./figures/fig4_before_after_confusion_matrix.pdf
-    ./figures/fig4_before_after_confusion_matrix.png
+    /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/figures/fig4_before_after_confusion_matrix.pdf
+    /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/figures/fig4_before_after_confusion_matrix.png
 Generating Figure 7: Amount-Tiered Suppression Breakdown...
   [✓] Saved Figure 7 to:
-    ./figures/fig7_amount_tier_breakdown.pdf
-    ./figures/fig7_amount_tier_breakdown.png
+    /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/figures/fig7_amount_tier_breakdown.pdf
+    /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/figures/fig7_amount_tier_breakdown.png
 Generating Figure 10: Bootstrap Robustness Distribution...
   [✓] Saved Figure 10 to:
-    ./figures/fig10_bootstrap_robustness.pdf
-    ./figures/fig10_bootstrap_robustness.png
+    /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/figures/fig10_bootstrap_robustness.pdf
+    /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/figures/fig10_bootstrap_robustness.png
 =============================================================================
 ALL FIGURES GENERATED SUCCESSFULLY!
 =============================================================================

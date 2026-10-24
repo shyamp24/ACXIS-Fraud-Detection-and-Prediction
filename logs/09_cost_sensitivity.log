@@ -1,0 +1,27 @@
+================================================================================
+STEP 9: MULTI-DIMENSIONAL COST SENSITIVITY & BREAK-EVEN ANALYSIS
+================================================================================
+
+[PaySim Mobile Money] Candidate FPs: 720 | Suppressed FPs: 42 | FN Cost: ₹905,948.26
+
+[IEEE-CIS E-Commerce] Candidate FPs: 1,804 | Suppressed FPs: 30 | FN Cost: $74,331.71
+
+[ULB Credit Card] Candidate FPs: 4 | Suppressed FPs: 0 | FN Cost: €744.61
+
+[✓] Saved Table 7 Master CSV to: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table7_cost_sensitivity_master.csv
+[✓] Saved Cost Sensitivity JSON to: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_json/exp6_cost_sensitivity_results.json
+
+--- TABLE 7 EXECUTION SUMMARY ---
+PaySim Mobile Money | Tiered Multiplier | Low Cost (-50%)                | ₹1,553,448.26 | ₹1,522,948.26 | ₹ 30,500.00 | +1.96%
+PaySim Mobile Money | Tiered Multiplier | Baseline Tiered (1.0x)         | ₹2,200,948.26 | ₹2,139,948.26 | ₹ 61,000.00 | +2.77%
+PaySim Mobile Money | Tiered Multiplier | High Cost (+50%)               | ₹2,848,448.26 | ₹2,756,948.26 | ₹ 91,500.00 | +3.21%
+PaySim Mobile Money | Tiered Multiplier | Very High Cost (+100%)         | ₹3,495,948.26 | ₹3,373,948.26 | ₹122,000.00 | +3.49%
+PaySim Mobile Money | Flat Penalty      | Flat ₹1,000 per False Alarm    | ₹1,625,948.26 | ₹1,583,948.26 | ₹ 42,000.00 | +2.58%
+PaySim Mobile Money | Flat Penalty      | Flat ₹1,500 per False Alarm    | ₹1,985,948.26 | ₹1,922,948.26 | ₹ 63,000.00 | +3.17%
+PaySim Mobile Money | Proportional Cost | FP Cost = 0.5% of Amount       | ₹1,533,660.66 | ₹1,503,273.88 | ₹ 30,386.77 | +1.98%
+PaySim Mobile Money | Proportional Cost | FP Cost = 1.0% of Amount       | ₹2,161,373.05 | ₹2,100,599.50 | ₹ 60,773.55 | +2.81%
+PaySim Mobile Money | Proportional Cost | FP Cost = 2.0% of Amount       | ₹3,416,797.85 | ₹3,295,250.75 | ₹121,547.10 | +3.56%
+PaySim Mobile Money | Proportional Cost | FP Cost = 5.0% of Amount       | ₹7,183,072.23 | ₹6,879,204.48 | ₹303,867.75 | +4.23%
+IEEE-CIS E-Commerce | Tiered Multiplier | Low Cost (-50%)                | $   84,594.21 | $   84,434.21 | $    160.00 | +0.19%
+IEEE-CIS E-Commerce | Tiered Multiplier | Baseline Tiered (1.0x)         | $   94,856.71 | $   94,536.71 | $    320.00 | +0.34%
+================================================================================

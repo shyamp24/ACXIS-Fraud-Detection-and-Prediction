@@ -1,0 +1,26 @@
+================================================================================
+STEP 8: PROGRESSIVE FEATURE DELETION FAITHFULNESS BENCHMARK (FIG. 9)
+================================================================================
+Loaded validation-optimal threshold tau* = 0.2179
+Candidate Alerts on Test: N = 1,528 (Frauds: 808, False Alarms: 720)
+Baseline mean predicted fraud probability (k=0): 0.6725
+k= 1: MoRF_A=0.0611, LeRF_A=0.7840 | MoRF_B=0.6430, LeRF_B=0.8754
+k= 2: MoRF_A=0.0288, LeRF_A=0.7869 | MoRF_B=0.1294, LeRF_B=0.8855
+k= 3: MoRF_A=0.0092, LeRF_A=0.7884 | MoRF_B=0.0656, LeRF_B=0.8859
+k= 4: MoRF_A=0.0025, LeRF_A=0.7856 | MoRF_B=0.0258, LeRF_B=0.8852
+k= 5: MoRF_A=0.0004, LeRF_A=0.7579 | MoRF_B=0.0087, LeRF_B=0.8729
+k= 6: MoRF_A=0.0003, LeRF_A=0.7411 | MoRF_B=0.0017, LeRF_B=0.8419
+k= 7: MoRF_A=0.0001, LeRF_A=0.6992 | MoRF_B=0.0014, LeRF_B=0.7367
+k= 8: MoRF_A=0.0001, LeRF_A=0.6449 | MoRF_B=0.0009, LeRF_B=0.4531
+k= 9: MoRF_A=0.0001, LeRF_A=0.6410 | MoRF_B=0.0009, LeRF_B=0.2501
+k=10: MoRF_A=0.0001, LeRF_A=0.6178 | MoRF_B=0.0000, LeRF_B=0.0035
+k=11: MoRF_A=0.0000, LeRF_A=0.0000 | MoRF_B=0.0000, LeRF_B=0.0000
+
+AUDC Protocol A (Median): MoRF=0.0399, Gain=0.2006, Random=0.3371, LeRF=0.6894
+AUDC Protocol B (Mean)  : MoRF=0.1103, Gain=0.0914, Random=0.3090, LeRF=0.6388
+
+Permutation reliance on oldbalanceOrg: Base PR-AUC = 0.9610 -> Permuted = 0.0040 (-99.58%)
+[✓] Saved JSON to: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_json/exp5_faithfulness_benchmarks.json
+[✓] Saved CSV to: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table9_faithfulness_curves.csv
+[✓] Saved Figure 9 to: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/figures/Fig_SHAP_Faithfulness_Curves.png
+================================================================================

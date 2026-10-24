@@ -170,34 +170,6 @@
         "tn_count": 634442
       }
     },
-    "XGBoost (Balanced Weights)": {
-      "roc_auc": 0.9997,
-      "pr_auc": 0.9601,
-      "tau_default": 0.5,
-      "cost_default": 3532487.25,
-      "res_default": {
-        "precision": 0.2733644859813084,
-        "recall": 0.997563946406821,
-        "f1": 0.42913280964107936,
-        "total_cost": 3532487.25,
-        "fp_count": 2177,
-        "fn_count": 2,
-        "tp_count": 819,
-        "tn_count": 633264
-      },
-      "tau_tuned": 0.8316,
-      "cost_tuned": 1899490.47,
-      "res_tuned": {
-        "precision": 0.4605337876206699,
-        "recall": 0.9878197320341047,
-        "f1": 0.6281952091402014,
-        "total_cost": 1899490.47,
-        "fp_count": 950,
-        "fn_count": 10,
-        "tp_count": 811,
-        "tn_count": 634491
-      }
-    },
     "SMOTE + XGBoost": {
       "roc_auc": 0.9984771775434633,
       "pr_auc": 0.9249876483426784,

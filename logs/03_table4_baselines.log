@@ -3,53 +3,20 @@ STARTING EXPERIMENT 3: COMPARATIVE BASELINES BENCHMARK (TABLE 4)
 =============================================================================
 
 ================================================================================
-GENUINE BASELINE BENCHMARK FOR: PAYSIM
+RUNNING BASELINE BENCHMARK FOR: PAYSIM
 ================================================================================
-Loading PaySim dataset from: ./data/six.csv
-
---- Training Logistic Regression ---
-Logistic Regression (fit+eval: 155.2s) -> ROC-AUC: 0.9887 | PR-AUC: 0.5682
-  tau=0.5:  Cost=₹56,100,609.89 | Rec=0.9464 | Prec=0.0249
-  tau=0.8712: Cost=₹29,132,574.50 | Rec=0.8027 | Prec=0.0890
-
---- Training Decision Tree ---
-Decision Tree (fit+eval: 58.3s) -> ROC-AUC: 0.9917 | PR-AUC: 0.7722
-  tau=0.5:  Cost=₹8,598,278.87 | Rec=0.9842 | Prec=0.1407
-  tau=0.9306: Cost=₹7,552,479.39 | Rec=0.9562 | Prec=0.2099
-
---- Training Random Forest ---
-Random Forest (fit+eval: 482.0s) -> ROC-AUC: 0.9991 | PR-AUC: 0.8870
-  tau=0.5:  Cost=₹19,255,385.53 | Rec=0.9903 | Prec=0.0787
-  tau=0.7722: Cost=₹9,666,656.22 | Rec=0.9330 | Prec=0.3352
-
---- Training LightGBM ---
-LightGBM (fit+eval: 74.0s) -> ROC-AUC: 0.9492 | PR-AUC: 0.3900
-  tau=0.5:  Cost=₹47,311,169.14 | Rec=0.8368 | Prec=0.4334
-  tau=0.2080: Cost=₹44,031,805.01 | Rec=0.8867 | Prec=0.3353
-
---- Training CatBoost (Fairly Tuned) ---
-CatBoost (Fairly Tuned) (fit+eval: 179.2s) -> ROC-AUC: 0.9986 | PR-AUC: 0.9540
-  tau=0.5:  Cost=₹2,737,505.53 | Rec=0.9939 | Prec=0.3785
-  tau=0.8811: Cost=₹3,113,489.08 | Rec=0.9854 | Prec=0.4475
-
---- Training SMOTE + XGBoost ---
-SMOTE + XGBoost (fit+eval: 25.9s) -> ROC-AUC: 0.9985 | PR-AUC: 0.9250
-  tau=0.5:  Cost=₹7,894,598.74 | Rec=0.9732 | Prec=0.2905
-  tau=0.7722: Cost=₹8,705,981.77 | Rec=0.9574 | Prec=0.4244
-
---- Training ADASYN + XGBoost ---
-ADASYN + XGBoost (fit+eval: 29.0s) -> ROC-AUC: 0.9985 | PR-AUC: 0.9085
-  tau=0.5:  Cost=₹9,250,483.58 | Rec=0.9720 | Prec=0.2579
-  tau=0.5346: Cost=₹9,351,167.46 | Rec=0.9695 | Prec=0.2704
+Loading PaySim dataset from: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/data/six.csv
+[Checkpoint] Loaded 13 previously evaluated models for PAYSIM
+Skipping Logistic Regression (already evaluated in checkpoint)
+Skipping Decision Tree (already evaluated in checkpoint)
+Skipping Random Forest (already evaluated in checkpoint)
+Skipping LightGBM (already evaluated in checkpoint)
+Skipping CatBoost (Fairly Tuned) (already evaluated in checkpoint)
+Skipping SMOTE + XGBoost (already in checkpoint)
+Skipping ADASYN + XGBoost (already in checkpoint)
 [PAYSIM] Alignment verification PASSED: Labels and transaction amounts match Stage 1 cache exactly.
-
---- Evaluating Bayes Minimum Risk (Bahnsen et al., 2014) ---
-Bayes Minimum Risk -> Cost=₹10,226,158.53 | Rec=0.9927 | Prec=0.1308
-
---- Training Instance-Weighted CS-XGBoost (Höppner et al., 2022) ---
-Instance-Weighted CS-XGBoost (fit+eval: 98.1s) -> ROC-AUC: 0.9996 | PR-AUC: 0.9461
-  tau=0.5:  Cost=₹2,667,929.30 | Rec=0.9695 | Prec=0.5293
-  tau=0.4951: Cost=₹2,367,511.02 | Rec=0.9708 | Prec=0.5268
+Skipping Bayes Minimum Risk (already in checkpoint)
+Skipping Instance-Weighted CS-XGBoost (already in checkpoint)
 
 --- Evaluating XAI Heuristic Rule Filter ---
 XAI Heuristic Rule Filter -> Cost=₹181,066,037.85 | Rec=0.4836 | Prec=0.8982
@@ -65,9 +32,9 @@ ACXIS Proposed:   Cost = ₹2,139,948.26 (Savings: ₹61,000.00)
 -----------------------------------------------------------------
 
 ================================================================================
-GENUINE BASELINE BENCHMARK FOR: IEEECIS
+RUNNING BASELINE BENCHMARK FOR: IEEECIS
 ================================================================================
-Loading IEEE-CIS transaction (./data/train_transaction.csv) and identity (./data/train_identity.csv)...
+Loading IEEE-CIS transaction (/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/data/train_transaction.csv) and identity (/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/data/train_identity.csv)...
 [Checkpoint] Loaded 13 previously evaluated models for IEEECIS
 Skipping Logistic Regression (already evaluated in checkpoint)
 Skipping Decision Tree (already evaluated in checkpoint)
@@ -93,10 +60,10 @@ Stage 2 Tuned:    Cost = $94,856.71 (tau*=0.3763)
 ACXIS Proposed:   Cost = $94,536.71 (Savings: $320.00)
 -----------------------------------------------------------------
 
-[✓] Saved complete genuine baseline results to:
-  ./results_json/exp3_table4_baselines.json
-[✓] Saved genuine Table 4 master CSV to:
-  ./results_csv/table4_baseline_benchmarks.csv
+[✓] Saved complete baseline results to:
+  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_json/exp3_table4_baselines.json
+[✓] Saved Table 4 master CSV to:
+  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table4_baseline_benchmarks.csv
 
 =============================================================================
 EXPERIMENT 3 COMPLETED SUCCESSFULLY!

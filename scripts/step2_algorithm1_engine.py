@@ -101,7 +101,7 @@ def derive_validation_optimal_tau(y_val, p_val, amt_val, brackets):
     opt_idx = int(np.argmin(costs))
     return float(thresholds[opt_idx])
 
-def run_dataset_algorithm1(ds_name, n_tiers=3, rf_depth=5, rf_cw=None, seed=42):
+def run_dataset_algorithm1(ds_name, n_tiers=3, rf_depth=5, rf_cw=None, seed=42, save_cache=True):
     raw_npz_path = os.path.join(CACHE_DIR, f"{ds_name}_cand_raw_X.npz")
     data = load_stage1_cache(ds_name, CACHE_DIR)
     p_val, p_test = data['p_val'], data['p_test']
@@ -211,12 +211,13 @@ def run_dataset_algorithm1(ds_name, n_tiers=3, rf_depth=5, rf_cw=None, seed=42):
     pred_acxis[supp_alert_indices] = 0
     
     # Save suppressed test indices and meta probabilities to cache for downstream sensitivity and ablation benchmarks
-    np.savez_compressed(
-        os.path.join(CACHE_DIR, f"{ds_name}_suppressed_test_alerts.npz"),
-        supp_indices=supp_alert_indices,
-        supp_mask=supp_test,
-        q_test=q_test
-    )
+    if save_cache:
+        np.savez_compressed(
+            os.path.join(CACHE_DIR, f"{ds_name}_suppressed_test_alerts.npz"),
+            supp_indices=supp_alert_indices,
+            supp_mask=supp_test,
+            q_test=q_test
+        )
     
     # 5. Evaluate Operational Costs
     base_eval = evaluate_cost(y_test, base_pred_test, amt_test, brackets)

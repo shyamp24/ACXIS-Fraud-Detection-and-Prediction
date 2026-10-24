@@ -18,11 +18,11 @@ Test Set at tau=0.5000: Cost = €748.61 | Recall = 0.8571 | Precision = 0.9333
 Test Set at tau*=0.4555: Cost = €750.61 | Recall = 0.8571 | Precision = 0.9130
 
 [✓] Saved Validation Cost Curve Figure to:
-  ./figures/fig4_cost_vs_threshold_curves.png
+  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/figures/fig4_cost_vs_threshold_curves.png
 [✓] Saved 100-Step Validation Grid JSON to:
-  ./results_json/exp1_stage1_coopt_grid.json
+  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_json/exp1_stage1_coopt_grid.json
 [✓] Saved Table 2 Settings CSV to:
-  ./results_csv/table2_experimental_settings.csv
+  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table2_experimental_settings.csv
 
 ================================================================================
 STEP 1 COMPLETE: VALIDATION THRESHOLDS DERIVED ALGORITHMICALLY

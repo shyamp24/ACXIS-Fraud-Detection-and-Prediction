@@ -1,0 +1,11 @@
+================================================================================
+STEP 11: RULE-OF-THREE UPPER BOUND EVALUATION (ZERO FALSE NEGATIVE LEAKS)
+================================================================================
+Dataset      | Tested Frauds (N)  | FN Leaks   | Exact 95% Bound  | Rule-of-Three
+---------------------------------------------------------------------------
+PaySim       | 808                | 0          |  0.371%         |  0.371% (3/808)
+IEEE-CIS     | 1642               | 0          |  0.182%         |  0.183% (3/1642)
+ULB          | 41                 | 0          |  7.307%         |  7.317% (3/41)
+
+[✓] Saved Rule-of-Three bounds to: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_json/exp11_rule_of_three_bounds.json
+================================================================================
