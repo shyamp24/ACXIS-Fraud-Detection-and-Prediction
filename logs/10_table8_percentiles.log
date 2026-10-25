@@ -1,5 +1,5 @@
-[OK] Saved Table 8 CSV: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table8_bootstrap_percentiles.csv
-[OK] Saved Table 8 JSON: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_json/exp8_table8_bootstrap_percentiles.json
+[OK] Saved Table 8 CSV: ./results_csv/table8_bootstrap_percentiles.csv
+[OK] Saved Table 8 JSON: ./results_json/exp8_table8_bootstrap_percentiles.json
 
 --- TABLE 8 BOOTSTRAP PERCENTILES SUMMARY ---
                                           metric                                   paysim                                    ieeecis                                   ulb

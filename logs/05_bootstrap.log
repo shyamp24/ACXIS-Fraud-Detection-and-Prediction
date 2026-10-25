@@ -56,8 +56,8 @@ Suppressed FP : 0.0 ± 0.0 [95% CI: 0, 0]
 Leaked FN     : 0.0000 (Max across all resamples = 0)
 
 [✓] Saved complete 1,000-Bootstrap Master JSON to:
-  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_json/exp5_bootstrap_results.json
+  ./results_json/exp5_bootstrap_results.json
 [✓] Saved Table 5 Resampling CI Master CSV to:
-  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table5_resampling_ci_master.csv
+  ./results_csv/table5_resampling_ci_master.csv
 
 ================================================================================

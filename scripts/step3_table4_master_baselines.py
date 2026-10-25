@@ -15,7 +15,7 @@ Evaluates across PaySim and IEEE-CIS:
 5. CatBoost (Fairly Tuned)
 6. SMOTE + XGBoost
 7. ADASYN + XGBoost
-8. Bayes Minimum Risk (Bahnsen et al., 2014)
+8. Bayes Minimum Risk (Bahnsen et al., 2013)
 9. Instance-Weighted CS-XGBoost (Höppner et al., 2022)
 10. XAI Heuristic Rule Filter [Formally Defined]
 11. Stage 1 Core (Default tau=0.5)
@@ -66,18 +66,15 @@ DATASET_FALLBACKS = {
     'paysim': [
         os.path.join(DATA_DIR, "six.csv"),
         os.path.join(DATA_DIR, "paysim.csv"),
-        os.path.join(DATA_DIR, "PS_20174392719_1491204439457_log.csv"),
-        os.path.join(PKG_DIR, "..", "01_R2_Experiments", "data", "six.csv")
+        os.path.join(DATA_DIR, "PS_20174392719_1491204439457_log.csv")
     ],
     'ieeecis_tx': [
         os.path.join(DATA_DIR, "train_transaction.csv"),
-        os.path.join(DATA_DIR, "ieee-fraud-detection", "train_transaction.csv"),
-        os.path.join(PKG_DIR, "..", "01_R2_Experiments", "data", "train_transaction.csv")
+        os.path.join(DATA_DIR, "ieee-fraud-detection", "train_transaction.csv")
     ],
     'ieeecis_id': [
         os.path.join(DATA_DIR, "train_identity.csv"),
-        os.path.join(DATA_DIR, "ieee-fraud-detection", "train_identity.csv"),
-        os.path.join(PKG_DIR, "..", "01_R2_Experiments", "data", "train_identity.csv")
+        os.path.join(DATA_DIR, "ieee-fraud-detection", "train_identity.csv")
     ]
 }
 
@@ -357,8 +354,8 @@ def run_benchmark_for_dataset(ds_name, from_scratch=False):
 
     opt_tau_core = find_optimal_threshold(y_val, p_val_core, amt_val, brackets)
     
-    if 'Bayes Minimum Risk (Bahnsen et al., 2014)' not in results:
-        print("\n--- Evaluating Bayes Minimum Risk (Bahnsen et al., 2014) ---")
+    if 'Bayes Minimum Risk (Bahnsen et al., 2013)' not in results:
+        print("\n--- Evaluating Bayes Minimum Risk (Bahnsen et al., 2013) ---")
         def get_fp_cost_vector(amts):
             costs = np.zeros(len(amts))
             prev = 0.0
@@ -380,7 +377,7 @@ def run_benchmark_for_dataset(ds_name, from_scratch=False):
         c_bmr = evaluate_cost(y_test, pred_bayes, amt_test, brackets)
         print(f"Bayes Minimum Risk -> Cost={currency}{c_bmr['total_cost']:,.2f} | Rec={c_bmr['recall']:.4f} | Prec={c_bmr['precision']:.4f}")
         
-        results['Bayes Minimum Risk (Bahnsen et al., 2014)'] = {
+        results['Bayes Minimum Risk (Bahnsen et al., 2013)'] = {
             'roc_auc': float(roc_auc_score(y_test, p_test_core)), 'pr_auc': float(average_precision_score(y_test, p_test_core)),
             'tau_default': 'Instance-Specific', 'cost_default': c_bmr['total_cost'], 'res_default': c_bmr,
             'tau_tuned': 'Instance-Specific', 'cost_tuned': c_bmr['total_cost'], 'res_tuned': c_bmr

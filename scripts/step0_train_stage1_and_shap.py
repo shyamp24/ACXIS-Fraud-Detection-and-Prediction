@@ -44,24 +44,19 @@ DATASET_FALLBACKS = {
     'paysim': [
         os.path.join(DATA_DIR, "six.csv"),
         os.path.join(DATA_DIR, "paysim.csv"),
-        os.path.join(DATA_DIR, "PS_20174392719_1491204439457_log.csv"),
-        os.path.join(PKG_DIR, "..", "01_R2_Experiments", "data", "six.csv")
+        os.path.join(DATA_DIR, "PS_20174392719_1491204439457_log.csv")
     ],
     'ieeecis_tx': [
         os.path.join(DATA_DIR, "train_transaction.csv"),
-        os.path.join(DATA_DIR, "ieee-fraud-detection", "train_transaction.csv"),
-        os.path.join(PKG_DIR, "..", "01_R2_Experiments", "data", "train_transaction.csv")
+        os.path.join(DATA_DIR, "ieee-fraud-detection", "train_transaction.csv")
     ],
     'ieeecis_id': [
         os.path.join(DATA_DIR, "train_identity.csv"),
-        os.path.join(DATA_DIR, "ieee-fraud-detection", "train_identity.csv"),
-        os.path.join(PKG_DIR, "..", "01_R2_Experiments", "data", "train_identity.csv")
+        os.path.join(DATA_DIR, "ieee-fraud-detection", "train_identity.csv")
     ],
     'ulb': [
         os.path.join(DATA_DIR, "creditcard.csv"),
-        os.path.join(DATA_DIR, "card.csv"),
-        os.path.join(PKG_DIR, "..", "01_R2_Experiments", "data", "card.csv"),
-        os.path.join(PKG_DIR, "..", "01_R2_Experiments", "data", "creditcard.csv")
+        os.path.join(DATA_DIR, "card.csv")
     ]
 }
 

@@ -238,7 +238,7 @@
         "tn_count": 633293
       }
     },
-    "Bayes Minimum Risk (Bahnsen et al., 2014)": {
+    "Bayes Minimum Risk (Bahnsen et al., 2013)": {
       "roc_auc": 0.9997058206544123,
       "pr_auc": 0.9609870792039499,
       "tau_default": "Instance-Specific",
@@ -678,7 +678,7 @@
         "tn_count": 53233
       }
     },
-    "Bayes Minimum Risk (Bahnsen et al., 2014)": {
+    "Bayes Minimum Risk (Bahnsen et al., 2013)": {
       "roc_auc": 0.959582853366117,
       "pr_auc": 0.7713369315210019,
       "tau_default": "Instance-Specific",

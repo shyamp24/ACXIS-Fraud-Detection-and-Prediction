@@ -20,7 +20,7 @@ AUDC Protocol A (Median): MoRF=0.0399, Gain=0.2006, Random=0.3371, LeRF=0.6894
 AUDC Protocol B (Mean)  : MoRF=0.1103, Gain=0.0914, Random=0.3090, LeRF=0.6388
 
 Permutation reliance on oldbalanceOrg: Base PR-AUC = 0.9610 -> Permuted = 0.0040 (-99.58%)
-[✓] Saved JSON to: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_json/exp5_faithfulness_benchmarks.json
-[✓] Saved CSV to: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table9_faithfulness_curves.csv
-[✓] Saved Figure 9 to: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/figures/Fig_SHAP_Faithfulness_Curves.png
+[✓] Saved JSON to: ./results_json/exp5_faithfulness_benchmarks.json
+[✓] Saved CSV to: ./results_csv/table9_faithfulness_curves.csv
+[✓] Saved Figure 9 to: ./figures/Fig_SHAP_Faithfulness_Curves.png
 ================================================================================

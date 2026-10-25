@@ -72,7 +72,12 @@ Raw Transaction x
 ### Key Operational Guarantees:
 1. **Validation-Derived Operating Point ($\tau^*$):** The Stage 1 threshold $\tau^*$ is determined strictly on the independent validation partition $\mathcal{D}_{\text{val}}$ by minimizing the total asymmetric operational cost. The test partition remains strictly blind during parameter tuning.
 2. **Amount-Tiered Safety Guard:** Candidate alerts ($\hat{p} \ge \tau^*$) are stratified into $K=3$ transaction amount quantile tiers. Within each tier $k$, an independent suppression threshold is calibrated against 5-fold out-of-fold (OOF) cross-validation predictions:
-   $$\tau_{\text{meta}, k} = \max_{i \in \text{Val-Fraud}_k} q_{\text{OOF}, i} + \varepsilon$$
+   
+
+$$
+\tau_{\text{meta}, k} = \max_{i \in \text{Val-Fraud}_k} q_{\text{OOF}, i} + \varepsilon
+$$
+
    If an amount tier suppresses zero false positives out-of-fold or reaches $\tau_{\text{meta}, k} \ge 1.0$, it automatically abstains ($\tau_{\text{meta}, k} = \infty$).
 3. **Recall Preservation ($\Delta\mathrm{FN} = 0$):** Under the amount-tiered safety guard, only high-confidence false alarms are suppressed; Stage 1 baseline fraud recall is strictly preserved with zero additional false negatives ($\Delta\mathrm{FN} = 0$) across the 1,000 stratified bootstrap test resamples and deterministic test partitions.
 
@@ -88,7 +93,7 @@ All experiments are initialized with fixed, documented random seeds for strict d
 ### Exact Partitioning Protocol per Dataset
 | Dataset | Total Transactions | Total Frauds | Fraud Rate | Train Partition (80%) | Validation Partition (10%) | Test Partition (10%) | Split Strategy & Rationale |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **PaySim** | 6,362,620 | 8,213 | 0.129% | 5,089,928 tx | 636,241 tx | 636,243 tx | **Stratified Split (`random_state=42`):** PaySim is an agent-based synthetic simulation where simulation steps do not model seasonal macro-drift. Stratified splitting preserves the extreme 0.129% class ratio across validation and test partitions. |
+| **PaySim** | 6,362,620 | 8,213 | 0.129% | 5,090,096 tx | 636,262 tx | 636,262 tx | **Stratified Split (`random_state=42`):** PaySim is an agent-based synthetic simulation where simulation steps do not model seasonal macro-drift. Stratified splitting preserves the extreme 0.129% class ratio across validation and test partitions. |
 | **IEEE-CIS** | 590,540 | 20,663 | 3.50% | 472,432 tx | 59,054 tx | 59,054 tx | **Stratified Split (`random_state=42`):** Merged transaction and identity tables (432 features). Stratified splitting ensures equal representation of complex device/identity multi-attribute fraud patterns across calibration and test sets. |
 | **ULB Credit** | 284,807 | 492 | 0.173% | 227,845 tx | 28,481 tx | 28,481 tx | **Stratified Split (`random_state=42`):** Extreme imbalance benchmark (492 frauds across 284k records). Stratification guarantees sufficient fraud samples in validation (49) and test (49). |
 
@@ -103,7 +108,7 @@ All model architectures, hyperparameter grids, and preprocessing steps are fully
 
 ### Feature Preprocessing
 - **PaySim:** Drop identifier columns (`nameOrig`, `nameDest`, `isFlaggedFraud`). One-hot encode categorical transaction `type`. Retain `amount`, `oldbalanceOrg`, `newbalanceOrig`, `oldbalanceDest`, `newbalanceDest`.
-- **IEEE-CIS:** Left merge `train_transaction.csv` and `train_identity.csv` on `TransactionID`. Categorical features (`card1`–`card6`, `addr1`–`addr2`, `P_emaildomain`, `R_emaildomain`, `M1`–`M9`, `id_12`–`id_38`) encoded via categorical codes; numerical features imputed with $-1.0$.
+- **IEEE-CIS:** Left merge `train_transaction.csv` and `train_identity.csv` on `TransactionID`. Categorical features (`card1`–`card6`, `addr1`–`addr2`, `P_emaildomain`, `R_emaildomain`, `M1`–`M9`, `id_12`–`id_38`) encoded via categorical codes; numerical features imputed with `-1.0`.
 - **ULB:** Features `V1`–`V28` (pre-standardized PCA components) and `Amount`. Robust scaling applied to `Amount`.
 
 ### Model Hyperparameters
@@ -115,7 +120,7 @@ All model architectures, hyperparameter grids, and preprocessing steps are fully
 | **CatBoost Baseline** | CatBoost (`CatBoostClassifier`) | `iterations=300`, `depth=6`, `learning_rate=0.05`, `auto_class_weights='Balanced'`, `random_seed=42` | Tuned depth and iteration budget matched to XGBoost. |
 | **LightGBM Baseline** | LightGBM (`LGBMClassifier`) | `n_estimators=300`, `max_depth=6`, `learning_rate=0.05`, `scale_pos_weight=10`, `random_state=42` | Standard GBDT baseline. |
 | **CS-XGBoost** | Instance-Weighted XGBoost | `sample_weight = Amount` for positive class, $C_{\text{FP}}(\text{Amount})$ for negative class | Implements Höppner et al. (2022) cost-weighting. |
-| **Bayes Min. Risk** | Decision-Theoretic BMR | $\tau^*_{\text{BMR}}(i) = C_{\text{FP}}(i) / (C_{\text{FP}}(i) + C_{\text{FN}}(i))$ | Implements Bahnsen et al. (2014) / Elkan (2001). |
+| **Bayes Min. Risk** | Decision-Theoretic BMR | $\tau^*_{\text{BMR}}(i) = C_{\text{FP}}(i) / (C_{\text{FP}}(i) + C_{\text{FN}}(i))$ | Implements Bahnsen et al. (2013) / Elkan (2001). |
 
 ---
 
@@ -123,10 +128,13 @@ All model architectures, hyperparameter grids, and preprocessing steps are fully
 
 ### 100-Step Validation Cost Minimization Sweep
 The Stage 1 operating threshold $\tau^*$ is selected by an exhaustive 100-step grid search over $\tau \in [0.01, 0.99]$ on the validation split $\mathcal{D}_{\text{val}}$ (`scripts/step1_data_and_stage1_coopt.py`), identifying the operating point that minimizes total asymmetric operational cost:
-$$\tau^* = \arg\min_{\tau \in [0.01, 0.99]} \left( \sum_{i \in \text{FN}(\tau)} \text{Amount}_i + \sum_{j \in \text{FP}(\tau)} C_{\text{FP}}(\text{Amount}_j) \right)$$
+
+$$
+\tau^* = \arg\min_{\tau \in [0.01, 0.99]} \left( \sum_{i \in \text{FN}(\tau)} \text{Amount}_i + \sum_{j \in \text{FP}(\tau)} C_{\text{FP}}(\text{Amount}_j) \right)
+$$
 
 - **PaySim:** $\tau^* = 0.2179$ (Validation cost: ₹2,391,599.76; Test baseline cost: ₹2,200,948.26).
-- **IEEE-CIS:** $\tau^* = 0.3763$ (Validation cost: $93,700.71; Test baseline cost: $94,856.71).
+- **IEEE-CIS:** $\tau^* = 0.3763$ (Validation cost: \$93,700.71; Test baseline cost: \$94,856.71).
 - **ULB:** $\tau^* = 0.4555$ (Validation cost: €1,202.81; Test baseline cost: €750.61).
 
 *Methodological Note:* The cost function exhibits strict empirical convexity across all three datasets (saved in `figures/fig4_cost_vs_threshold_curves.png`). Selecting $\tau^*$ on validation data strictly isolates threshold selection from test scoring, preventing test-favored threshold optimization.
@@ -136,14 +144,18 @@ $$\tau^* = \arg\min_{\tau \in [0.01, 0.99]} \left( \sum_{i \in \text{FN}(\tau)} 
 ## 5. Operational Cost Schedules & Safety Guard Economics
 
 ### Framing of Operational Cost Schedules
-In accordance with cost-sensitive fraud detection literature (Bahnsen et al., 2014; Elkan, 2001; Hand et al., 2000), false negative costs represent direct financial chargeback losses equal to the transaction amount ($C_{\text{FN}} = \text{Amount}$). False positive costs represent operational investigation overheads. As detailed in the manuscript, tiered cost schedules represent **illustrative operational assumptions** reflecting tiered audit workflows:
+In accordance with cost-sensitive fraud detection literature (Bahnsen et al., 2013; Elkan, 2001; Hand et al., 2000), false negative costs represent direct financial chargeback losses equal to the transaction amount ($C_{\text{FN}} = \text{Amount}$). False positive costs represent operational investigation overheads. As detailed in the manuscript, tiered cost schedules represent **illustrative operational assumptions** reflecting tiered audit workflows:
 - **PaySim (₹ INR):** Amount $\le 50\text{k} \to ₹500$; $\le 100\text{k} \to ₹1,000$; $\le 150\text{k} \to ₹1,500$; $\le 200\text{k} \to ₹2,000$; $\le 500\text{k} \to ₹3,000$; $\le 1\text{M} \to ₹5,000$; $> 1\text{M} \to ₹10,000$.
 - **IEEE-CIS (\$ USD):** Amount $\le \$68.5 \to \$5$; $\le \$125 \to \$10$; $\le \$276.85 \to \$15$; $\le \$554 \to \$20$; $\le \$1,651 \to \$30$; $\le \$2,755.95 \to \$50$; $> \$2,755.95 \to \$100$.
 - **ULB (€ EUR):** Amount $\le €20 \to €2$; $\le €50 \to €5$; $\le €100 \to €10$; $\le €250 \to €15$; $\le €500 \to €25$; $\le €1,000 \to €50$; $> €1,000 \to €100$.
 
 ### Flat Penalty Sensitivity & Break-Even Analysis
-Under the amount-tiered safety guard (Algorithm 1), ACXIS suppresses strictly verified false alarms with zero false negative leakage ($\Delta\mathrm{FN} = 0$). Consequently, every suppressed transaction is a pure false positive ($42$ on PaySim, $30$ on IEEE-CIS, $0$ on ULB):
-$$\Delta\text{Cost} = \sum_{j \in \text{Suppressed FPs}} C_{\text{FP}}(j)$$
+Under the amount-tiered safety guard (Algorithm 1), ACXIS suppresses strictly verified false alarms with zero false negative leakage ($\Delta\mathrm{FN} = 0$). Consequently, every suppressed transaction is a pure false positive (42 on PaySim, 30 on IEEE-CIS, 0 on ULB):
+
+$$
+\Delta\text{Cost} = \sum_{j \in \text{Suppressed FPs}} C_{\text{FP}}(j)
+$$
+
 - **Flat Administrative Penalties:**
   - PaySim: Flat ₹1,000 fee yields **₹42,000.00** net savings; flat ₹1,500 fee yields **₹63,000.00** net savings ($\Delta\mathrm{FN} = 0$).
   - IEEE-CIS: Flat \$10 fee yields **\$300.00** net savings; flat \$15 fee yields **\$450.00** net savings ($\Delta\mathrm{FN} = 0$).
@@ -165,29 +177,29 @@ All 13 baseline models were executed on identical dataset splits at both Default
 | | Modern GBDT | CatBoost (Fairly Tuned) | 0.9986 | 0.9540 | ₹2,737,506 | ₹3,113,489 | 0.9793 | 0.9125 |
 | | Sampling | SMOTE + XGBoost | 0.9985 | 0.9250 | ₹7,894,599 | ₹8,705,982 | 0.9512 | 0.8456 |
 | | Sampling | ADASYN + XGBoost | 0.9985 | 0.9085 | ₹9,250,484 | ₹9,351,167 | 0.9488 | 0.8321 |
-| | Cost-Sensitive | Bayes Minimum Risk (Bahnsen 2014) | 0.9997 | 0.9610 | ₹10,226,160 | ₹10,226,160 | 0.9634 | 0.9012 |
+| | Cost-Sensitive | Bayes Minimum Risk (Bahnsen 2013) | 0.9997 | 0.9610 | ₹10,226,160 | ₹10,226,160 | 0.9634 | 0.9012 |
 | | Cost-Sensitive | CS-XGBoost (Höppner 2022) | 0.9996 | 0.9461 | ₹2,667,929 | ₹2,367,511 | 0.9829 | 0.7845 |
 | | XAI Heuristic | XAI Heuristic Rule Filter | 0.9997 | 0.9610 | ₹181,066,000 | ₹181,066,000 | 0.8245 | 0.4512 |
 | | **ACXIS Stages** | Stage 1 Core ($\tau=0.5$) | 0.9997 | 0.9610 | ₹7,433,385 | ₹7,433,385 | 0.9245 | 0.8161 |
 | | **ACXIS Stages** | Stage 2 Tuned ($\tau^*=0.2179$) | 0.9997 | 0.9610 | ₹7,433,385 | ₹2,200,948 | 0.9842 | 0.5288 |
 | | **ACXIS Stages** | **ACXIS Proposed (Stage 1+2+3)** | **0.9997** | **0.9610** | **₹7,433,385** | **₹2,139,948** | **0.9842** | **0.5437** |
-| **IEEE-CIS** | Classical ML | Logistic Regression | 0.7722 | 0.1500 | $254,796 | $227,382 | 0.6512 | 0.0845 |
-| | Classical ML | Decision Tree | 0.8576 | 0.4092 | $170,971 | $166,845 | 0.7123 | 0.3214 |
-| | Classical ML | Random Forest | 0.8806 | 0.5053 | $168,816 | $169,944 | 0.7245 | 0.3845 |
-| | Modern GBDT | LightGBM | 0.9395 | 0.6819 | $117,312 | $108,691 | 0.7654 | 0.4512 |
-| | Modern GBDT | CatBoost (Fairly Tuned) | 0.9499 | 0.7041 | $101,753 | $98,960 | 0.7812 | 0.4689 |
-| | Sampling | SMOTE + XGBoost | 0.9039 | 0.5959 | $230,444 | $133,057 | 0.7412 | 0.3912 |
-| | Sampling | ADASYN + XGBoost | 0.9038 | 0.6014 | $224,695 | $135,782 | 0.7389 | 0.3876 |
-| | Cost-Sensitive | Bayes Minimum Risk (Bahnsen 2014) | 0.9596 | 0.7713 | $181,625 | $181,625 | 0.7512 | 0.5123 |
-| | Cost-Sensitive | CS-XGBoost (Höppner 2022) | 0.9114 | 0.6285 | $224,494 | $123,592 | 0.7545 | 0.4125 |
-| | XAI Heuristic | XAI Heuristic Rule Filter | 0.9596 | 0.7713 | $249,246 | $249,246 | 0.6845 | 0.3125 |
-| | **ACXIS Stages** | Stage 1 Core ($\tau=0.5$) | 0.9596 | 0.7713 | $107,018 | $107,018 | 0.7507 | 0.6267 |
-| | **ACXIS Stages** | Stage 2 Tuned ($\tau^*=0.3763$) | 0.9596 | 0.7713 | $107,018 | $94,857 | 0.7948 | 0.4765 |
-| | **ACXIS Stages** | **ACXIS Proposed (Stage 1+2+3)** | **0.9596** | **0.7713** | **$107,018** | **$94,537** | **0.7948** | **0.4807** |
+| **IEEE-CIS** | Classical ML | Logistic Regression | 0.7722 | 0.1500 | \$254,796 | \$227,382 | 0.6512 | 0.0845 |
+| | Classical ML | Decision Tree | 0.8576 | 0.4092 | \$170,971 | \$166,845 | 0.7123 | 0.3214 |
+| | Classical ML | Random Forest | 0.8806 | 0.5053 | \$168,816 | \$169,944 | 0.7245 | 0.3845 |
+| | Modern GBDT | LightGBM | 0.9395 | 0.6819 | \$117,312 | \$108,691 | 0.7654 | 0.4512 |
+| | Modern GBDT | CatBoost (Fairly Tuned) | 0.9499 | 0.7041 | \$101,753 | \$98,960 | 0.7812 | 0.4689 |
+| | Sampling | SMOTE + XGBoost | 0.9039 | 0.5959 | \$230,444 | \$133,057 | 0.7412 | 0.3912 |
+| | Sampling | ADASYN + XGBoost | 0.9038 | 0.6014 | \$224,695 | \$135,782 | 0.7389 | 0.3876 |
+| | Cost-Sensitive | Bayes Minimum Risk (Bahnsen 2013) | 0.9596 | 0.7713 | \$181,625 | \$181,625 | 0.7512 | 0.5123 |
+| | Cost-Sensitive | CS-XGBoost (Höppner 2022) | 0.9114 | 0.6285 | \$224,494 | \$123,592 | 0.7545 | 0.4125 |
+| | XAI Heuristic | XAI Heuristic Rule Filter | 0.9596 | 0.7713 | \$249,246 | \$249,246 | 0.6845 | 0.3125 |
+| | **ACXIS Stages** | Stage 1 Core ($\tau=0.5$) | 0.9596 | 0.7713 | \$107,018 | \$107,018 | 0.7507 | 0.6267 |
+| | **ACXIS Stages** | Stage 2 Tuned ($\tau^*=0.3763$) | 0.9596 | 0.7713 | \$107,018 | \$94,857 | 0.7948 | 0.4765 |
+| | **ACXIS Stages** | **ACXIS Proposed (Stage 1+2+3)** | **0.9596** | **0.7713** | **\$107,018** | **\$94,537** | **0.7948** | **0.4807** |
 
 *Key Findings:*
-1. ACXIS Stage 2 threshold optimization captures the majority of savings, while Stage 3 safely suppresses remaining false alarms (+₹61,000 on PaySim, +$320 on IEEE-CIS) without leaking a single fraud.
-2. CatBoost achieves $98,960 on IEEE-CIS (within 4.7% of ACXIS). ACXIS is framed as a safe operational refinement rather than an exaggerated breakthrough.
+1. ACXIS Stage 2 threshold optimization captures the majority of savings, while Stage 3 safely suppresses remaining false alarms (+₹61,000 on PaySim, +\$320 on IEEE-CIS) without leaking a single fraud.
+2. CatBoost achieves \$98,960 on IEEE-CIS (within 4.7% of ACXIS). ACXIS is framed as a safe operational refinement rather than an exaggerated breakthrough.
 
 ---
 
@@ -208,11 +220,11 @@ Table 6 evaluates representations, architectures, and cross-dataset generalizabi
 
 ### Panel C: Cross-Dataset Validation & Raw vs SHAP Ablation (IEEE-CIS)
 To address Reviewer 5's request to evaluate raw features vs SHAP on IEEE-CIS:
-- **Baseline Stage 1 ($\tau^* = 0.3763$):** Cost = $94,856.71 (Recall: 0.7948).
-- **Probability-Only Filter $[\hat{p}]$:** Suppresses 0 FPs ($0 savings, 0% reduction).
-- **Raw Features Only $[x]$:** Suppresses 20 FPs, but **leaks 3 FNs** (Cost: $94,957.71; Net loss: **-$101.00**, -0.11%).
-- **SHAP Attributions Only $[\phi(x)]$:** Suppresses 30 FPs, **0 FNs leaked** (Cost: $94,536.71; Net savings: **+$320.00**, +0.34%).
-- **ACXIS Proposed $[\phi(x)] + 3 \text{ Tiers}$:** Suppresses 30 FPs, **0 FNs leaked** (Cost: $94,536.71; Net savings: **+$320.00**, +0.34%).
+- **Baseline Stage 1 ($\tau^* = 0.3763$):** Cost = \$94,856.71 (Recall: 0.7948).
+- **Probability-Only Filter $[\hat{p}]$:** Suppresses 0 FPs (\$0 savings, 0% reduction).
+- **Raw Features Only $[x]$:** Suppresses 20 FPs, but **leaks 3 FNs** (Cost: \$94,957.71; Net loss: **-\$101.00**, -0.11%).
+- **SHAP Attributions Only $[\phi(x)]$:** Suppresses 30 FPs, **0 FNs leaked** (Cost: \$94,536.71; Net savings: **+\$320.00**, +0.34%).
+- **ACXIS Proposed $[\phi(x)] + 3 \text{ Tiers}$:** Suppresses 30 FPs, **0 FNs leaked** (Cost: \$94,536.71; Net savings: **+\$320.00**, +0.34%).
 
 *Crucial Scientific Finding:* In high-dimensional spaces (IEEE-CIS, 432 features), raw features suffer from collinear noise that misclassifies true frauds as false alarms (3 FNs leaked). SHAP attributions act as an essential noise filter, isolating model reasoning to achieve zero false negative leakage.
 
@@ -223,13 +235,13 @@ To address Reviewer 5's request to evaluate raw features vs SHAP on IEEE-CIS:
 To address Reviewer 1 and Reviewer 5's request for empirical data resampling beyond fixed-split seed variance, ACXIS evaluates transaction partition uncertainty via a **1,000-iteration stratified test bootstrap** (`scripts/step5_bootstrap_resampling_1000.py`). This protocol directly reflects operational banking deployment—where compliance engines are calibrated and frozen for fixed audit cycles—and quantifies streaming transaction volume uncertainty and class imbalance fluctuations while holding the compliance engine constant:
 
 - **PaySim:** Mean Cost Reduction = **+2.83% ± 0.75%** [95% CI: 1.63%, 4.52%]; Suppressed FPs = 41.7 ± 6.5; Leaked FNs = 0.00 ± 0.00 (**0 leaks across all 1,000 draws**; $p_{95} \le 0.37\%$). On the full unresampled test partition, point savings are **₹61,000.00** (+2.77%).
-- **IEEE-CIS:** Mean Cost Reduction = **+0.34% ± 0.07%** [95% CI: 0.21%, 0.49%]; Suppressed FPs = 30.0 ± 5.6; Leaked FNs = 0.00 ± 0.00 (**0 leaks across all 1,000 draws**; $p_{95} \le 0.37\%$). On the full unresampled test partition, point savings are **$320.00** (+0.34%).
+- **IEEE-CIS:** Mean Cost Reduction = **+0.34% ± 0.07%** [95% CI: 0.21%, 0.49%]; Suppressed FPs = 30.0 ± 5.6; Leaked FNs = 0.00 ± 0.00 (**0 leaks across all 1,000 draws**; $p_{95} \le 0.37\%$). On the full unresampled test partition, point savings are **\$320.00** (+0.34%).
 - **ULB:** Mean Cost Reduction = **0.00% ± 0.00%** [95% CI: 0.00%, 0.00%]; Suppressed FPs = 0.0 ± 0.0; Leaked FNs = 0.00 ± 0.00 (Safely abstains with zero false negative leakage).
 
 ### Multi-Seed Meta-Classifier Robustness across PaySim & IEEE-CIS (10 Seeds: 42..51)
 To assess downstream bagging variance, `scripts/step5b_multiseed_robustness.py` evaluates the secondary Random Forest meta-classifier across 10 independent random seeds (seeds 42 through 51) while holding the Stage 1 predictive core and data split constant:
 - **PaySim (Extreme 0.129% Imbalance):** In 5 of 10 seeds (seeds 42, 45, 46, 48, 49), ACXIS achieves positive net savings (up to +₹61,000.00 / +2.77%) with zero false negative leaks. Across all 10 seeds, mean savings are −₹131,061 ± ₹186,341 (−5.95% ± 8.47%), with 1–2 false negative leaks observed in the remaining 5 seeds (seeds 43, 44, 47, 50, 51). All headline PaySim benchmark results reflect the frozen seed-42 configuration, the most favorable of the ten evaluated seeds.
-- **IEEE-CIS (Distributed 3.50% Multi-Attribute Signals):** ACXIS achieves positive net savings across all 10 seeds (**10/10 seeds positive**, zero false negative leaks across all 10 seeds), delivering a mean net savings of **+$209.50 ± $91.15** (+0.22% ± 0.10%; suppressing 24.4 ± 9.9 false alarms with 0 leaks).
+- **IEEE-CIS (Distributed 3.50% Multi-Attribute Signals):** ACXIS achieves positive net savings across all 10 seeds (**10/10 seeds positive**, zero false negative leaks across all 10 seeds), delivering a mean net savings of **+\$209.50 ± \$91.15** (+0.22% ± 0.10%; suppressing 24.4 ± 9.9 false alarms with 0 leaks).
 - **Operational Implication:** Secondary bagging variance on fixed threshold boundaries under extreme class imbalance demonstrates why enterprise compliance engines freeze validated deployment configurations and enforce strict validation-gate verification, and why primary statistical inference is governed by 1,000 stratified bootstrap resamples on the frozen validated configuration.
 
 ---
@@ -292,18 +304,22 @@ Hardware: Dual-Core Intel Core i5-5287U CPU @ 2.90GHz (MacBook Pro, 2 physical c
 └── logs/                                      # Full console execution logs for all steps
 ```
 
+### Technical Cache Notes
+- **IEEE-CIS Split Partition (`_val.npz` and `_test.npz`):** The monolithic IEEE-CIS TreeSHAP attribution matrix exceeds 116 MB due to the 432-feature tabular representation. To strictly adhere to GitHub's 100 MB per-file limit without requiring external Git-LFS tooling, the cache is cleanly partitioned into `ieeecis_stage1_and_shap_val.npz` (58.39 MB) and `ieeecis_stage1_and_shap_test.npz` (58.34 MB), which are transparently loaded by `scripts/cache_utils.py`.
+- **ULB Suppressed Alerts (`cache/ulb_suppressed_test_alerts.npz`, 864 bytes):** The 864-byte size reflects the mathematically expected operational abstention of the ACXIS amount-tiered safety guard on the ULB benchmark: because the safety guard threshold converges to infinity ($\tau_{\text{meta}}^* \to \infty$) to eliminate false negative leakage, zero false alarms are suppressed ($\Delta\mathrm{FN} = 0$, $\Delta\mathrm{FP} = 0$). The file is valid, complete, and uncorrupted.
+
 ### Publication Figure-to-Manuscript Mapping Table
 
 | Manuscript Figure | Figure Description | Artifact Filename(s) in `figures/` |
 | :--- | :--- | :--- |
 | **Figure 1** | Architectural Flowchart of ACXIS Framework Formalizing Algorithm 1 | `Figure_1_ACXIS_Architecture.pdf` / `.png` / `.svg` |
-| **Figure 2** | Probability Calibration & Tail Reliability Errors | `fig2_calibration_curves.png` |
-| **Figure 3** | Receiver Operating Characteristic (ROC) & Precision-Recall (PR) Curves | `fig3_roc_pr_curves.png` |
+| **Figure 2** | Probability Calibration & Tail Reliability Errors | `fig2_calibration_curves.pdf` / `.png` |
+| **Figure 3** | Receiver Operating Characteristic (ROC) & Precision-Recall (PR) Curves | `fig3_roc_pr_curves.pdf` / `.png` |
 | **Figure 4** | Before & After Stage 3 SHAP Suppression Confusion Matrices | `fig4_before_after_confusion_matrix.pdf` / `.png` |
 | **Figure 5** | Cross-Dataset Performance Benchmark (PaySim, IEEE-CIS, ULB) | `Fig5_Cross_Dataset_Synchronized.pdf` / `.png` |
 | **Figure 6** | Meta-Feature Representation Ablation Comparison | `Fig6_Ablation_Synchronized.pdf` / `.png` |
 | **Figure 7** | Total Financial Misclassification Cost vs Decision Threshold ($\tau$) | `Fig7_Cost_vs_Threshold_Synchronized.pdf` / `.png` |
-| **Figure 8** | SHAP Summary Beeswarm Plot of Local Feature Attributions | `fig8_shap_beeswarm.png` |
+| **Figure 8** | SHAP Summary Beeswarm Plot of Local Feature Attributions | `fig8_shap_beeswarm.pdf` / `.png` |
 | **Figure 9** | Progressive Feature Deletion Faithfulness Benchmark for TreeSHAP | `Fig9_SHAP_Faithfulness_Curves.pdf` / `.png` |
 | **Figure 10** | Sensitivity Analysis Under Varying FP Cost Multipliers | `Fig10_Cost_Sensitivity_Synchronized.pdf` / `.png` |
 | **Figure 11** | Empirical Distribution of Financial Cost Savings Across 1,000 Bootstraps | `Fig11_Bootstrap_Distribution_Synchronized.pdf` / `.png` |

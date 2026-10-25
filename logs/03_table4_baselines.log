@@ -5,7 +5,7 @@ STARTING EXPERIMENT 3: COMPARATIVE BASELINES BENCHMARK (TABLE 4)
 ================================================================================
 RUNNING BASELINE BENCHMARK FOR: PAYSIM
 ================================================================================
-Loading PaySim dataset from: /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/data/six.csv
+Loading PaySim dataset from: ./data/six.csv
 [Checkpoint] Loaded 13 previously evaluated models for PAYSIM
 Skipping Logistic Regression (already evaluated in checkpoint)
 Skipping Decision Tree (already evaluated in checkpoint)
@@ -34,7 +34,7 @@ ACXIS Proposed:   Cost = ₹2,139,948.26 (Savings: ₹61,000.00)
 ================================================================================
 RUNNING BASELINE BENCHMARK FOR: IEEECIS
 ================================================================================
-Loading IEEE-CIS transaction (/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/data/train_transaction.csv) and identity (/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/data/train_identity.csv)...
+Loading IEEE-CIS transaction (./data/train_transaction.csv) and identity (./data/train_identity.csv)...
 [Checkpoint] Loaded 13 previously evaluated models for IEEECIS
 Skipping Logistic Regression (already evaluated in checkpoint)
 Skipping Decision Tree (already evaluated in checkpoint)
@@ -61,9 +61,9 @@ ACXIS Proposed:   Cost = $94,536.71 (Savings: $320.00)
 -----------------------------------------------------------------
 
 [✓] Saved complete baseline results to:
-  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_json/exp3_table4_baselines.json
+  ./results_json/exp3_table4_baselines.json
 [✓] Saved Table 4 master CSV to:
-  /Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second/06_ACXIS_GitHub_Replication_Package_Final/results_csv/table4_baseline_benchmarks.csv
+  ./results_csv/table4_baseline_benchmarks.csv
 
 =============================================================================
 EXPERIMENT 3 COMPLETED SUCCESSFULLY!
