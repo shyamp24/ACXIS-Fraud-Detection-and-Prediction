@@ -1,4 +1,4 @@
 dataset,val_tx_count,test_tx_count,currency,val_optimal_tau,val_min_cost,test_default_cost,test_default_recall,test_default_precision,test_tuned_cost,test_tuned_recall,test_tuned_precision
 PAYSIM,636199,636262,₹,0.2179,2391599.76,7433384.74,0.9245,0.8161,2200948.26,0.9842,0.5288
 IEEECIS,59049,59054,$,0.3763,93700.71,107017.62,0.7507,0.6267,94856.71,0.7948,0.4765
-ULB,28478,28481,€,0.4555,1202.81,748.61,0.8571,0.9333,750.61,0.8571,0.913
+ULB,28478,28481,€,0.4555,1202.81,748.61,0.8571,0.9333,752.61,0.8571,0.913

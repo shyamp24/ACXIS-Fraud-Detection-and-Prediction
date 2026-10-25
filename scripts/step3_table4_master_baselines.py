@@ -228,12 +228,14 @@ def run_benchmark_for_dataset(ds_name, from_scratch=False):
             results = {}
     
     # 1. Classical Machine Learning Baselines
+    spw = float((len(y_train) - y_train.sum()) / y_train.sum())
     models = {
         'Logistic Regression': LogisticRegression(max_iter=1000, class_weight='balanced', random_state=42),
         'Decision Tree': DecisionTreeClassifier(max_depth=10, class_weight='balanced', random_state=42),
         'Random Forest': RandomForestClassifier(n_estimators=100, max_depth=10, class_weight='balanced', random_state=42, n_jobs=-1),
         'LightGBM': LGBMClassifier(n_estimators=300, max_depth=6, scale_pos_weight=10, random_state=42, verbose=-1, n_jobs=-1),
-        'CatBoost (Fairly Tuned)': CatBoostClassifier(iterations=300, depth=6, auto_class_weights='Balanced', random_seed=42, verbose=0, thread_count=-1)
+        'CatBoost (Fairly Tuned)': CatBoostClassifier(iterations=300, depth=6, auto_class_weights='Balanced', random_seed=42, verbose=0, thread_count=-1),
+        'XGBoost (Balanced Weights)': XGBClassifier(n_estimators=500, max_depth=5, scale_pos_weight=spw, learning_rate=0.05, subsample=0.8, colsample_bytree=0.8, tree_method='hist', random_state=42)
     }
     
     for name, clf in models.items():

@@ -135,7 +135,7 @@ $$
 
 - **PaySim:** $\tau^* = 0.2179$ (Validation cost: ₹2,391,599.76; Test baseline cost: ₹2,200,948.26).
 - **IEEE-CIS:** $\tau^* = 0.3763$ (Validation cost: \$93,700.71; Test baseline cost: \$94,856.71).
-- **ULB:** $\tau^* = 0.4555$ (Validation cost: €1,202.81; Test baseline cost: €750.61).
+- **ULB:** $\tau^* = 0.4555$ (Validation cost: €1,202.81; Test baseline cost: €752.61).
 
 *Methodological Note:* The cost function exhibits strict empirical convexity across all three datasets (saved in `figures/fig4_cost_vs_threshold_curves.png`). Selecting $\tau^*$ on validation data strictly isolates threshold selection from test scoring, preventing test-favored threshold optimization.
 
@@ -175,6 +175,7 @@ All 13 baseline models were executed on identical dataset splits at both Default
 | | Classical ML | Random Forest | 0.9991 | 0.8870 | ₹19,255,390 | ₹9,666,656 | 0.8951 | 0.9234 |
 | | Modern GBDT | LightGBM | 0.9492 | 0.3900 | ₹47,311,170 | ₹44,031,810 | 0.7927 | 0.1245 |
 | | Modern GBDT | CatBoost (Fairly Tuned) | 0.9986 | 0.9540 | ₹2,737,506 | ₹3,113,489 | 0.9793 | 0.9125 |
+| | Modern GBDT | XGBoost (Balanced Weights, spw=774) | 0.9997 | 0.9601 | ₹3,532,487 | ₹1,899,490 | 0.9878 | 0.4605 |
 | | Sampling | SMOTE + XGBoost | 0.9985 | 0.9250 | ₹7,894,599 | ₹8,705,982 | 0.9512 | 0.8456 |
 | | Sampling | ADASYN + XGBoost | 0.9985 | 0.9085 | ₹9,250,484 | ₹9,351,167 | 0.9488 | 0.8321 |
 | | Cost-Sensitive | Bayes Minimum Risk (Bahnsen 2013) | 0.9997 | 0.9610 | ₹10,226,160 | ₹10,226,160 | 0.9634 | 0.9012 |
@@ -235,12 +236,12 @@ To address Reviewer 5's request to evaluate raw features vs SHAP on IEEE-CIS:
 To address Reviewer 1 and Reviewer 5's request for empirical data resampling beyond fixed-split seed variance, ACXIS evaluates transaction partition uncertainty via a **1,000-iteration stratified test bootstrap** (`scripts/step5_bootstrap_resampling_1000.py`). This protocol directly reflects operational banking deployment—where compliance engines are calibrated and frozen for fixed audit cycles—and quantifies streaming transaction volume uncertainty and class imbalance fluctuations while holding the compliance engine constant:
 
 - **PaySim:** Mean Cost Reduction = **+2.83% ± 0.75%** [95% CI: 1.63%, 4.52%]; Suppressed FPs = 41.7 ± 6.5; Leaked FNs = 0.00 ± 0.00 (**0 leaks across all 1,000 draws**; $p_{95} \le 0.37\%$). On the full unresampled test partition, point savings are **₹61,000.00** (+2.77%).
-- **IEEE-CIS:** Mean Cost Reduction = **+0.34% ± 0.07%** [95% CI: 0.21%, 0.49%]; Suppressed FPs = 30.0 ± 5.6; Leaked FNs = 0.00 ± 0.00 (**0 leaks across all 1,000 draws**; $p_{95} \le 0.37\%$). On the full unresampled test partition, point savings are **\$320.00** (+0.34%).
+- **IEEE-CIS:** Mean Cost Reduction = **+0.34% ± 0.07%** [95% CI: 0.21%, 0.49%]; Suppressed FPs = 30.0 ± 5.6; Leaked FNs = 0.00 ± 0.00 (**0 leaks across all 1,000 draws**; $p_{95} \le 0.18\%$). On the full unresampled test partition, point savings are **\$320.00** (+0.34%).
 - **ULB:** Mean Cost Reduction = **0.00% ± 0.00%** [95% CI: 0.00%, 0.00%]; Suppressed FPs = 0.0 ± 0.0; Leaked FNs = 0.00 ± 0.00 (Safely abstains with zero false negative leakage).
 
 ### Multi-Seed Meta-Classifier Robustness across PaySim & IEEE-CIS (10 Seeds: 42..51)
 To assess downstream bagging variance, `scripts/step5b_multiseed_robustness.py` evaluates the secondary Random Forest meta-classifier across 10 independent random seeds (seeds 42 through 51) while holding the Stage 1 predictive core and data split constant:
-- **PaySim (Extreme 0.129% Imbalance):** In 5 of 10 seeds (seeds 42, 45, 46, 48, 49), ACXIS achieves positive net savings (up to +₹61,000.00 / +2.77%) with zero false negative leaks. Across all 10 seeds, mean savings are −₹131,061 ± ₹186,341 (−5.95% ± 8.47%), with 1–2 false negative leaks observed in the remaining 5 seeds (seeds 43, 44, 47, 50, 51). All headline PaySim benchmark results reflect the frozen seed-42 configuration, the most favorable of the ten evaluated seeds.
+- **PaySim (Extreme 0.129% Imbalance):** In 5 of 10 seeds (seeds 42, 45, 46, 48, 49), ACXIS achieves positive net savings (up to +₹61,000.00 / +2.77%) with zero false negative leaks. Across all 10 seeds, mean savings are −₹131,061 ± ₹186,341 (−5.95% ± 8.47%), with 1–2 false negative leaks observed in the remaining 5 seeds (seeds 43, 44, 47, 50, 51). All headline PaySim benchmark results reflect the default baseline configuration (seed 42, which is also the highest-saving of the ten evaluated seeds).
 - **IEEE-CIS (Distributed 3.50% Multi-Attribute Signals):** ACXIS achieves positive net savings across all 10 seeds (**10/10 seeds positive**, zero false negative leaks across all 10 seeds), delivering a mean net savings of **+\$209.50 ± \$91.15** (+0.22% ± 0.10%; suppressing 24.4 ± 9.9 false alarms with 0 leaks).
 - **Operational Implication:** Secondary bagging variance on fixed threshold boundaries under extreme class imbalance demonstrates why enterprise compliance engines freeze validated deployment configurations and enforce strict validation-gate verification, and why primary statistical inference is governed by 1,000 stratified bootstrap resamples on the frozen validated configuration.
 
@@ -335,6 +336,10 @@ To re-train all models from the raw CSV datasets from scratch:
 python3 run_all.py --from-scratch
 ```
 *(Ensure raw CSVs are placed in `data/` as documented in `data/README.md`).*
+
+**Execution & Partition Notes:**
+- **Baseline Model Checkpointing:** To avoid redundant computation during routine testing, `scripts/step3_table4_master_baselines.py` caches fitted baseline models in `results_json/exp3_table4_baselines.json` and resumes from checkpoints by default. Running with `--from-scratch` deletes checkpoints and retrains all models.
+- **Partition Count Alignment:** Minor differences in validation counts (59,049 vs 59,054 on IEEE-CIS; 28,478 vs 28,481 on ULB) arise from integer floor rounding in scikit-learn's `train_test_split(test_size=0.1111)` on the 90% pre-split. Blind test partitions remain strictly 10.00% across all benchmarks (59,054 and 28,481 records, respectively).
 
 ### Reviewer-to-File Mapping Directory
 This table maps every specific peer review comment (Reviewers 1, 2, 3, and 5) directly to the corresponding replication script, output CSV, and structured JSON artifact:

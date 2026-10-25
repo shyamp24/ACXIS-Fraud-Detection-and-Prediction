@@ -3992,7 +3992,7 @@
     },
     "test_tuned_tau": {
       "tau": 0.45545454545454545,
-      "total_cost": 750.61,
+      "total_cost": 752.61,
       "fn_cost": 744.61,
       "fp_cost": 6.0,
       "tp": 42,

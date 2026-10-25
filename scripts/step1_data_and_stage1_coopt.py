@@ -67,7 +67,7 @@ def evaluate_cost_full(y_true, probs, amounts, tau, brackets):
     fp_amounts = amounts[fp_mask]
     fp_cost = 0.0
     if len(fp_amounts) > 0:
-        prev = 0.0
+        prev = -1e-6
         for limit, cost in brackets:
             in_b = (fp_amounts > prev) & (fp_amounts <= limit)
             fp_cost += np.sum(in_b) * cost

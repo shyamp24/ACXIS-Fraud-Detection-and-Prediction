@@ -84,11 +84,11 @@
       0,
       0
     ],
-    "base_cost": 750.61,
+    "base_cost": 752.61,
     "base_recall": 0.8571428571428571,
     "base_precision": 0.9130434782608695,
     "base_f1": 0.8842105263157894,
-    "acxis_cost": 750.61,
+    "acxis_cost": 752.61,
     "acxis_recall": 0.8571428571428571,
     "acxis_precision": 0.9130434782608695,
     "acxis_f1": 0.8842105263157894,
