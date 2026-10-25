@@ -16,7 +16,7 @@ This repository contains the complete replication code, dataset pre-processing s
 3. [Hyperparameter Settings & Preprocessing Pipelines (Table 2)](#3-hyperparameter-settings--preprocessing-pipelines-table-2)
 4. [Validation Cost Optimization Grid (Table 2)](#4-validation-cost-optimization-grid-table-2)
 5. [Operational Cost Schedules & Safety Guard Economics](#5-operational-cost-schedules--safety-guard-economics)
-6. [Comparative Baseline Benchmarks: 13 Literature Models (Table 4)](#6-comparative-baseline-benchmarks-13-literature-models-table-4)
+6. [Comparative Baseline Benchmarks: 11 Literature Models / 14 Configurations (Table 4)](#6-comparative-baseline-benchmarks-11-literature-models--14-configurations-table-4)
 7. [Comprehensive Ablation Studies: Panels A, B, and C (Table 6)](#7-comprehensive-ablation-studies-panels-a-b-and-c-table-6)
 8. [Data Resampling & Statistical Significance (Tables 5 & 8)](#8-data-resampling--statistical-significance-tables-5--8)
 9. [Hardware Timing Loops, Tail Latencies & Exact Function Calls (Table 3)](#9-hardware-timing-loops-tail-latencies--exact-function-calls-table-3)
@@ -164,9 +164,9 @@ $$
 
 ---
 
-## 6. Comparative Baseline Benchmarks: 13 Literature Models (Table 4)
+## 6. Comparative Baseline Benchmarks: 11 Literature Models / 14 Configurations (Table 4)
 
-All 13 baseline models were executed on identical dataset splits at both Default ($\tau = 0.5$) and Validation-Tuned ($\tau = \tau^*$) thresholds:
+All 11 baseline models (14 configurations including default/tuned and ACXIS variants) were executed on identical dataset splits at both Default ($\tau = 0.5$) and Validation-Tuned ($\tau = \tau^*$) thresholds:
 
 | Dataset | Model Category | Model Name | ROC-AUC | PR-AUC | Cost (Default $\tau=0.5$) | Cost (Tuned $\tau=\tau^*$) | Recall (Tuned) | Precision (Tuned) |
 | :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -287,7 +287,7 @@ Hardware: Dual-Core Intel Core i5-5287U CPU @ 2.90GHz (MacBook Pro, 2 physical c
 │   ├── step0_train_stage1_and_shap.py         # Stage 1 training & TreeSHAP calculation
 │   ├── step1_data_and_stage1_coopt.py         # 100-step validation cost minimization sweep
 │   ├── step2_algorithm1_engine.py             # Algorithm 1 implementation & evaluation
-│   ├── step3_table4_master_baselines.py       # Comparative baseline benchmarks (11 models / 14 configurations)
+│   ├── step3_table4_master_baselines.py       # Comparative baseline benchmarks: 11 comparative baselines (14 configurations)
 │   ├── step4_table6_ablation_panels.py        # Ablation benchmark (Panels A, B, C)
 │   ├── step5_bootstrap_resampling_1000.py     # 1,000-iteration stratified bootstrap resampling
 │   ├── step5b_multiseed_robustness.py         # Multi-seed meta-classifier robustness (10 seeds)
