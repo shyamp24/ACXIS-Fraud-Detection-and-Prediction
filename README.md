@@ -287,7 +287,7 @@ Hardware: Dual-Core Intel Core i5-5287U CPU @ 2.90GHz (MacBook Pro, 2 physical c
 │   ├── step0_train_stage1_and_shap.py         # Stage 1 training & TreeSHAP calculation
 │   ├── step1_data_and_stage1_coopt.py         # 100-step validation cost minimization sweep
 │   ├── step2_algorithm1_engine.py             # Algorithm 1 implementation & evaluation
-│   ├── step3_table4_master_baselines.py       # Comparative baseline benchmarks (13 models)
+│   ├── step3_table4_master_baselines.py       # Comparative baseline benchmarks (11 models / 14 configurations)
 │   ├── step4_table6_ablation_panels.py        # Ablation benchmark (Panels A, B, C)
 │   ├── step5_bootstrap_resampling_1000.py     # 1,000-iteration stratified bootstrap resampling
 │   ├── step5b_multiseed_robustness.py         # Multi-seed meta-classifier robustness (10 seeds)
