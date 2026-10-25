@@ -292,6 +292,23 @@ Hardware: Dual-Core Intel Core i5-5287U CPU @ 2.90GHz (MacBook Pro, 2 physical c
 └── logs/                                      # Full console execution logs for all steps
 ```
 
+### Publication Figure-to-Manuscript Mapping Table
+
+| Manuscript Figure | Figure Description | Artifact Filename(s) in `figures/` |
+| :--- | :--- | :--- |
+| **Figure 1** | Architectural Flowchart of ACXIS Framework | `Figure_1_ACXIS_Architecture.pdf` / `.png` / `.svg` |
+| **Figure 2** | Calibration Curves & Tail Reliability Errors | `fig2_calibration_curves.png` |
+| **Figure 3** | Receiver Operating Characteristic (ROC) & PR Curves | `fig3_roc_pr_curves.png` |
+| **Figure 4** | Before & After Stage 3 SHAP Suppression Confusion Matrices | `fig4_before_after_confusion_matrix.pdf` / `.png` |
+| **Figure 5** | Cross-Dataset Performance Benchmark (PaySim, IEEE-CIS, ULB) | `Fig5_Cross_Dataset_Synchronized.pdf` / `.png` |
+| **Figure 6** | Meta-Feature Representation Ablation Comparison | `Fig6_Ablation_Synchronized.pdf` / `.png` |
+| **Figure 7** | Total Financial Misclassification Cost vs Decision Threshold ($\\tau$) | `Fig7_Cost_vs_Threshold_Synchronized.pdf` / `.png` |
+| **Figure 8** | SHAP Summary Beeswarm Plot of Feature Attributions | `fig8_shap_beeswarm.png` |
+| **Figure 9** | Progressive Feature Deletion Faithfulness Benchmark | `Fig9_SHAP_Faithfulness_Curves.pdf` / `.png` |
+| **Figure 10** | Sensitivity Analysis Under Varying FP Cost Multipliers | `Fig10_Cost_Sensitivity_Synchronized.pdf` / `.png` |
+| **Figure 11** | Empirical Distribution of Financial Cost Savings Across 1,000 Bootstraps | `Fig11_Bootstrap_Distribution_Synchronized.pdf` / `.png` |
+| *Supp. Panel* | Downstream Meta-Classifier Multi-Seed Bagging Sensitivity (10 Seeds) | `Fig10_Seed_Robustness_Synchronized.pdf` / `.png` |
+
 ### Quickstart Execution
 To execute all experiments from the verified cache (takes ~25 minutes on standard hardware):
 ```bash
