@@ -5,194 +5,166 @@ import matplotlib.patches as patches
 from matplotlib.patches import FancyBboxPatch
 import os
 
-def create_architecture_diagram():
-    fig, ax = plt.subplots(figsize=(16, 9.5), dpi=300)
-    ax.set_xlim(0, 16)
-    ax.set_ylim(0, 9.5)
+def generate_exact_vector_figure1():
+    # Canvas: 15.0 x 10.8 inches at 300 DPI
+    fig = plt.figure(figsize=(15.0, 10.8), dpi=300)
+    ax = fig.add_axes([0, 0, 1, 1])
+    ax.set_xlim(0, 15.0)
+    ax.set_ylim(0, 10.8)
     ax.axis('off')
-    
-    # Background and Color Palette
     fig.patch.set_facecolor('#FFFFFF')
-    
-    # Colors
-    c_blue_light = '#EFF6FF'   # Phase 1 background
-    c_teal_light = '#F0FDFA'   # Phase 2 background
-    c_purple_light = '#FAF5FF' # Phase 3 background
-    
-    # -------------------------------------------------------------------------
-    # Phase Background Panels
-    # -------------------------------------------------------------------------
-    # Phase 1 Panel: Stage 1 Predictive Core (Offline Training)
-    rect1 = FancyBboxPatch((0.4, 4.8), 4.6, 4.2, boxstyle="round,pad=0.2",
-                           edgecolor='#3B82F6', facecolor=c_blue_light, linewidth=1.5, linestyle='--')
-    ax.add_patch(rect1)
-    ax.text(0.6, 8.7, "PHASE 1: STAGE 1 PREDICTIVE CORE (OFFLINE TRAINING)", 
-            fontsize=10.5, fontweight='bold', color='#1D4ED8')
 
-    # Phase 2 Panel: Stage 2 Validation & OOF Calibration (enclosing all of Phase 2)
-    rect2 = FancyBboxPatch((5.4, 4.8), 10.2, 4.2, boxstyle="round,pad=0.2",
-                           edgecolor='#0D9488', facecolor=c_teal_light, linewidth=1.5, linestyle='--')
-    ax.add_patch(rect2)
-    ax.text(5.6, 8.7, r"PHASE 2: STAGE 2 VALIDATION & OOF CALIBRATION", 
-            fontsize=10.5, fontweight='bold', color='#0F766E')
+    # Color Palette
+    c_p1_border, c_p1_bg, c_p1_txt = '#1D4ED8', '#EFF6FF', '#1E40AF'
+    c_p2_border, c_p2_bg, c_p2_txt = '#0D9488', '#F0FDFA', '#0F766E'
+    c_p3_border, c_p3_bg, c_p3_txt = '#7C3AED', '#FAF5FF', '#5B21B6'
 
-    # Phase 3 Panel: Stage 3 Production Streaming Inference
-    rect3 = FancyBboxPatch((0.4, 0.4), 15.2, 3.8, boxstyle="round,pad=0.2",
-                           edgecolor='#7C3AED', facecolor=c_purple_light, linewidth=1.5, linestyle='--')
-    ax.add_patch(rect3)
-    ax.text(0.6, 3.85, "PHASE 3: STAGE 3 SELECTIVE PRODUCTION STREAMING INFERENCE", 
-            fontsize=10.5, fontweight='bold', color='#6D28D9')
+    # Phase 1: y = 6.10 to 10.35 (h = 4.25)
+    ax.add_patch(FancyBboxPatch((0.40, 6.10), 4.10, 4.25, boxstyle="round,pad=0.12",
+                                edgecolor=c_p1_border, facecolor=c_p1_bg, linewidth=1.8, linestyle='--'))
+    ax.text(0.65, 9.98, "PHASE 1: OFFLINE TRAINING", fontsize=12.8, fontweight='bold', color=c_p1_txt)
 
-    # -------------------------------------------------------------------------
-    # Helper to draw styled boxes
-    # -------------------------------------------------------------------------
-    def draw_box(x, y, w, h, title, subtitle="", facecolor='#FFFFFF', edgecolor='#CBD5E1', lw=1.2, textcolor='#1E293B'):
-        box = FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.1",
+    # Phase 2: y = 6.10 to 10.35 (h = 4.25)
+    ax.add_patch(FancyBboxPatch((4.80, 6.10), 9.80, 4.25, boxstyle="round,pad=0.12",
+                                edgecolor=c_p2_border, facecolor=c_p2_bg, linewidth=1.8, linestyle='--'))
+    ax.text(5.05, 9.98, "PHASE 2: VALIDATION & CALIBRATION", fontsize=12.8, fontweight='bold', color=c_p2_txt)
+
+    # --- PRODUCTION DEPLOYMENT BUS: y = 4.85 to 5.75 (h = 0.90) ---
+    bus_box = FancyBboxPatch((0.40, 4.85), 14.20, 0.90, boxstyle="round,pad=0.08",
+                             edgecolor='#334155', facecolor='#F8FAFC', linewidth=2.0, linestyle='-')
+    ax.add_patch(bus_box)
+    ax.text(7.50, 5.30, r"$\mathbf{PRODUCTION \; DEPLOYMENT \; PIPELINE \; (Algorithm \; 1):}$  " +
+                        r"Deploy $\left\{ f_{\mathrm{core}}, \; \tau^*, \; g^{(j)}, \; \{\tau_{\mathrm{meta},k}\} \right\} \longrightarrow$ Streaming Runtime Engine",
+            fontsize=11.4, fontweight='bold', ha='center', va='center', color='#0F172A')
+
+    # Phase 3: y = 0.30 to 4.20 (h = 3.90)
+    ax.add_patch(FancyBboxPatch((0.40, 0.30), 14.20, 3.90, boxstyle="round,pad=0.12",
+                                edgecolor=c_p3_border, facecolor=c_p3_bg, linewidth=1.8, linestyle='--'))
+    ax.text(0.65, 3.88, "PHASE 3: STREAMING PRODUCTION DEPLOYMENT WITH SAFETY GUARD", fontsize=12.6, fontweight='bold', color=c_p3_txt)
+
+    def draw_box(x, y, w, h, title, subtitle="", facecolor='#FFFFFF', edgecolor='#CBD5E1', lw=1.5, textcolor='#0F172A', title_size=12.0, sub_size=10.2):
+        box = FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.06",
                              edgecolor=edgecolor, facecolor=facecolor, linewidth=lw)
         ax.add_patch(box)
         if subtitle:
-            ax.text(x + w/2.0, y + h*0.62, title, fontsize=9.5, fontweight='bold',
-                    ha='center', va='center', color=textcolor)
-            ax.text(x + w/2.0, y + h*0.28, subtitle, fontsize=8.0,
-                    ha='center', va='center', color='#475569')
+            ax.text(x + w/2.0, y + h*0.68, title, fontsize=title_size, fontweight='bold', ha='center', va='center', color=textcolor)
+            ax.text(x + w/2.0, y + h*0.30, subtitle, fontsize=sub_size, ha='center', va='center', color='#334155', multialignment='center', linespacing=1.28)
         else:
-            ax.text(x + w/2.0, y + h/2.0, title, fontsize=9.0, fontweight='bold',
-                    ha='center', va='center', color=textcolor)
+            ax.text(x + w/2.0, y + h/2.0, title, fontsize=title_size, fontweight='bold', ha='center', va='center', color=textcolor, multialignment='center')
         return box
 
-    def draw_arrow(x1, y1, x2, y2, label="", color='#64748B', style='->', lw=1.5, label_pos=0.5, label_offset=(0, 0.15)):
+    def draw_arrow(x1, y1, x2, y2, label="", color='#334155', style='->', lw=1.9, label_offset=(0, 0), dashed=False, label_size=10.2):
+        ls = '--' if dashed else '-'
         ax.annotate('', xy=(x2, y2), xytext=(x1, y1),
-                    arrowprops=dict(arrowstyle=style, color=color, lw=lw, shrinkA=3, shrinkB=3))
+                    arrowprops=dict(arrowstyle=style, color=color, lw=lw, linestyle=ls, shrinkA=3, shrinkB=3))
         if label:
-            lx = x1 + (x2 - x1) * label_pos + label_offset[0]
-            ly = y1 + (y2 - y1) * label_pos + label_offset[1]
-            ax.text(lx, ly, label, fontsize=8.0, fontweight='bold', ha='center', va='center',
-                    color=color, bbox=dict(boxstyle='round,pad=0.15', facecolor='#FFFFFF', edgecolor=color, lw=0.8, alpha=0.9))
+            lx = (x1 + x2) / 2.0 + label_offset[0]
+            ly = (y1 + y2) / 2.0 + label_offset[1]
+            ax.text(lx, ly, label, fontsize=label_size, fontweight='bold', ha='center', va='center',
+                    color=color, bbox=dict(boxstyle='round,pad=0.22', facecolor='#FFFFFF', edgecolor=color, lw=1.1, alpha=0.98))
 
-    # -------------------------------------------------------------------------
-    # Phase 1 Components
-    # -------------------------------------------------------------------------
-    draw_box(0.7, 7.3, 4.0, 1.0, r"Dataset Partition $\mathcal{D}_{\mathrm{train}}$ (80%)", 
-             "PaySim / IEEE-CIS / ULB:\nStandardized Stratified Split (80/10/10)", facecolor='#FFFFFF', edgecolor='#93C5FD')
+    # --- PHASE 1 BOXES ---
+    draw_box(0.65, 8.35, 3.60, 1.35, r"Training Partition $\mathcal{D}_{\mathrm{train}}$ (80%)",
+             "Chronological / Stratified Splits\nBenchmark Cross-Evaluation", 
+             edgecolor='#93C5FD', title_size=12.2, sub_size=10.2)
+    draw_box(0.65, 6.30, 3.60, 1.35, r"Stage 1: Primary GBDT Core",
+             r"Cost-Weighted Ensemble $f_{\mathrm{core}}(\mathbf{x})$" + "\n" + r"Balanced Weighting ($w_{\mathrm{pos}}$)", 
+             edgecolor='#2563EB', lw=1.9, title_size=12.2, sub_size=10.2)
+    draw_arrow(2.45, 8.35, 2.45, 7.65)
+    draw_arrow(4.25, 7.00, 5.05, 7.00, label=r"Validation Score: $\hat{p} \geq \tau^*$", color='#0D9488', lw=1.9, label_offset=(0, 0.38), label_size=10.5)
+
+    # --- PHASE 2 BOXES ---
+    draw_box(5.05, 8.35, 4.30, 1.35, r"Validation Partition $\mathcal{D}_{\mathrm{val}}$ (10%)",
+             "Chronological / Stratified Splits\nUnseen Threshold Optimization",
+             edgecolor='#99F6E4', title_size=12.2, sub_size=10.2)
+    draw_box(5.05, 6.30, 4.30, 1.35, r"Stage 2: Optimal Threshold $\tau^*$ Search",
+             r"Operational Cost Surface Search" + "\n" + r"$\tau^* = \arg\min_{\tau} \mathrm{Cost}(\tau)$",
+             edgecolor='#0D9488', lw=1.9, title_size=12.2, sub_size=10.2)
+    draw_arrow(7.20, 8.35, 7.20, 7.65)
+    draw_arrow(9.35, 9.00, 9.95, 9.00)
+
+    draw_box(9.95, 8.35, 4.40, 1.35, r"5-Fold OOF Cross-Fitting",
+             r"Candidate Alerts $\mathcal{D}_{\mathrm{cand}}$ ($\hat{p} \geq \tau^*$)" + "\n" + r"TreeSHAP $\phi(\mathbf{x})$ + Meta-Model $g^{(j)}$",
+             edgecolor='#0D9488', title_size=12.2, sub_size=10.2)
+    draw_box(9.95, 6.30, 4.40, 1.35, r"Amount-Tiered Safety Calibration",
+             r"Quantile Stratification ($K = 3$ Tiers)" + "\n" + r"Safety Thresholds $\tau_{\mathrm{meta},k}$ ($\Delta\mathrm{FN} = 0$)",
+             edgecolor='#0D9488', lw=1.9, title_size=12.2, sub_size=10.2)
     
-    draw_box(0.7, 5.2, 4.0, 1.2, "Stage 1 XGBoost Predictive Core", 
-             r"Cost-Weighted Tree Ensemble $f_{\mathrm{core}}(\mathbf{x})$" + "\n" + r"Deterministic Objective Optimization", facecolor='#FFFFFF', edgecolor='#3B82F6', lw=1.5)
+    # 0.70" vertical gap with centered pill box
+    draw_arrow(12.15, 8.35, 12.15, 7.65, label=r"OOF Meta-Risk $\hat{q}$", color='#0D9488', lw=2.1, label_offset=(0, 0), label_size=10.8)
 
-    draw_arrow(2.7, 7.3, 2.7, 6.4, label="")
+    # FEED INTO BUS
+    draw_arrow(2.45, 6.30, 2.45, 5.75, color='#1D4ED8', lw=1.9)
+    draw_arrow(7.20, 6.30, 7.20, 5.75, color='#0D9488', lw=1.9)
+    draw_arrow(12.15, 6.30, 12.15, 5.75, color='#7C3AED', lw=1.9)
 
-    # -------------------------------------------------------------------------
-    # Phase 2 Components
-    # -------------------------------------------------------------------------
-    draw_box(5.7, 7.3, 4.4, 1.0, r"Validation Split $\mathcal{D}_{\mathrm{val}}$ (10%)", 
-             r"$\hat{p}_{\mathrm{val}} = \sigma(f_{\mathrm{core}}(\mathbf{x}))$ via Held-Out Split", facecolor='#FFFFFF', edgecolor='#99F6E4')
+    # --- PHASE 3: HARMONIOUS SPACING WITH IDENTICAL RIGHT BORDER AT 14.35 ---
+    # 1. Live Transaction: 0.65 to 2.50 (w = 1.85)
+    draw_box(0.65, 1.50, 1.85, 1.90, r"Live Transaction",
+             r"Feature Vector $\mathbf{x} \in \mathbb{R}^d$" + "\nReal-Time Ingestion\n" + r"Single-Row ($B = 1$)",
+             edgecolor='#C084FC', title_size=11.8, sub_size=10.0)
+    draw_arrow(2.50, 2.45, 2.85, 2.45)
 
-    draw_box(5.7, 5.2, 4.4, 1.2, r"$k=5$ Stratified OOF Cross-Fitting", 
-             r"Extract Alerts ($\hat{p} \geq \tau^*$)" + "\n" + r"Local TreeSHAP $\phi(\mathbf{x})$ + Train RF Meta", facecolor='#FFFFFF', edgecolor='#0D9488', lw=1.5)
-
-    draw_arrow(4.7, 5.8, 5.7, 5.8, label=r"Deploy $f_{\mathrm{core}}$")
-    draw_arrow(7.9, 7.3, 7.9, 6.4, label="")
-
-    # Cost calibration box on the right of Phase 2
-    draw_box(10.8, 5.2, 4.4, 3.1, r"Cost-Sensitive Calibration", 
-             r"1. Threshold Search: $\tau^* = \arg\min \mathrm{Cost}(\tau)$" + "\n" + 
-             r"   Validation Grid Search on $\mathcal{D}_{\mathrm{val}}$" + "\n" +
-             r"2. Safety Guard: $\tau_{\mathrm{meta}}^*$ Calibration" + "\n" +
-             r"   $\tau_{\mathrm{meta}}^* = \min \{q : \Delta\mathrm{FN}_{\mathrm{OOF}}(q) = 0\}$" + "\n" +
-             r"3. Enforces Zero Additional FN Leaks", 
-             facecolor='#F8FAFC', edgecolor='#0F766E', lw=1.5)
-
-    draw_arrow(10.1, 5.8, 10.8, 5.8, label="OOF Context")
-
-    # -------------------------------------------------------------------------
-    # Phase 3 Components (Streaming Inference)
-    # -------------------------------------------------------------------------
-    # Input stream
-    draw_box(0.6, 2.0, 1.8, 1.35, r"Live Transaction $\mathbf{x}_k$", 
-             "Unlabeled Production Stream\n(B=1 or Batched B=1000)", facecolor='#FFFFFF', edgecolor='#C4B5FD')
-
-    # Preprocessing
-    draw_box(2.7, 2.0, 1.8, 1.35, "Preprocessing", 
-             r"Feature Encoding & Pipeline" + "\n" + r"Low-Latency Streaming Engine", facecolor='#FFFFFF', edgecolor='#A78BFA')
-
-    # Stage 1 Scoring
-    draw_box(4.8, 2.0, 2.0, 1.35, "Stage 1 XGBoost", 
-             r"Compute $\hat{p}_k = \sigma(f_{\mathrm{core}}(\mathbf{x}_k))$" + "\n" + r"High-Throughput Fast-Path Engine", facecolor='#FFFFFF', edgecolor='#7C3AED', lw=1.5)
-
-    draw_arrow(2.4, 2.675, 2.7, 2.675)
-    draw_arrow(4.5, 2.675, 4.8, 2.675)
-
-    # Decision Gate 1 (Threshold check) - centered at x=7.8
-    diamond1 = patches.Polygon([[7.2, 2.675], [7.8, 3.35], [8.4, 2.675], [7.8, 2.0]], 
-                                closed=True, edgecolor='#D97706', facecolor='#FEF3C7', lw=1.5)
-    ax.add_patch(diamond1)
-    ax.text(7.8, 2.675, r"$\hat{p}_k \geq \tau^*$ ?", fontsize=9.0, fontweight='bold', ha='center', va='center', color='#92400E')
-
-    draw_arrow(6.8, 2.675, 7.2, 2.675)
-
-    # Fast-Path Bypass (Downward branch from Diamond to Cleared box)
-    draw_arrow(7.8, 2.0, 7.8, 1.20, label="", color='#059669')
-    ax.text(7.8, 1.6, r"NO (Fast-Path: $\hat{p}_k < \tau^*$)", fontsize=7.5, fontweight='bold', ha='center', va='center',
-            color='#059669', bbox=dict(boxstyle='round,pad=0.2', facecolor='#FFFFFF', edgecolor='#059669', lw=0.8))
-
-    draw_box(4.2, 0.50, 4.6, 0.70, r"Fast-Path Clearance: Emit $\hat{y}_k = 0$ (Cleared)", 
-             "Bypasses Heavy XAI & Human Review", facecolor='#ECFDF5', edgecolor='#10B981', textcolor='#065F46', lw=1.3)
-
-    # Candidate Alert Branch (Rightward arrow to SHAP)
-    draw_arrow(8.4, 2.675, 9.5, 2.675, label="", color='#DC2626')
-    ax.text(8.95, 2.95, r"YES (Alert: $\hat{p}_k \geq \tau^*$)", fontsize=7.8, fontweight='bold', ha='center', va='center',
-            color='#DC2626', bbox=dict(boxstyle='round,pad=0.2', facecolor='#FFFFFF', edgecolor='#DC2626', lw=0.8, alpha=0.95))
-
-    # Stage 3 Explainer & Meta-Classifier
-    draw_box(9.5, 2.0, 2.3, 1.35, "TreeExplainer SHAP", 
-             r"Compute Attribution $\phi(\mathbf{x}_k)$" + "\n" + r"Selective Trigger (Alerts Only)", facecolor='#FFFFFF', edgecolor='#EC4899')
-
-    draw_arrow(11.8, 2.675, 12.2, 2.675)
-
-    draw_box(12.2, 2.0, 2.3, 1.35, "Stage 3 RF Meta", 
-             r"Input Space: $[\mathbf{x}_k, \phi(\mathbf{x}_k)]$" + "\n" + r"Predict Meta-Prob $q_k \in [0, 1]$", facecolor='#FFFFFF', edgecolor='#6366F1')
-
-    # Arrow from Stage 3 RF Meta down to Safety Gate
-    draw_arrow(13.35, 2.0, 13.35, 1.20, label="", color='#4F46E5')
-
-    # Safety Gate Box
-    draw_box(9.6, 0.50, 4.2, 0.70, "Safety-Guarded Decision Gate", 
-             r"Suppressed ($s_k=1$) if $q_k \geq \tau_{\mathrm{meta}}^*$; else Actionable Alert ($s_k=0$)" + "\n" + r"Preserves Stage 1 Recall (0.00 FN Leaks)", 
-             facecolor='#EFF6FF', edgecolor='#2563EB', lw=1.4, textcolor='#1E40AF')
-
-    # Suppression arrow (left to Cleared box)
-    draw_arrow(9.6, 0.85, 8.8, 0.85, label="", color='#059669')
-    ax.text(9.2, 1.05, r"Suppressed ($s_k=1$)", fontsize=7.0, fontweight='bold', ha='center', va='center', color='#059669')
-
-    # Confirmed Alert box (Right)
-    draw_box(14.2, 0.50, 1.4, 0.70, r"Emit $\hat{y}_k = 1$", 
-             "Actionable Alert", facecolor='#FEF2F2', edgecolor='#EF4444', textcolor='#991B1B', lw=1.3)
-
-    # Confirmed Fraud arrow (right to Alert box)
-    draw_arrow(13.8, 0.85, 14.2, 0.85, label="", color='#DC2626')
-    ax.text(14.0, 1.05, r"Alert ($s_k=0$)", fontsize=7.0, fontweight='bold', ha='center', va='center', color='#DC2626')
-
-    plt.tight_layout()
+    # 2. Stage 1 Fast-Path: 2.85 to 5.05 (w = 2.20)
+    draw_box(2.85, 1.50, 2.20, 1.90, r"Stage 1 Fast-Path",
+             r"Score $\hat{p} = f_{\mathrm{core}}(\mathbf{x})$" + "\nSub-millisecond Scoring\n" + r"Gate: $\hat{p} \geq \tau^*$ ?",
+             edgecolor='#7C3AED', lw=1.9, title_size=11.8, sub_size=10.0)
     
-    # Save formats
-    base_dir = "/Users/shyamsundar/Dropbox/4 SHYAM DOCs/PHD/PET 2021/PROJECT/Scopus ready Paper/Paper I/Array Elsivier/Array revision Second"
-    results_dir = os.path.join(base_dir, "02_R2_Results")
-    repl_dir = os.path.join(base_dir, "ACXIS_Replication_Package")
-    
-    pdf_path = os.path.join(results_dir, "Figure_1_ACXIS_Architecture.pdf")
-    svg_path = os.path.join(results_dir, "Figure_1_ACXIS_Architecture.svg")
-    png_path = os.path.join(results_dir, "Figure_1_ACXIS_Architecture.png")
-    
-    plt.savefig(pdf_path, format='pdf', bbox_inches='tight', dpi=300)
-    plt.savefig(svg_path, format='svg', bbox_inches='tight')
-    plt.savefig(png_path, format='png', bbox_inches='tight', dpi=300)
-    
-    if os.path.exists(repl_dir):
-        plt.savefig(os.path.join(repl_dir, "Figure_1_ACXIS_Architecture.png"), format='png', bbox_inches='tight', dpi=300)
-        plt.savefig(os.path.join(repl_dir, "Figure_1_ACXIS_Architecture.pdf"), format='pdf', bbox_inches='tight', dpi=300)
-    
+    # Benign branch down:
+    draw_arrow(3.95, 1.50, 3.95, 1.15, label=r"$\hat{p} < \tau^*$", color='#16A34A', label_offset=(-0.45, 0), label_size=10.2)
+    draw_box(2.85, 0.45, 2.20, 0.70, r"Auto-Cleared Legit",
+             r"Direct Approval ($\hat{y} = 0$)",
+             facecolor='#DCFCE7', edgecolor='#16A34A', lw=1.5, title_size=10.6, sub_size=9.4)
+
+    # Feed from Bus to Stage 1
+    draw_arrow(3.95, 4.85, 3.95, 3.40, label=r"Deploy $f_{\mathrm{core}}$ & $\tau^*$", color='#1E40AF', lw=1.9, label_offset=(0, 0.42), label_size=10.5)
+
+    # Alert branch right:
+    draw_arrow(5.05, 2.45, 5.65, 2.45, label=r"$\hat{p} \geq \tau^*$", color='#DC2626', label_offset=(0, 0.30), label_size=10.4)
+
+    # 3. Stage 3 TreeSHAP: 5.65 to 7.80 (w = 2.15)
+    draw_box(5.65, 1.50, 2.15, 1.90, r"Stage 3 TreeSHAP",
+             r"Local Attribution $\phi(\mathbf{x})$" + "\nExact TreeExplainer\nSelective Trigger",
+             edgecolor='#7C3AED', lw=1.9, title_size=11.8, sub_size=10.0)
+    draw_arrow(7.80, 2.45, 8.25, 2.45)
+
+    # 4. Meta-Classification: 8.25 to 10.45 (w = 2.20)
+    draw_box(8.25, 1.50, 2.20, 1.90, r"Meta-Classification",
+             r"Joint Input $[\mathbf{x}, \phi(\mathbf{x})]$" + "\n" + r"Ensemble $g(\mathbf{u}) \to \bar{q}$" + "\nSecondary Filter",
+             edgecolor='#7C3AED', lw=1.9, title_size=11.8, sub_size=10.0)
+    draw_arrow(10.45, 2.45, 10.85, 2.45)
+
+    # Feed from Bus to Meta-Classification & Safety Guard
+    draw_arrow(9.35, 4.85, 9.35, 3.40, label=r"Deploy $g$ & $\{\tau_{\mathrm{meta},k}\}$", color='#5B21B6', lw=1.9, label_offset=(0, 0.42), label_size=10.5)
+
+    # 5. Safety Guard: 10.85 to 12.20 (w = 1.35)
+    draw_box(10.85, 1.50, 1.35, 1.90, r"Safety Guard",
+             r"Tier $k(\mathrm{Amount})$" + "\n" + r"$\bar{q} \geq \tau_{\mathrm{meta},k}$ ?",
+             facecolor='#FEF3C7', edgecolor='#D97706', lw=1.9, title_size=11.6, sub_size=9.8)
+
+    # Upper Output: Auto-Cleared False Alarm
+    draw_box(12.90, 2.15, 1.45, 1.30, "Auto-Cleared\nFalse Alarm\n" + r"($\hat{y} = 0$)",
+             facecolor='#DCFCE7', edgecolor='#16A34A', lw=1.7, title_size=10.5)
+    draw_arrow(12.20, 2.80, 12.90, 2.80, label=r"$\bar{q} \geq \tau_{\mathrm{meta},k}$", color='#16A34A', label_offset=(0, 0.22), label_size=10.0)
+
+    # Lower Output: Escalated Candidate Alert
+    draw_box(12.90, 0.65, 1.45, 1.30, "Escalated\nCandidate Alert\n" + r"($\hat{y} = 1$)",
+             facecolor='#FEE2E2', edgecolor='#DC2626', lw=1.7, title_size=10.5)
+    draw_arrow(12.20, 2.10, 12.90, 1.30, label=r"$\bar{q} < \tau_{\mathrm{meta},k}$", color='#DC2626', label_offset=(0, 0.22), label_size=10.0)
+
+    out_pdf = '/tmp/test_figure1_vector.pdf'
+    out_svg = '/tmp/test_figure1_vector.svg'
+    out_png = '/tmp/test_figure1_vector.png'
+
+    plt.savefig(out_pdf, format='pdf')
+    plt.savefig(out_svg, format='svg')
+    plt.savefig(out_png, format='png', dpi=300)
     plt.close()
-    
-    print(f"Figure 1 successfully generated in vector PDF, SVG, and 300-DPI PNG:\n  {pdf_path}\n  {svg_path}\n  {png_path}")
+
+    print("Generated:")
+    print("  PDF:", out_pdf, os.path.getsize(out_pdf), "bytes")
+    print("  SVG:", out_svg, os.path.getsize(out_svg), "bytes")
+    print("  PNG:", out_png, os.path.getsize(out_png), "bytes")
 
 if __name__ == '__main__':
-    create_architecture_diagram()
+    generate_exact_vector_figure1()
