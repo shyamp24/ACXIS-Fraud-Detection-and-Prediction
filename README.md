@@ -107,15 +107,15 @@ In PaySim, fraudulent activities are concentrated exclusively within `TRANSFER` 
 All model architectures, hyperparameter grids, and preprocessing steps are fully synchronized with manuscript Table 2:
 
 ### Feature Preprocessing
-- **PaySim:** Drop identifier columns (`nameOrig`, `nameDest`, `isFlaggedFraud`). One-hot encode categorical transaction `type`. Retain `amount`, `oldbalanceOrg`, `newbalanceOrig`, `oldbalanceDest`, `newbalanceDest`.
+- **PaySim:** Drop identifier columns (`nameOrig`, `nameDest`, `isFlaggedFraud`). One-hot encode categorical transaction `type`. Retain `step`, `amount`, `oldbalanceOrg`, `newbalanceOrig`, `oldbalanceDest`, `newbalanceDest` (11 features after one-hot encoding; no engineered features).
 - **IEEE-CIS:** Left merge `train_transaction.csv` and `train_identity.csv` on `TransactionID`. Categorical features (`card1`–`card6`, `addr1`–`addr2`, `P_emaildomain`, `R_emaildomain`, `M1`–`M9`, `id_12`–`id_38`) encoded via categorical codes; numerical features imputed with `-1.0`.
-- **ULB:** Features `V1`–`V28` (pre-standardized PCA components) and `Amount`. Robust scaling applied to `Amount`.
+- **ULB:** Features `Time`, `V1`–`V28` (pre-standardized PCA components) and `Amount` (30 features), used unscaled (tree-based models are scale-invariant).
 
 ### Model Hyperparameters
 | Component | Architecture | Hyperparameters & Configuration | Search Grid / Tuning Policy |
 | :--- | :--- | :--- | :--- |
 | **Stage 1 Primary** | XGBoost (`XGBClassifier`) | `n_estimators=500`, `max_depth=5`, `learning_rate=0.05`, `scale_pos_weight=10.0`, `subsample=0.8`, `colsample_bytree=0.8`, `tree_method='hist'`, `random_state=42` | Grid search over `max_depth` $\in \{4, 5, 6, 8\}$, `scale_pos_weight` $\in \{1, 5, 10, 20\}$ on $\mathcal{D}_{\text{val}}$. |
-| **Stage 3 Meta** | Random Forest (`RandomForestClassifier`) | `n_estimators=100`, `max_depth=5`, `class_weight='balanced'`, `max_features='sqrt'`, `n_jobs=-1`, `random_state=42` | Regularized tree depth ($\le 5$) prevents memorization of rare fraud attributions. |
+| **Stage 3 Meta** | Random Forest (`RandomForestClassifier`) | `n_estimators=100`, `max_depth=5`, `class_weight=None` (scikit-learn default), `max_features='sqrt'`, `n_jobs=-1`, `random_state=42` | Regularized tree depth ($\le 5$) prevents memorization of rare fraud attributions. |
 | **Meta Ensemble** | 5-Fold Cross-Fitting | Out-of-fold calibration on single-fold predictions; test predictions scored by full 5-model average: $\bar{q}(x) = \frac{1}{5}\sum_{j=1}^5 m_j(x)$ | Mitigates fold-specific variance and stabilizes test scoring. |
 | **CatBoost Baseline** | CatBoost (`CatBoostClassifier`) | `iterations=300`, `depth=6`, `learning_rate=0.05`, `auto_class_weights='Balanced'`, `random_seed=42` | Tuned depth and iteration budget matched to XGBoost. |
 | **LightGBM Baseline** | LightGBM (`LGBMClassifier`) | `n_estimators=300`, `max_depth=6`, `learning_rate=0.05`, `scale_pos_weight=10`, `random_state=42` | Standard GBDT baseline. |
@@ -299,7 +299,7 @@ Hardware: Dual-Core Intel Core i5-5287U CPU @ 2.90GHz (MacBook Pro, 2 physical c
 │   ├── step11_rule_of_three_evaluation.py     # Rule-of-Three false negative leakage bounds
 │   └── step12_section5_5_domain_and_temporal_controls.py # Section 5.5 typology & temporal streaming controls
 ├── cache/                                     # Versioned plain binary caches (<59MB each, No Git LFS)
-├── results_csv/                               # Generated tables in CSV format (Tables 1-9)
+├── results_csv/                               # Generated tables in CSV format (Tables 1-9 and 12)
 ├── results_json/                              # Complete structured JSON benchmark logs
 ├── figures/                                   # High-DPI and vector publication figures
 └── logs/                                      # Full console execution logs for all steps
@@ -309,7 +309,12 @@ Hardware: Dual-Core Intel Core i5-5287U CPU @ 2.90GHz (MacBook Pro, 2 physical c
 - **IEEE-CIS Split Partition (`_val.npz` and `_test.npz`):** The monolithic IEEE-CIS TreeSHAP attribution matrix exceeds 116 MB due to the 432-feature tabular representation. To strictly adhere to GitHub's 100 MB per-file limit without requiring external Git-LFS tooling, the cache is cleanly partitioned into `ieeecis_stage1_and_shap_val.npz` (58.39 MB) and `ieeecis_stage1_and_shap_test.npz` (58.34 MB), which are transparently loaded by `scripts/cache_utils.py`.
 - **ULB Suppressed Alerts (`cache/ulb_suppressed_test_alerts.npz`, 864 bytes):** The 864-byte size reflects the mathematically expected operational abstention of the ACXIS amount-tiered safety guard on the ULB benchmark: because the safety guard threshold converges to infinity ($\tau_{\text{meta}}^* \to \infty$) to eliminate false negative leakage, zero false alarms are suppressed ($\Delta\mathrm{FN} = 0$, $\Delta\mathrm{FP} = 0$). The file is valid, complete, and uncorrupted.
 
+### Tested Environment
+Python 3.12, scikit-learn 1.4.2, XGBoost 2.1.0 (versions recorded in `logs/`); the remaining dependencies in `requirements.txt` are minimum versions.
+
 ### Publication Figure-to-Manuscript Mapping Table
+See `figures/FIGURE_PROVENANCE.md` for which script generates which figure file. Figure 10 is regenerated by `scripts/generate_fig10_cost_sensitivity.py`.
+
 
 | Manuscript Figure | Figure Description | Artifact Filename(s) in `figures/` |
 | :--- | :--- | :--- |
